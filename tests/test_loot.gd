@@ -1,4 +1,4 @@
-## Tests for loot: gun chest weights over 10 000 rolls, and the gun inventory rules.
+## Tests for loot: gun chest weights and enemy drops over 10 000 rolls, and the gun inventory rules.
 extends TestCase
 
 const PLAYER := preload("res://scenes/player/player.tscn")
@@ -35,6 +35,8 @@ func test_enemy_drop_rates_hold_over_10000_rolls() -> void:
 			TOLERANCE, "ammo box share in %")
 	assert_near(100.0 * counts.get(Loot.HEART_PICKUP, 0) / ROLLS, 100.0 * Config.balance.heart_drop_chance,
 			TOLERANCE, "heart share in %")
+	assert_near(100.0 * counts.get(Loot.SMOKE_PICKUP, 0) / ROLLS, 100.0 * Config.balance.smoke_drop_chance,
+			TOLERANCE, "smoke bomb share in %")
 
 
 func test_inventory_holds_pistol_plus_two() -> void:

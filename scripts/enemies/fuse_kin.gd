@@ -1,5 +1,6 @@
 ## Fuse Kin: runs at the player. Close up it lights a 1.2 s fuse, blinking faster and faster,
-## then explodes (36 px, one heart). It also explodes when killed.
+## then explodes (36 px): one heart off the player, and damage to enemies caught in it.
+## It also explodes when killed.
 class_name FuseKin
 extends Enemy
 
@@ -45,7 +46,8 @@ func _burn_fuse(delta: float) -> void:
 
 ## Killed or out of fuse, it always goes off.
 func die() -> void:
-	var blast := Explosion.create(Config.balance.fuse_blast_radius, 0, false, true)
+	var cfg := Config.balance
+	var blast := Explosion.create(cfg.fuse_blast_radius, cfg.fuse_blast_damage, true)
 	blast.global_position = global_position
 	get_tree().current_scene.add_child.call_deferred(blast)
 	super.die()

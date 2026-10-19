@@ -1,4 +1,4 @@
-## Tests for the Grunt and Fuse Kin, and the smoke bomb that clears enemy bullets.
+## Tests for the Grunt and Fuse Kin (waking up, dying, exploding), and the smoke bomb.
 extends TestCase
 
 const PLAYER := preload("res://scenes/player/player.tscn")
@@ -49,3 +49,34 @@ func test_smoke_bomb_clears_enemy_bullets_on_screen() -> void:
 	assert_true(not far.is_queued_for_deletion(), "bullet off screen stays")
 	assert_eq(player.smoke_bombs, Config.balance.smoke_bombs_start - 1, "one bomb used up")
 	assert_true(not player.use_smoke_bomb(), "no bombs left")
+
+
+func test_enemy_idles_until_it_sees_or_is_near_the_player() -> void:
+	var wake := Config.balance.enemy_wake_distance
+	_add(PLAYER, Vector2.ZERO)
+	await add_wall(Rect2(Vector2(20, -100), Vector2(16, 200)))
+	var far_behind_wall: Enemy = _add(GRUNT, Vector2(wake + 40, 0))
+	var near_behind_wall: Enemy = _add(GRUNT, Vector2(wake - 40, 0))
+	var far_in_sight: Enemy = _add(GRUNT, Vector2(-(wake + 100), 0))
+	assert_eq(far_behind_wall.target_player(), null, "far and behind a wall: still idle")
+	assert_true(not far_behind_wall.awake, "far and behind a wall: not awake")
+	assert_true(near_behind_wall.target_player() != null, "within %d px: awake even behind a wall" % wake)
+	assert_true(far_in_sight.target_player() != null, "far but in sight: awake")
+
+
+func test_awake_enemy_stays_awake() -> void:
+	var player: Player = _add(PLAYER, Vector2.ZERO)
+	var grunt: Enemy = _add(GRUNT, Vector2(50, 0))
+	grunt.target_player()
+	player.position = Vector2(-1000, 0)
+	await add_wall(Rect2(Vector2(-500, -100), Vector2(16, 200)))
+	assert_true(grunt.target_player() != null, "still chasing after losing sight")
+
+
+func test_smoke_bombs_carry_at_most_two() -> void:
+	var player: Player = _add(PLAYER, Vector2.ZERO)
+	var most := Config.balance.smoke_bombs_max
+	while player.smoke_bombs < most:
+		assert_true(player.add_smoke_bomb(), "picks up a smoke bomb below the limit")
+	assert_true(not player.add_smoke_bomb(), "no pickup at %d" % most)
+	assert_eq(player.smoke_bombs, most, "count stays at the limit")

@@ -1,5 +1,5 @@
-## Base for every enemy: hit points, hit flash and knockback, pathfinding towards a point,
-## line of sight, shooting, and the death puff with a chance of a drop.
+## Base for every enemy: waking up, hit points, hit flash and knockback, pathfinding towards a
+## point, line of sight, shooting, and the death puff with a chance of a drop.
 class_name Enemy
 extends CharacterBody2D
 
@@ -10,6 +10,8 @@ const EYE_OFFSET := Vector2(0, -10)
 const WALL_MASK := 1
 
 var hp := 1
+## Enemies idle until they see the player or the player comes close; then they stay awake.
+var awake := false
 var _knockback := Vector2.ZERO
 var _dead := false
 
@@ -18,12 +20,21 @@ var _dead := false
 @onready var _nav: NavigationAgent2D = $Nav
 
 
-## The player, or null if there is none or they are dead.
+## The player to go after, or null while this enemy is idle or the player is dead.
+## Wakes the enemy up the first time it sees the player or the player comes within range.
 func target_player() -> Player:
 	var player := get_tree().get_first_node_in_group(&"player") as Player
-	if player and player.state != Player.State.DEAD:
-		return player
-	return null
+	if player == null or player.state == Player.State.DEAD:
+		return null
+	if not awake:
+		var close := global_position.distance_to(player.global_position) <= Config.balance.enemy_wake_distance
+		awake = close or can_see(player.hurtbox_position())
+	return player if awake else null
+
+
+## Where bullets and blasts hit: the middle of the body.
+func hitbox_position() -> Vector2:
+	return $Hitbox/Shape.global_position
 
 
 ## Loses `amount` hit points with a white flash and a push along `direction`.
@@ -60,8 +71,8 @@ func move(desired: Vector2, delta: float) -> void:
 	velocity = desired + _knockback
 	_knockback = _knockback.move_toward(Vector2.ZERO, Config.balance.knockback_decay * delta)
 	move_and_slide()
-	var player := target_player()
-	if player:
+	var player := get_tree().get_first_node_in_group(&"player") as Node2D
+	if awake and player:
 		body.flip_h = player.global_position.x < global_position.x
 	body.play(&"walk" if desired != Vector2.ZERO else &"idle")
 	juice.update_walk(delta, desired != Vector2.ZERO)

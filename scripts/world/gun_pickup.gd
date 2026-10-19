@@ -9,7 +9,7 @@ var owned: OwnedGun
 
 
 func _ready() -> void:
-	$Sprite.texture = owned.stats.texture
+	$Sprite.texture = owned.stats.icon
 
 
 func interact(player: Player) -> void:

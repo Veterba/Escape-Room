@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map per round, a 10:00 timer, find the secret code before time runs out.
 
-Current version: **0.2.0** (Part B: the round loop, all 5 guns, Grunt and Fuse Kin, placeholder maps).
+Current version: **0.2.1** (Part B plus fixes: small guns in hand, y-sorting, one explosion rule, smoke bomb drops, idle enemies).
 
 ## Requirements
 

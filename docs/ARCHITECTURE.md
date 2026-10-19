@@ -46,7 +46,8 @@ Round  --win / death / timeout-->  EndScreen  --Play again-->  Game.start_round(
 Round (scenes/round/round.tscn)               loads the map, decides the result, writes the run log
 ├── <map>  (added at runtime, e.g. scenes/maps/enemy_arena.tscn)
 │   ├── Navigation (NavigationRegion2D)       walkable area, baked at runtime around the walls
-│   │   └── Tiles (TileMapLayer)              floor and walls; wall tiles have collision
+│   │   ├── Floor (TileMapLayer)              floor tiles, always underneath (z_index -10)
+│   │   └── Walls (TileMapLayer)              wall tiles with collision, y-sorted
 │   └── chests, enemies, the code             placed from the map's text layout
 ├── Player (scenes/player/player.tscn)
 │   ├── Body (AnimatedSprite2D)               hero art, animations from hero_frames.tres
@@ -66,7 +67,20 @@ Round (scenes/round/round.tscn)               loads the map, decides the result,
 
 - **One balance resource.** `BalanceConfig` is a `Resource` with typed `@export` fields; the values
   are in `config/balance.tres`. Each gun is a `GunStats` sub-resource inside it, so a gun's numbers
-  and its art data (grip, muzzle and ejection pixels) sit together.
+  and its art sit together: `icon` (the big drawing, for the HUD and the floor), `held_texture`
+  (the small drawing in the hand) and the grip, muzzle and ejection pixels of the held drawing.
+- **Y-sorting.** `Round`, the map, the navigation region and the `Walls` layer all have
+  `y_sort_enabled`, so their children are drawn in order of their y position, as if they were one
+  list: a character lower on screen is drawn in front. Wall tiles sort by the top of the tile
+  (`y_sort_origin = -8` in `dungeon_tiles.tres`), so a character beside or below a wall is drawn
+  in front of it. The gun goes behind the hero by moving before the body in the player's own
+  draw order, not by z_index (that would lift it above walls and other characters).
+- **One explosion rule.** `Explosion` damages every enemy and the player inside its radius, if a
+  ray from the centre to the target's body hits no wall. Only the Gold Detonator passes
+  `hurts_player = false`. Rockets explode a few pixels back from the wall they hit, so the
+  centre is never inside the wall.
+- **Idle enemies.** An enemy stays idle until it sees the player (a ray to the player hits no
+  wall) or the player comes within `enemy_wake_distance`; after that it stays awake.
 - **Maps as text.** A map is a `GameMap` scene with a `layout`: one string per row of tiles
   (`#` wall, `.` floor, `P` start, `C` code, `G` gun chest, `g` Grunt Kin, `f` Fuse Kin). The
   script builds the tiles and entities, then bakes the navigation mesh. The labyrinth will
@@ -93,8 +107,10 @@ Round (scenes/round/round.tscn)               loads the map, decides the result,
 - **Fake height for casings.** A casing is a 2D node that tracks how high above the floor it is
   and moves its sprite up by that much. That is enough for a top-down bounce without 3D physics.
 - **Draw order with z_index.** Floor tiles are at -10, casings and dust at -5, items on the floor
-  at -1, characters at 0, bullets, sparks and blasts at 5.
+  at -1, characters, walls and chests at 0 (y-sorted among themselves), bullets, sparks and
+  blasts at 5.
 - **Own test runner instead of GUT.** About 60 lines, no third-party code to vendor or keep in
   step with the Godot version. Tests advance time by calling `_physics_process` / `_process` with a
   fixed step, so they are fast and do not depend on the frame rate. A test file that fails to
-  compile counts as a failure.
+  compile counts as a failure, and so does any engine or script error during a test (the runner
+  listens to Godot's log through a `Logger`).

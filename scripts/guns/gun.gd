@@ -36,6 +36,7 @@ var _rest_position: Vector2
 @onready var _muzzle: Marker2D = $Muzzle
 @onready var _flash: Sprite2D = $Muzzle/Flash
 @onready var _eject: Marker2D = $Eject
+@onready var _sparkles: CPUParticles2D = $Sparkles
 
 
 func _ready() -> void:
@@ -46,10 +47,11 @@ func _ready() -> void:
 func equip(gun: OwnedGun) -> void:
 	owned = gun
 	# The gun node sits at the grip, so the art is shifted to put its grip pixel on the hand.
-	_sprite.texture = stats.texture
+	_sprite.texture = stats.held_texture
 	_sprite.offset = -stats.grip
 	_muzzle.position = stats.muzzle - stats.grip
 	_eject.position = stats.eject - stats.grip
+	_sparkles.emitting = stats.sparkles
 	is_reloading = false
 	_cooldown_left = 0.0
 	changed.emit()

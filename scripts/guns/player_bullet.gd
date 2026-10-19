@@ -4,6 +4,9 @@ class_name PlayerBullet
 extends Area2D
 
 const IMPACT_SPARK := preload("res://scenes/fx/impact_spark.tscn")
+## A blast starts this many pixels back along the bullet's path, so its centre is never
+## inside the wall it hit (walls block blasts, and a centre inside one would be blocked oddly).
+const BLAST_PULLBACK := 6.0
 
 var _stats: GunStats
 var _velocity := Vector2.ZERO
@@ -35,8 +38,8 @@ func _on_hit(enemy: Enemy = null) -> void:
 		return
 	_spent = true
 	if _stats.blast_radius > 0.0:
-		var blast := Explosion.create(_stats.blast_radius, _stats.damage, true, _stats.blast_hurts_player)
-		blast.global_position = global_position
+		var blast := Explosion.create(_stats.blast_radius, _stats.damage, _stats.blast_hurts_player)
+		blast.global_position = global_position - _velocity.normalized() * BLAST_PULLBACK
 		get_tree().current_scene.add_child.call_deferred(blast)
 	else:
 		if enemy:

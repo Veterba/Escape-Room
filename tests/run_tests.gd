@@ -1,11 +1,28 @@
 ## Headless test runner. Runs every test_* method in res://tests/test_*.gd and exits with
-## code 1 if any test fails. Usage: godot --headless --path . -s tests/run_tests.gd
+## code 1 if any test fails. A test also fails if it triggers any engine or script error.
+## Usage: godot --headless --path . -s tests/run_tests.gd
 extends SceneTree
 
 const TEST_DIR := "res://tests/"
 
 
+## Collects every error Godot reports, so a crash inside a test counts as a failure.
+class ErrorCatcher extends Logger:
+	var errors: Array[String] = []
+
+	func _log_error(_function: String, file: String, line: int, code: String, rationale: String,
+			_editor_notify: bool, _error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
+		errors.append("%s (%s:%d)" % [rationale if rationale else code, file, line])
+
+	func _log_message(_message: String, _error: bool) -> void:
+		pass
+
+
+var _catcher := ErrorCatcher.new()
+
+
 func _initialize() -> void:
+	OS.add_logger(_catcher)
 	_run_all.call_deferred()
 
 
@@ -34,6 +51,7 @@ func _run_all() -> void:
 				for failure in failures:
 					print("        - " + failure)
 	print("\n%d passed, %d failed" % [passed, failed])
+	OS.remove_logger(_catcher)
 	quit(1 if failed > 0 else 0)
 
 
@@ -42,9 +60,12 @@ func _run_one(script: GDScript, test_name: String) -> Array[String]:
 	test.world = Node2D.new()
 	root.add_child(test.world)
 	current_scene = test.world  # Bullets, casings and puffs are spawned into the current scene.
+	_catcher.errors.clear()
 	await test.call(test_name)
 	await process_frame  # Lets deferred calls (sparks, drops) finish before the world is freed.
 	current_scene = null
 	paused = false  # A round that ended may have paused the game.
 	test.world.free()
+	for error in _catcher.errors:
+		test.failures.append("engine error: " + error)
 	return test.failures

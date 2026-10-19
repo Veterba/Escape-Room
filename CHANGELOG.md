@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.2.1 — 2026-10-19
+
+### Added
+- Enemies drop a smoke bomb 3 % of the time; you can carry at most 2.
+- Enemies stand idle until they see you or you come within 160 px.
+
+### Changed
+- Guns in the hand are small (10–16 px long) and drawn in the game palette; the big drawings are now only icons in the HUD and on the floor.
+- The Gold Detonator's sparkles stay upright instead of turning with the gun.
+- Characters, walls and chests are drawn in depth order: whatever stands lower on screen is in front.
+- Every explosion follows one rule: it hurts enemies and you, except the Gold Detonator, which never hurts you. Walls block explosions.
+- Fuse Kin blasts now also hurt other enemies.
+
+### Removed
+- The floor tile with shell casings drawn on it, which looked like real casings.
+
 ## v0.2.0 — 2026-10-19
 
 ### Added

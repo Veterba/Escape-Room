@@ -20,7 +20,7 @@ PALETTE = {
     "A": (0x0B, 0x08, 0x10, 255),  # abyss, outlines and background
 }
 
-# 16x16 tiles. The tile set atlas is these five tiles side by side, in this order.
+# 16x16 tiles. The tile set atlas is these four tiles side by side, in this order.
 FLOOR_PLAIN = [
     "SSSSSSSSSSSSSSSA",
     "SSSSSSSSSSSSSSSA",
@@ -55,25 +55,6 @@ FLOOR_CRACKED = [
     "SSSSSSSSSSSSSSSA",
     "SSSSSSSSSSSSSSSA",
     "SSSSSSSSSSSSMSSA",
-    "SSSSSSSSSSSSSSSA",
-    "AAAAAAAAAAAAAAAA",
-]
-
-FLOOR_CASINGS = [
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSBBBMSSSSSSSSA",
-    "SSSAAAASSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSASSSA",
-    "SSSSSSSSSSASSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSMBBBSSSA",
-    "SSSSSSSSAAAASSSA",
-    "SSSSSSSSSSSSSSSA",
     "SSSSSSSSSSSSSSSA",
     "AAAAAAAAAAAAAAAA",
 ]
@@ -118,7 +99,7 @@ WALL_FACE = [
     "AAAAAAAAAAAAAAAA",
 ]
 
-TILES = [FLOOR_PLAIN, FLOOR_CRACKED, FLOOR_CASINGS, WALL_TOP, WALL_FACE]
+TILES = [FLOOR_PLAIN, FLOOR_CRACKED, WALL_TOP, WALL_FACE]
 
 PLAYER_BULLET = [
     ".AAAA.",
@@ -158,6 +139,55 @@ GOLD_BULLET = [
     "ABTTBA",
     "ABBBBA",
     ".AAAA.",
+]
+
+# Guns as held in the hand, 10-16 px long, pointing right with the grip at the bottom left.
+# The big drawings in art/source/ are only used as icons.
+HELD_POP_PISTOL = [
+    "AAAAAAAAA.",
+    "AOOOOOOOOA",
+    "AMMMMMMMMA",
+    "AMMAAAAAA.",
+    "AMMA......",
+    "AAAA......",
+]
+
+HELD_BRASS_REVOLVER = [
+    ".AAA........",
+    "AMMMAAAAAAA.",
+    "AMOMBBBBBBBA",
+    "AMMMAAAAAAA.",
+    "AASSA.......",
+    ".ASSA.......",
+    ".AAAA.......",
+]
+
+HELD_SCATTERSHOT = [
+    "....AAAAAAAAAA",
+    "AAAAMMOOOOOOOA",
+    "ASSSMMMMMMMMMA",
+    "ASSAAMAAAAAAA.",
+    "AAA.AMA.......",
+    "....AAA.......",
+]
+
+HELD_FUSE_LAUNCHER = [
+    ".AAAAAAAAAAAAAA.",
+    "AORRBORRRRRBORRA",
+    "ARRRBRRRRRRBRRRA",
+    "ASRRBRRRRRRBRRSA",
+    ".AAAAAAAAAAAAAA.",
+    "....ASA.........",
+    "....AAA.........",
+]
+
+HELD_GOLD_DETONATOR = [
+    ".AAAAAAAAAAA.",
+    "AOBBBBBBBBBBA",
+    "ABBTTBBBBBBMA",
+    "AAABBAAAAAAA.",
+    "..ABBA.......",
+    "..AAAA.......",
 ]
 
 SHELL_CASING = [
@@ -221,6 +251,11 @@ def main() -> None:
         "bullet_rocket": ROCKET,
         "bullet_gold": GOLD_BULLET,
         "shell_casing": SHELL_CASING,
+        "held_pop_pistol": HELD_POP_PISTOL,
+        "held_brass_revolver": HELD_BRASS_REVOLVER,
+        "held_scattershot": HELD_SCATTERSHOT,
+        "held_fuse_launcher": HELD_FUSE_LAUNCHER,
+        "held_gold_detonator": HELD_GOLD_DETONATOR,
         "muzzle_flash": MUZZLE_FLASH,
         "hand": HAND,
         "ui_panel": UI_PANEL,

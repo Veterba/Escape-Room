@@ -1,5 +1,6 @@
 ## A map built from a text layout: walls, floor, the player's start, and what stands where.
 ## After building, it bakes the navigation mesh that enemies use to walk around walls.
+## Walls, characters and chests are y-sorted: whatever stands lower on screen is drawn in front.
 ##
 ## Layout legend: '#' wall, '.' floor, 'P' player start, 'C' secret code,
 ## 'G' gun chest, 'g' Grunt Kin, 'f' Fuse Kin. Every letter stands on floor.
@@ -9,11 +10,11 @@ extends Node2D
 const TILE_SIZE := 16
 const SOURCE_ID := 0
 ## Atlas coordinates of the tiles in art/game/tiles.png.
-const FLOOR_TILES: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0)]
-## How often each floor tile is picked: mostly plain, some cracks and casings.
-const FLOOR_WEIGHTS: Array[float] = [8.0, 1.0, 1.0]
-const WALL_TOP := Vector2i(3, 0)
-const WALL_FACE := Vector2i(4, 0)
+const FLOOR_TILES: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0)]
+## How often each floor tile is picked: mostly plain, some cracked.
+const FLOOR_WEIGHTS: Array[float] = [9.0, 1.0]
+const WALL_TOP := Vector2i(2, 0)
+const WALL_FACE := Vector2i(3, 0)
 const WALL := "#"
 const PLAYER_START := "P"
 ## What each letter in the layout places on the map.
@@ -34,7 +35,8 @@ var spawn_position := Vector2.ZERO
 var bounds := Rect2i()
 
 @onready var _navigation: NavigationRegion2D = $Navigation
-@onready var _tiles: TileMapLayer = $Navigation/Tiles
+@onready var _floor: TileMapLayer = $Navigation/Floor
+@onready var _walls: TileMapLayer = $Navigation/Walls
 
 
 func _ready() -> void:
@@ -50,10 +52,10 @@ func _build() -> void:
 			var cell := Vector2i(x, y)
 			var symbol := layout[y][x]
 			if symbol == WALL:
-				_tiles.set_cell(cell, SOURCE_ID, _wall_tile_at(x, y))
+				_walls.set_cell(cell, SOURCE_ID, _wall_tile_at(x, y))
 				continue
-			_tiles.set_cell(cell, SOURCE_ID, FLOOR_TILES[rng.rand_weighted(FLOOR_WEIGHTS)])
-			var center := _tiles.map_to_local(cell)
+			_floor.set_cell(cell, SOURCE_ID, FLOOR_TILES[rng.rand_weighted(FLOOR_WEIGHTS)])
+			var center := _floor.map_to_local(cell)
 			if symbol == PLAYER_START:
 				spawn_position = center
 			elif ENTITIES.has(symbol):

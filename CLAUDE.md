@@ -46,6 +46,8 @@ Checks before saying something is done:
 - the game launches from the command line without errors in the output
 - `--map=boss|maze|arena` loads the map you touched
 - `python3 tools/import_art.py` still runs if you touched art
+- `tools/export.sh` builds both Windows and macOS without errors (from v0.2.1 on). I test the
+  Mac build myself; say clearly that the Windows build was not run if you couldn't run it
 - for anything visual: describe what I should look at and where, since I check it by playing
 
 All balance numbers live in `res://config/balance.tres`. No magic numbers in scripts.

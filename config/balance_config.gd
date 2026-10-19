@@ -21,7 +21,6 @@ extends Resource
 ## Blinks per second while invulnerable after a hit.
 @export var hit_blink_rate: float = 12.0
 @export var smoke_bombs_start: int = 1
-## Not used yet: nothing in the spec gives the player more smoke bombs.
 @export var smoke_bombs_max: int = 2
 ## Pixels from the player's feet within which E reaches a chest or a gun on the floor.
 @export var interact_range: float = 24.0
@@ -53,10 +52,14 @@ extends Resource
 @export var ammo_drop_chance: float = 0.10
 ## Chance that a dead enemy drops a heart.
 @export var heart_drop_chance: float = 0.05
+## Chance that a dead enemy drops a smoke bomb.
+@export var smoke_drop_chance: float = 0.03
 ## Share of the current gun's full reserve an ammo box gives back.
 @export var ammo_box_refill: float = 0.5
 
 @export_group("Enemies")
+## An idle enemy wakes up when it sees the player or the player comes this close, in pixels.
+@export var enemy_wake_distance: float = 160.0
 ## Pixels per second an enemy is pushed back when hit; it fades quickly.
 @export var enemy_knockback_speed: float = 90.0
 ## Pixels per second the player is pushed back when hit.
@@ -81,6 +84,8 @@ extends Resource
 ## Seconds from the fuse starting to the explosion.
 @export var fuse_time: float = 1.2
 @export var fuse_blast_radius: float = 36.0
+## Damage the blast does to enemies caught in it (the player always loses one heart).
+@export var fuse_blast_damage: int = 5
 ## Blinks per second at the start and at the end of the fuse.
 @export var fuse_blink_rate_start: float = 3.0
 @export var fuse_blink_rate_end: float = 20.0

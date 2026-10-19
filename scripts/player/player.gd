@@ -94,6 +94,15 @@ func heal() -> bool:
 	return true
 
 
+## Picks up a smoke bomb. Returns false if the player already carries the most allowed.
+func add_smoke_bomb() -> bool:
+	if smoke_bombs >= Config.balance.smoke_bombs_max:
+		return false
+	smoke_bombs += 1
+	smoke_bombs_changed.emit(smoke_bombs)
+	return true
+
+
 ## Starts a dodge roll in `direction`. Returns false if a roll is running or on cooldown.
 func start_roll(direction: Vector2) -> bool:
 	if state != State.NORMAL or _roll_cooldown_left > 0.0:
@@ -193,7 +202,10 @@ func _aim_at(target: Vector2) -> Vector2:
 	gun_pivot.rotation = aim.angle()
 	# Flipping the pivot upside down keeps the gun right side up when aiming left.
 	gun_pivot.scale.y = -1.0 if aiming_left else 1.0
-	# When aiming steeply up, the gun is drawn behind the hero.
-	gun_pivot.z_index = -1 if aim.y < AIM_UP_BEHIND_THRESHOLD else 1
+	# When aiming steeply up, the gun is drawn behind the hero: it moves before the body in
+	# the draw order. (A z_index would also lift it above walls and other characters.)
+	var gun_behind := aim.y < AIM_UP_BEHIND_THRESHOLD
+	if gun_behind != (gun_pivot.get_index() < body.get_index()):
+		move_child(gun_pivot, body.get_index() if gun_behind else body.get_index() + 1)
 	body.flip_h = aiming_left
 	return aim

@@ -77,7 +77,7 @@ func _show_map_name(map_name: String) -> void:
 
 func _refresh_gun() -> void:
 	var gun := _player.gun
-	_gun_icon.texture = gun.stats.texture
+	_gun_icon.texture = gun.stats.icon
 	if gun.is_reloading:
 		_ammo_label.text = Strings.RELOADING
 		return

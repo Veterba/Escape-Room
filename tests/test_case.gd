@@ -30,6 +30,18 @@ func assert_near(actual: float, expected: float, tolerance: float, message: Stri
 		failures.append("%s (expected %s ± %s, got %s)" % [message, expected, tolerance, actual])
 
 
+## Adds a wall (physics layer 1) covering `rect`, and waits a physics frame so rays see it.
+func add_wall(rect: Rect2) -> void:
+	var wall := StaticBody2D.new()
+	var shape := CollisionShape2D.new()
+	shape.shape = RectangleShape2D.new()
+	shape.shape.size = rect.size
+	shape.position = rect.get_center()
+	wall.add_child(shape)
+	world.add_child(wall)
+	await world.get_tree().physics_frame
+
+
 ## Waits for real time to pass, for things driven by tweens and timers.
 func wait(seconds: float) -> void:
 	await world.get_tree().create_timer(seconds).timeout
