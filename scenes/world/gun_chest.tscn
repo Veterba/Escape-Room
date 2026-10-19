@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/world/gun_chest.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://art/game/item_code_chest.png" id="2_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_chest"]
+size = Vector2(26, 14)
+
+[node name="GunChest" type="Node2D"]
+script = ExtResource("1_script")
+prompt_height = 16.0
+
+[node name="Sprite" type="Sprite2D" parent="."]
+self_modulate = Color(0.55, 0.85, 0.8, 1)
+texture = ExtResource("2_texture")
+
+[node name="Body" type="StaticBody2D" parent="."]
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="Body"]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_chest")

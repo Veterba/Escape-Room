@@ -1,22 +1,31 @@
-## A gun held in the player's hand: fires bullets, counts ammo, reloads, and plays its own juice
-## (muzzle flash, recoil kick, shell casings). Its numbers come from a GunStats resource.
+## The gun in the player's hand: fires bullets, counts ammo, reloads, and plays its own juice
+## (muzzle flash, recoil kick, shell casings). Which gun it is comes from the OwnedGun it holds.
 class_name Gun
 extends Node2D
 
-## Emitted whenever the ammo count or the reload state changes, so the HUD can redraw.
+## Emitted whenever the ammo count, the reload state or the gun in hand changes.
 signal changed
+## Emitted on every shot (used to find the gun used most in a round).
+signal fired(stats: GunStats)
 
 const BULLET := preload("res://scenes/guns/player_bullet.tscn")
 const SHELL_CASING := preload("res://scenes/fx/shell_casing.tscn")
 ## How much casings lean backwards (away from the aim) as they fly out of the gun.
 const EJECT_BACKWARD_TILT := 0.5
 
-var stats: GunStats
 ## The character holding the gun. Casings fall to the floor at its feet.
 var holder: Node2D
-
-var in_magazine := 0
-var reserve := 0
+## The gun currently in hand, with its ammo.
+var owned: OwnedGun
+var stats: GunStats:
+	get:
+		return owned.stats
+var in_magazine: int:
+	get:
+		return owned.in_magazine
+var reserve: int:
+	get:
+		return owned.reserve
 var is_reloading := false
 
 var _cooldown_left := 0.0
@@ -33,16 +42,14 @@ func _ready() -> void:
 	_rest_position = position
 
 
-## Puts a gun with these stats in the hand, with a full magazine and full reserve.
-func equip(new_stats: GunStats) -> void:
-	stats = new_stats
+## Puts `gun` in the hand. Its ammo is kept as it was; a running reload is cancelled.
+func equip(gun: OwnedGun) -> void:
+	owned = gun
 	# The gun node sits at the grip, so the art is shifted to put its grip pixel on the hand.
 	_sprite.texture = stats.texture
 	_sprite.offset = -stats.grip
 	_muzzle.position = stats.muzzle - stats.grip
 	_eject.position = stats.eject - stats.grip
-	in_magazine = stats.magazine_size
-	reserve = stats.reserve_ammo
 	is_reloading = false
 	_cooldown_left = 0.0
 	changed.emit()
@@ -57,28 +64,29 @@ func _process(delta: float) -> void:
 
 
 ## Fires one shot if the gun is ready. An empty magazine starts a reload instead.
-## Returns true if a bullet was fired.
+## Returns true if the gun fired.
 func try_fire() -> bool:
 	if is_reloading or _cooldown_left > 0.0:
 		return false
-	if in_magazine == 0:
+	if owned.in_magazine == 0:
 		start_reload()
 		return false
-	in_magazine -= 1
+	owned.in_magazine -= 1
 	_cooldown_left = 1.0 / stats.fire_rate
-	_spawn_bullet()
+	_spawn_bullets()
 	_play_shot_juice()
 	Audio.play_sfx(&"gun_shot")
+	fired.emit(stats)
 	changed.emit()
-	if in_magazine == 0:
+	if owned.in_magazine == 0:
 		start_reload()
 	return true
 
 
 ## Starts a reload unless the magazine is full or there is no ammo left to load.
 func start_reload() -> void:
-	var has_ammo := stats.infinite_reserve or reserve > 0
-	if is_reloading or in_magazine == stats.magazine_size or not has_ammo:
+	var has_ammo := stats.infinite_reserve or owned.reserve > 0
+	if is_reloading or owned.in_magazine == stats.magazine_size or not has_ammo:
 		return
 	is_reloading = true
 	_reload_left = stats.reload_time
@@ -87,21 +95,28 @@ func start_reload() -> void:
 
 
 func _finish_reload() -> void:
-	var missing := stats.magazine_size - in_magazine
-	var loaded := missing if stats.infinite_reserve else mini(missing, reserve)
-	in_magazine += loaded
+	var missing := stats.magazine_size - owned.in_magazine
+	var loaded := missing if stats.infinite_reserve else mini(missing, owned.reserve)
+	owned.in_magazine += loaded
 	if not stats.infinite_reserve:
-		reserve -= loaded
+		owned.reserve -= loaded
 	is_reloading = false
 	changed.emit()
 
 
-func _spawn_bullet() -> void:
-	var bullet: PlayerBullet = BULLET.instantiate()
-	bullet.global_position = _muzzle.global_position
+## Spawns one bullet per pellet, fanned out evenly over the gun's spread.
+func _spawn_bullets() -> void:
 	# The gun's x axis points where it aims, even when it is flipped for aiming left.
-	bullet.setup(global_transform.x.normalized(), stats.damage)
-	get_tree().current_scene.add_child(bullet)
+	var aim := global_transform.x.normalized()
+	var spread := deg_to_rad(stats.spread_degrees)
+	for i in stats.pellets:
+		var offset := 0.0
+		if stats.pellets > 1:
+			offset = lerpf(-spread / 2.0, spread / 2.0, float(i) / (stats.pellets - 1))
+		var bullet: PlayerBullet = BULLET.instantiate()
+		bullet.global_position = _muzzle.global_position
+		bullet.setup(aim.rotated(offset), stats)
+		get_tree().current_scene.add_child(bullet)
 
 
 func _play_shot_juice() -> void:
@@ -110,7 +125,8 @@ func _play_shot_juice() -> void:
 	get_tree().create_timer(cfg.muzzle_flash_time).timeout.connect(_hide_flash)
 	position = _rest_position - Vector2(cfg.recoil_kick, 0.0)
 	create_tween().tween_property(self, "position", _rest_position, cfg.recoil_return_time)
-	_eject_casing()
+	if stats.ejects_casings:
+		_eject_casing()
 
 
 func _hide_flash() -> void:

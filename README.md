@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map per round, a 10:00 timer, find the secret code before time runs out.
 
-Current version: **0.1.0** (Part A: player, Pop Pistol and a test room).
+Current version: **0.2.0** (Part B: the round loop, all 5 guns, Grunt and Fuse Kin, placeholder maps).
 
 ## Requirements
 
@@ -21,7 +21,16 @@ godot --path .
 Or open the folder in the Godot editor and press F5. On a fresh clone, run the import step from
 the test section once first (the editor does it automatically).
 
-### Controls (Part A)
+To skip the menu and force a map (for testing), add `--map=boss`, `--map=maze` or `--map=arena`:
+
+```sh
+godot --path . --map=arena
+```
+
+The maps are placeholder rooms until parts C to E: each has a gun chest, a few Grunt and Fuse Kin,
+and the secret code somewhere far from the start.
+
+### Controls
 
 | Action | Input |
 |---|---|
@@ -30,6 +39,18 @@ the test section once first (the editor does it automatically).
 | Shoot (hold for auto-fire) | Left mouse button |
 | Dodge roll | Space or right mouse button |
 | Reload | R |
+| Switch gun | Mouse wheel, or 1 / 2 / 3 |
+| Open a chest (hold), take a gun | E |
+| Smoke bomb (clears enemy bullets on screen) | Q |
+| Pause | Esc |
+| Debug overlay | F3 |
+
+### Run log
+
+Every finished round adds a line to `runs.csv` in Godot's user folder
+(on macOS `~/Library/Application Support/Godot/app_userdata/Escape Boom/runs.csv`, on Windows
+`%APPDATA%\Godot\app_userdata\Escape Boom\runs.csv`). Columns: date, map, result
+(win/death/timeout), seconds used, hearts lost, times trapped, gun used most.
 
 ## Run the tests
 

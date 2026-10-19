@@ -129,6 +129,37 @@ PLAYER_BULLET = [
     ".AAAA.",
 ]
 
+# Gungeon-style enemy bullet: big, round, bright outline so it reads on the dark floor.
+ENEMY_BULLET = [
+    "..OOOO..",
+    ".ORRRRO.",
+    "ORROORRO",
+    "ORROORRO",
+    "ORRRRRRO",
+    "ORRRRRRO",
+    ".ORRRRO.",
+    "..OOOO..",
+]
+
+# Fuse Launcher rocket, pointing right.
+ROCKET = [
+    ".AAAAA..",
+    "AMRRRRA.",
+    "ABRRRROA",
+    "AMRRRRA.",
+    ".AAAAA..",
+]
+
+# Gold Detonator bullet: brass with a teal core.
+GOLD_BULLET = [
+    ".AAAA.",
+    "ABBBBA",
+    "ABTTBA",
+    "ABTTBA",
+    "ABBBBA",
+    ".AAAA.",
+]
+
 SHELL_CASING = [
     "OBBM",
     "BBBM",
@@ -186,6 +217,9 @@ def main() -> None:
     draw_atlas(TILES).save(GAME_DIR / "tiles.png")
     sprites = {
         "bullet_player": PLAYER_BULLET,
+        "bullet_enemy": ENEMY_BULLET,
+        "bullet_rocket": ROCKET,
+        "bullet_gold": GOLD_BULLET,
         "shell_casing": SHELL_CASING,
         "muzzle_flash": MUZZLE_FLASH,
         "hand": HAND,

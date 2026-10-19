@@ -1,7 +1,35 @@
 ## All text the player sees, kept in one place so it can be translated later.
 class_name Strings
 
+const GAME_TITLE := "ESCAPE BOOM"
+const PLAY := "Play"
+const QUIT := "Quit"
+const PAUSED := "Paused"
+const RESUME := "Resume"
+const RESTART_ROUND := "Restart round"
+const MENU := "Menu"
+const PLAY_AGAIN := "Play again"
+
+const WIN_TITLE := "ESCAPED!"
+const SECRET_CODE := "Secret code"
+## Time used, for example "Time 5:42".
+const TIME_USED_FORMAT := "Time %s"
+const LOSE_TITLE := "BOOM"
+const REASON_TIMEOUT := "Out of time"
+const REASON_DEATH := "You died"
+
+const MAP_NAMES := {
+	&"boss": "Boss Chamber",
+	&"maze": "Labyrinth",
+	&"arena": "Enemy Arena",
+}
+
 const INFINITE_AMMO := "∞"
 ## Magazine count and reserve, for example "8 / ∞".
 const AMMO_FORMAT := "%d / %s"
 const RELOADING := "Reloading"
+## Shown above chests and guns on the floor.
+const INTERACT_PROMPT := "E"
+
+## F3 overlay: FPS, map, seconds left, player position, enemy count.
+const DEBUG_FORMAT := "FPS %d\nMap %s\nTime left %.1f s\nPlayer %d, %d\nEnemies %d"

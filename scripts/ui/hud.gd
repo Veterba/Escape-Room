@@ -1,39 +1,85 @@
-## The in-game HUD: hearts top-left; gun, ammo and smoke bombs top-right.
+## The in-game HUD: hearts top-left; the timer top-centre (red and pulsing in the last minute);
+## gun, ammo and smoke bombs top-right; the map name for a moment at the start.
 class_name Hud
 extends CanvasLayer
 
 const HEART_TEXTURE := preload("res://art/game/item_heart.png")
+const TIMER_COLOR := Color("#F0B43C")
+const TIMER_WARNING_COLOR := Color("#E0403A")
+## A lost heart is drawn as a dark shadow.
+const LOST_HEART_TINT := Color(0.15, 0.12, 0.2, 0.8)
+## Timer pulses per second and how much it grows (0.15 = 15 %) in the last minute.
+const PULSE_RATE := 2.0
+const PULSE_SIZE := 0.15
+## Seconds the map name takes to fade out.
+const MAP_NAME_FADE_TIME := 0.4
 
-var _gun: Gun
+var _player: Player
+var _timer: RoundTimer
+var _pulse_time := 0.0
 
 @onready var _hearts: HBoxContainer = $Root/Hearts
+@onready var _timer_label: Label = $Root/TimerLabel
+@onready var _map_name: Label = $Root/MapName
 @onready var _gun_icon: TextureRect = $Root/Loadout/Row/GunIcon
 @onready var _ammo_label: Label = $Root/Loadout/Row/AmmoLabel
 @onready var _smoke_label: Label = $Root/Loadout/Row/SmokeLabel
 
 
-## Connects the HUD to the player it shows.
-func bind(player: Player) -> void:
-	_gun = player.gun
-	_gun.changed.connect(_refresh_gun)
+## Connects the HUD to the player and timer it shows.
+func bind(player: Player, timer: RoundTimer, map_id: StringName) -> void:
+	_player = player
+	_timer = timer
+	player.gun.changed.connect(_refresh_gun)
+	player.hearts_changed.connect(_show_hearts)
+	player.smoke_bombs_changed.connect(_show_smoke_bombs)
 	_refresh_gun()
 	_show_hearts(player.hearts)
-	_smoke_label.text = str(player.smoke_bombs)
+	_show_smoke_bombs(player.smoke_bombs)
+	_show_map_name(Strings.MAP_NAMES[map_id])
+
+
+func _process(delta: float) -> void:
+	if _timer == null:
+		return
+	_timer_label.text = RoundTimer.format(ceili(_timer.time_left))
+	_timer_label.pivot_offset = _timer_label.size / 2.0
+	if _timer.time_left <= Config.balance.timer_warning_time:
+		_pulse_time += delta
+		_timer_label.modulate = TIMER_WARNING_COLOR
+		_timer_label.scale = Vector2.ONE * (1.0 + PULSE_SIZE * absf(sin(_pulse_time * PULSE_RATE * PI)))
+	else:
+		_timer_label.modulate = TIMER_COLOR
+		_timer_label.scale = Vector2.ONE
 
 
 func _show_hearts(count: int) -> void:
 	for child in _hearts.get_children():
 		child.queue_free()
-	for i in count:
+	for i in Config.balance.player_hearts:
 		var heart := TextureRect.new()
 		heart.texture = HEART_TEXTURE
+		heart.modulate = Color.WHITE if i < count else LOST_HEART_TINT
 		_hearts.add_child(heart)
 
 
+func _show_smoke_bombs(count: int) -> void:
+	_smoke_label.text = str(count)
+
+
+func _show_map_name(map_name: String) -> void:
+	_map_name.text = map_name
+	_map_name.modulate.a = 1.0
+	var fade := create_tween()
+	fade.tween_interval(Config.balance.map_name_show_time)
+	fade.tween_property(_map_name, "modulate:a", 0.0, MAP_NAME_FADE_TIME)
+
+
 func _refresh_gun() -> void:
-	_gun_icon.texture = _gun.stats.texture
-	if _gun.is_reloading:
+	var gun := _player.gun
+	_gun_icon.texture = gun.stats.texture
+	if gun.is_reloading:
 		_ammo_label.text = Strings.RELOADING
 		return
-	var reserve := Strings.INFINITE_AMMO if _gun.stats.infinite_reserve else str(_gun.reserve)
-	_ammo_label.text = Strings.AMMO_FORMAT % [_gun.in_magazine, reserve]
+	var reserve := Strings.INFINITE_AMMO if gun.stats.infinite_reserve else str(gun.reserve)
+	_ammo_label.text = Strings.AMMO_FORMAT % [gun.in_magazine, reserve]

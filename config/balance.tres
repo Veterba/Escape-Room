@@ -1,12 +1,21 @@
-[gd_resource type="Resource" script_class="BalanceConfig" load_steps=5 format=3]
+[gd_resource type="Resource" script_class="BalanceConfig" load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://config/balance_config.gd" id="1_balance"]
 [ext_resource type="Script" path="res://config/gun_stats.gd" id="2_gun_stats"]
 [ext_resource type="Texture2D" path="res://art/game/gun_pop_pistol.png" id="3_pop_pistol"]
+[ext_resource type="Texture2D" path="res://art/game/gun_brass_revolver.png" id="4_brass_revolver"]
+[ext_resource type="Texture2D" path="res://art/game/gun_scattershot.png" id="5_scattershot"]
+[ext_resource type="Texture2D" path="res://art/game/gun_fuse_launcher.png" id="6_fuse_launcher"]
+[ext_resource type="Texture2D" path="res://art/game/gun_gold_detonator.png" id="7_gold_detonator"]
+[ext_resource type="Texture2D" path="res://art/game/bullet_player.png" id="8_bullet"]
+[ext_resource type="Texture2D" path="res://art/game/bullet_rocket.png" id="9_rocket"]
+[ext_resource type="Texture2D" path="res://art/game/bullet_gold.png" id="10_gold"]
 
 [sub_resource type="Resource" id="GunStats_pop_pistol"]
 script = ExtResource("2_gun_stats")
+id = &"pop_pistol"
 texture = ExtResource("3_pop_pistol")
+bullet_texture = ExtResource("8_bullet")
 grip = Vector2(10, 10)
 muzzle = Vector2(25, 4)
 eject = Vector2(14, 2)
@@ -17,20 +26,120 @@ reserve_ammo = 0
 infinite_reserve = true
 reload_time = 1.0
 
+[sub_resource type="Resource" id="GunStats_brass_revolver"]
+script = ExtResource("2_gun_stats")
+id = &"brass_revolver"
+texture = ExtResource("4_brass_revolver")
+bullet_texture = ExtResource("8_bullet")
+grip = Vector2(7, 9)
+muzzle = Vector2(36, 3)
+eject = Vector2(14, 3)
+damage = 3
+fire_rate = 2.0
+magazine_size = 6
+reserve_ammo = 60
+reload_time = 1.4
+chest_weight = 50.0
+
+[sub_resource type="Resource" id="GunStats_scattershot"]
+script = ExtResource("2_gun_stats")
+id = &"scattershot"
+texture = ExtResource("5_scattershot")
+bullet_texture = ExtResource("8_bullet")
+grip = Vector2(18, 11)
+muzzle = Vector2(56, 4)
+eject = Vector2(21, 2)
+damage = 1
+fire_rate = 1.2
+magazine_size = 4
+reserve_ammo = 40
+reload_time = 1.6
+pellets = 6
+spread_degrees = 30.0
+chest_weight = 30.0
+
+[sub_resource type="Resource" id="GunStats_fuse_launcher"]
+script = ExtResource("2_gun_stats")
+id = &"fuse_launcher"
+texture = ExtResource("6_fuse_launcher")
+bullet_texture = ExtResource("9_rocket")
+grip = Vector2(16, 16)
+muzzle = Vector2(57, 10)
+eject = Vector2(5, 9)
+ejects_casings = false
+damage = 8
+fire_rate = 0.8
+magazine_size = 2
+reserve_ammo = 12
+reload_time = 2.0
+blast_radius = 40.0
+blast_hurts_player = true
+chest_weight = 15.0
+
+[sub_resource type="Resource" id="GunStats_gold_detonator"]
+script = ExtResource("2_gun_stats")
+id = &"gold_detonator"
+texture = ExtResource("7_gold_detonator")
+bullet_texture = ExtResource("10_gold")
+grip = Vector2(11, 13)
+muzzle = Vector2(45, 7)
+eject = Vector2(25, 4)
+damage = 3
+fire_rate = 4.0
+magazine_size = 12
+reserve_ammo = 120
+reload_time = 1.2
+blast_radius = 24.0
+chest_weight = 5.0
+
 [resource]
 script = ExtResource("1_balance")
+round_length = 600.0
+timer_warning_time = 60.0
+map_name_show_time = 2.0
+end_screen_delay = 0.8
 player_hearts = 3
 player_move_speed = 110.0
+hit_invulnerable_time = 1.0
+hit_blink_rate = 12.0
 smoke_bombs_start = 1
+smoke_bombs_max = 2
+interact_range = 24.0
 roll_duration = 0.45
 roll_distance = 70.0
 roll_invulnerable_time = 0.35
 roll_cooldown = 0.6
 player_bullet_speed = 300.0
 pop_pistol = SubResource("GunStats_pop_pistol")
+brass_revolver = SubResource("GunStats_brass_revolver")
+scattershot = SubResource("GunStats_scattershot")
+fuse_launcher = SubResource("GunStats_fuse_launcher")
+gold_detonator = SubResource("GunStats_gold_detonator")
+gun_slots = 3
+gun_chest_open_time = 0.5
+ammo_drop_chance = 0.1
+heart_drop_chance = 0.05
+ammo_box_refill = 0.5
+enemy_knockback_speed = 90.0
+player_knockback_speed = 120.0
+knockback_decay = 900.0
+grunt_hp = 5
+grunt_speed = 50.0
+grunt_stop_distance = 120.0
+grunt_fire_interval = 1.5
+grunt_bullet_speed = 120.0
+fuse_hp = 3
+fuse_speed = 90.0
+fuse_trigger_distance = 40.0
+fuse_time = 1.2
+fuse_blast_radius = 36.0
+fuse_blink_rate_start = 3.0
+fuse_blink_rate_end = 20.0
 camera_smoothing_speed = 8.0
 screen_shake_enabled = true
 screen_shake_decay = 30.0
+hit_shake = 3.0
+explosion_shake = 4.0
 walk_bob_height = 2.0
 walk_step_rate = 6.0
 footstep_squash = 0.12

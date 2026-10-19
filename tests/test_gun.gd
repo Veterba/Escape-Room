@@ -1,14 +1,18 @@
-## Tests for the Pop Pistol: fire rate, magazine, automatic and manual reload, infinite reserve.
+## Tests for guns: fire rate, magazine, automatic and manual reload, pellets.
 extends TestCase
 
 const GUN := preload("res://scenes/guns/gun.tscn")
 
 
-func _make_pistol() -> Gun:
+func _make_gun(stats: GunStats) -> Gun:
 	var gun: Gun = GUN.instantiate()
 	world.add_child(gun)
-	gun.equip(Config.balance.pop_pistol)
+	gun.equip(OwnedGun.new(stats))
 	return gun
+
+
+func _make_pistol() -> Gun:
+	return _make_gun(Config.balance.pop_pistol)
 
 
 func _step(gun: Gun, seconds: float) -> void:
@@ -45,3 +49,18 @@ func test_manual_reload_only_when_not_full() -> void:
 	gun.start_reload()
 	assert_true(gun.is_reloading, "reload starts after one shot")
 	assert_true(not gun.try_fire(), "cannot shoot while reloading")
+
+
+func test_scattershot_fires_six_pellets_per_shot() -> void:
+	_make_gun(Config.balance.scattershot).try_fire()
+	var bullets := world.get_children().filter(func(node: Node) -> bool: return node is PlayerBullet)
+	assert_eq(bullets.size(), 6, "pellets per shot")
+
+
+func test_reload_takes_ammo_from_the_reserve() -> void:
+	var gun := _make_gun(Config.balance.brass_revolver)
+	gun.try_fire()
+	gun.start_reload()
+	_step(gun, gun.stats.reload_time)
+	assert_eq(gun.in_magazine, gun.stats.magazine_size, "magazine refilled")
+	assert_eq(gun.reserve, gun.stats.reserve_ammo - 1, "one bullet taken from the reserve")

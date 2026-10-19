@@ -1,0 +1,89 @@
+## Base for every enemy: hit points, hit flash and knockback, pathfinding towards a point,
+## line of sight, shooting, and the death puff with a chance of a drop.
+class_name Enemy
+extends CharacterBody2D
+
+const ENEMY_BULLET := preload("res://scenes/enemies/enemy_bullet.tscn")
+## Enemies look and shoot from this height above their feet.
+const EYE_OFFSET := Vector2(0, -10)
+## Physics layer 1: walls. Only walls block line of sight.
+const WALL_MASK := 1
+
+var hp := 1
+var _knockback := Vector2.ZERO
+var _dead := false
+
+@onready var body: AnimatedSprite2D = $Body
+@onready var juice: Juice = $Juice
+@onready var _nav: NavigationAgent2D = $Nav
+
+
+## The player, or null if there is none or they are dead.
+func target_player() -> Player:
+	var player := get_tree().get_first_node_in_group(&"player") as Player
+	if player and player.state != Player.State.DEAD:
+		return player
+	return null
+
+
+## Loses `amount` hit points with a white flash and a push along `direction`.
+func take_damage(amount: int, direction: Vector2) -> void:
+	if _dead:
+		return
+	hp -= amount
+	juice.hit_flash()
+	_knockback = direction.normalized() * Config.balance.enemy_knockback_speed
+	if hp <= 0:
+		die()
+
+
+## Death puff, maybe a drop, and gone.
+func die() -> void:
+	_dead = true
+	juice.spawn_death_puff()
+	_drop_loot()
+	Events.enemy_died.emit(self)
+	Audio.play_sfx(&"enemy_die")
+	queue_free()
+
+
+## Velocity that walks towards `point` along the navigation path, around walls.
+func path_velocity(point: Vector2, speed: float) -> Vector2:
+	_nav.target_position = point
+	if _nav.is_navigation_finished():
+		return Vector2.ZERO
+	return global_position.direction_to(_nav.get_next_path_position()) * speed
+
+
+## Moves with `desired` velocity plus any knockback, and animates walking.
+func move(desired: Vector2, delta: float) -> void:
+	velocity = desired + _knockback
+	_knockback = _knockback.move_toward(Vector2.ZERO, Config.balance.knockback_decay * delta)
+	move_and_slide()
+	var player := target_player()
+	if player:
+		body.flip_h = player.global_position.x < global_position.x
+	body.play(&"walk" if desired != Vector2.ZERO else &"idle")
+	juice.update_walk(delta, desired != Vector2.ZERO)
+
+
+## True if no wall is between this enemy's eyes and `point`.
+func can_see(point: Vector2) -> bool:
+	var query := PhysicsRayQueryParameters2D.create(global_position + EYE_OFFSET, point, WALL_MASK)
+	return get_world_2d().direct_space_state.intersect_ray(query).is_empty()
+
+
+func shoot(direction: Vector2, speed: float) -> void:
+	var bullet: EnemyBullet = ENEMY_BULLET.instantiate()
+	bullet.global_position = global_position + EYE_OFFSET
+	bullet.setup(direction, speed)
+	get_tree().current_scene.add_child(bullet)
+	Audio.play_sfx(&"enemy_shot")
+
+
+func _drop_loot() -> void:
+	var drop := Loot.roll_enemy_drop(RandomNumberGenerator.new())
+	if drop:
+		var pickup: Node2D = drop.instantiate()
+		pickup.global_position = global_position
+		get_tree().current_scene.add_child.call_deferred(pickup)

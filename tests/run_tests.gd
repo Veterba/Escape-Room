@@ -16,6 +16,10 @@ func _run_all() -> void:
 		if not (file.begins_with("test_") and file.ends_with(".gd")) or file == "test_case.gd":
 			continue
 		var script: GDScript = load(TEST_DIR + file)
+		if script == null or not script.can_instantiate():
+			failed += 1
+			print("  FAIL  %s does not compile (see the error above)" % file)
+			continue
 		for method in script.get_script_method_list():
 			var test_name: String = method["name"]
 			if not test_name.begins_with("test_"):
@@ -39,6 +43,8 @@ func _run_one(script: GDScript, test_name: String) -> Array[String]:
 	root.add_child(test.world)
 	current_scene = test.world  # Bullets, casings and puffs are spawned into the current scene.
 	await test.call(test_name)
+	await process_frame  # Lets deferred calls (sparks, drops) finish before the world is freed.
 	current_scene = null
+	paused = false  # A round that ended may have paused the game.
 	test.world.free()
 	return test.failures

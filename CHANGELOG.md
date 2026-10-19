@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.2.0 — 2026-10-19
+
+### Added
+- Main menu with Play and Quit. Play starts a round on one of the three maps at random.
+- A 10:00 round timer at the top of the screen; it turns red and pulses in the last minute and stops while paused.
+- Win by picking up the secret code; lose when the timer hits 0:00 or the last heart is gone.
+- Win screen with "ESCAPED!", the round's random 4-digit code and the time used; lose screen with "BOOM" and the reason. Both offer Play again (new random map) and Menu.
+- Pause menu on Esc: Resume, Restart round, Menu.
+- Hearts: enemy bullets and blasts cost one heart, followed by 1 s of blinking invulnerability. The dodge roll lets bullets pass through.
+- All five guns: Pop Pistol, Brass Revolver, Scattershot (6 pellets), Fuse Launcher (rockets that can hurt you) and Gold Detonator (exploding bullets). Carry the pistol plus two more and switch with the mouse wheel or 1–3.
+- Gun chests: hold E for half a second to open; they drop a C, B, A or S gun (50/30/15/5 %). Press E on a gun to take it.
+- Grunt Kin, who keep their distance and shoot, and Fuse Kin, who run at you and explode.
+- Dead enemies sometimes drop an ammo box (refills half the reserve) or a heart.
+- Smoke bomb on Q clears every enemy bullet on screen.
+- Placeholder rooms for the Boss Chamber, Labyrinth and Enemy Arena, with the map name shown at the start.
+- `--map=boss|maze|arena` on the command line goes straight to that map.
+- F3 shows a debug overlay: FPS, map, time left, player position and enemy count.
+- Every finished round is written to runs.csv for playtest tuning.
+
+### Removed
+- The Part A test room; the placeholder maps replace it.
+
 ## v0.1.0 — 2026-10-19
 
 ### Added

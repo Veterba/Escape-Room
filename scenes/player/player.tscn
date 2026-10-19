@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_player"]
 [ext_resource type="SpriteFrames" path="res://scenes/player/hero_frames.tres" id="2_frames"]
@@ -6,6 +6,8 @@
 [ext_resource type="Script" path="res://scripts/fx/juice.gd" id="4_juice"]
 [ext_resource type="PackedScene" path="res://scenes/guns/gun.tscn" id="5_gun"]
 [ext_resource type="Script" path="res://scripts/player/game_camera.gd" id="6_camera"]
+[ext_resource type="Script" path="res://scripts/player/gun_inventory.gd" id="7_guns"]
+[ext_resource type="Script" path="res://scripts/player/interactor.gd" id="8_interactor"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_flash"]
 resource_local_to_scene = true
@@ -15,7 +17,10 @@ shader_parameter/flash_amount = 0.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_feet"]
 radius = 5.0
 
-[node name="Player" type="CharacterBody2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_hurtbox"]
+radius = 5.0
+
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 collision_layer = 2
 collision_mask = 1
 motion_mode = 1
@@ -24,6 +29,15 @@ script = ExtResource("1_player")
 [node name="Shape" type="CollisionShape2D" parent="."]
 position = Vector2(0, -4)
 shape = SubResource("CircleShape2D_feet")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 32
+collision_mask = 0
+monitoring = false
+
+[node name="Shape" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -10)
+shape = SubResource("CircleShape2D_hurtbox")
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_flash")
@@ -40,6 +54,12 @@ position = Vector2(0, -5)
 
 [node name="Gun" parent="GunPivot" instance=ExtResource("5_gun")]
 position = Vector2(10, 0)
+
+[node name="Guns" type="Node" parent="."]
+script = ExtResource("7_guns")
+
+[node name="Interactor" type="Node" parent="."]
+script = ExtResource("8_interactor")
 
 [node name="Camera" type="Camera2D" parent="."]
 script = ExtResource("6_camera")

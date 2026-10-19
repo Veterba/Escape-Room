@@ -1,0 +1,34 @@
+## The round timer: counts down from 10:00. It is a normal node, so it stops while the game is paused.
+class_name RoundTimer
+extends Node
+
+signal timed_out
+
+var time_left := 0.0
+## Seconds played this round (for the win screen and the run log).
+var elapsed := 0.0
+var running := false
+
+
+static func format(total_seconds: int) -> String:
+	return "%d:%02d" % [total_seconds / 60, total_seconds % 60]
+
+
+func start(seconds: float) -> void:
+	time_left = seconds
+	elapsed = 0.0
+	running = true
+
+
+func stop() -> void:
+	running = false
+
+
+func _process(delta: float) -> void:
+	if not running:
+		return
+	elapsed += delta
+	time_left = maxf(time_left - delta, 0.0)
+	if time_left == 0.0:
+		running = false
+		timed_out.emit()
