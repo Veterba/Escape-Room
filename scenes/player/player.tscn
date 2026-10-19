@@ -1,0 +1,45 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="1_player"]
+[ext_resource type="SpriteFrames" path="res://scenes/player/hero_frames.tres" id="2_frames"]
+[ext_resource type="Shader" path="res://shaders/hit_flash.gdshader" id="3_flash"]
+[ext_resource type="Script" path="res://scripts/fx/juice.gd" id="4_juice"]
+[ext_resource type="PackedScene" path="res://scenes/guns/gun.tscn" id="5_gun"]
+[ext_resource type="Script" path="res://scripts/player/game_camera.gd" id="6_camera"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_flash"]
+resource_local_to_scene = true
+shader = ExtResource("3_flash")
+shader_parameter/flash_amount = 0.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_feet"]
+radius = 5.0
+
+[node name="Player" type="CharacterBody2D"]
+collision_layer = 2
+collision_mask = 1
+motion_mode = 1
+script = ExtResource("1_player")
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4)
+shape = SubResource("CircleShape2D_feet")
+
+[node name="Body" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_flash")
+position = Vector2(0, -12)
+sprite_frames = ExtResource("2_frames")
+animation = &"idle"
+
+[node name="Juice" type="Node" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("4_juice")
+sprite = NodePath("../Body")
+
+[node name="GunPivot" type="Node2D" parent="."]
+position = Vector2(0, -5)
+
+[node name="Gun" parent="GunPivot" instance=ExtResource("5_gun")]
+position = Vector2(10, 0)
+
+[node name="Camera" type="Camera2D" parent="."]
+script = ExtResource("6_camera")

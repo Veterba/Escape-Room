@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="BalanceConfig" load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://config/balance_config.gd" id="1_balance"]
+[ext_resource type="Script" path="res://config/gun_stats.gd" id="2_gun_stats"]
+[ext_resource type="Texture2D" path="res://art/game/gun_pop_pistol.png" id="3_pop_pistol"]
+
+[sub_resource type="Resource" id="GunStats_pop_pistol"]
+script = ExtResource("2_gun_stats")
+texture = ExtResource("3_pop_pistol")
+grip = Vector2(10, 10)
+muzzle = Vector2(25, 4)
+eject = Vector2(14, 2)
+damage = 1
+fire_rate = 4.0
+magazine_size = 8
+reserve_ammo = 0
+infinite_reserve = true
+reload_time = 1.0
+
+[resource]
+script = ExtResource("1_balance")
+player_hearts = 3
+player_move_speed = 110.0
+smoke_bombs_start = 1
+roll_duration = 0.45
+roll_distance = 70.0
+roll_invulnerable_time = 0.35
+roll_cooldown = 0.6
+player_bullet_speed = 300.0
+pop_pistol = SubResource("GunStats_pop_pistol")
+camera_smoothing_speed = 8.0
+screen_shake_enabled = true
+screen_shake_decay = 30.0
+walk_bob_height = 2.0
+walk_step_rate = 6.0
+footstep_squash = 0.12
+roll_squash = 0.25
+squash_return_time = 0.12
+hit_flash_time = 0.08
+muzzle_flash_time = 0.05
+recoil_kick = 2.0
+recoil_return_time = 0.08
+casing_eject_speed = 50.0
+casing_randomness = 0.3
+casing_eject_lift = 80.0
+casing_gravity = 500.0
+casing_bounciness = 0.4
+casing_bounces = 2
+casing_spin = 18.0

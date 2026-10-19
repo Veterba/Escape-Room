@@ -1,0 +1,10 @@
+# Godot cache and builds
+.godot/
+/build/
+/export/
+
+# Python
+__pycache__/
+
+# macOS
+.DS_Store

@@ -1,0 +1,31 @@
+[gd_resource type="SpriteFrames" load_steps=2 format=3]
+
+[ext_resource type="Texture2D" path="res://art/game/hero.png" id="1_hero"]
+
+[resource]
+animations = [{
+"frames": [{"duration": 1.0, "texture": ExtResource("1_hero")}],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}, {
+"frames": [{"duration": 1.0, "texture": ExtResource("1_hero")}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}, {
+"frames": [{"duration": 1.0, "texture": ExtResource("1_hero")}],
+"loop": false,
+"name": &"roll",
+"speed": 8.0
+}, {
+"frames": [{"duration": 1.0, "texture": ExtResource("1_hero")}],
+"loop": false,
+"name": &"hit",
+"speed": 8.0
+}, {
+"frames": [{"duration": 1.0, "texture": ExtResource("1_hero")}],
+"loop": false,
+"name": &"die",
+"speed": 8.0
+}]
