@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.7.0** (the ASCII TV password menu).
+Current version: **0.8.0** (the hero retexture: Telly).
 
 ## Requirements
 

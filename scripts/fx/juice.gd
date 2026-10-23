@@ -1,4 +1,4 @@
-## Reusable "game feel" for any character: walk bob, footstep squash, roll spin, hit flash, puffs.
+## Reusable "game feel" for any character: walk bob, footstep squash, roll dust, hit flash, puffs.
 ## Add it as a child node and point `sprite` at the character's AnimatedSprite2D.
 class_name Juice
 extends Node
@@ -43,18 +43,11 @@ func squash(amount: float) -> void:
 	_scale_tween.tween_property(sprite, "scale", Vector2.ONE, Config.balance.squash_return_time)
 
 
-## One full spin with a squash, and a dust puff at the start and the end of the roll.
-func play_roll(duration: float, direction: Vector2) -> void:
-	sprite.position = _rest_position
-	_step_phase = 0.0
-	squash(Config.balance.roll_squash)
+## A dust puff at the start of a roll and another one `duration` seconds later, at its end.
+## (The roll itself is drawn frame by frame, without spinning.)
+func play_roll(duration: float) -> void:
 	spawn_dust()
-	var spin := TAU if direction.x >= 0.0 else -TAU
-	sprite.rotation = 0.0
-	var tween := create_tween()
-	tween.tween_property(sprite, "rotation", spin, duration)
-	tween.tween_callback(func() -> void: sprite.rotation = 0.0)
-	tween.tween_callback(spawn_dust)
+	get_tree().create_timer(duration, false).timeout.connect(spawn_dust)
 
 
 ## Turns the sprite white for a moment.

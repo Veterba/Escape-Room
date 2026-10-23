@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.8.0 — 2026-10-23
+
+### Changed
+- The hero is now Telly, a walking TV: idle with blinking and a little breathing dip, walking front and back (the body sinks onto its legs on every step), and his screen is his face.
+- Aiming down or level shows his front, aiming up shows his back; aiming left mirrors him.
+- He holds the gun in one hand at the corner of the box on the aiming side: under the screen in front view, up by the ear (with the gun behind him) in back view. The gun turns around its grip and is never upside down.
+- Shooting: the gun and the hand jump back 3 px, the muzzle kicks up, a 2-frame flash, and he shouts on his screen. Bullets come out of the muzzle.
+- Reloading: the muzzle tips up and back down while a loading bar fills on his screen over the gun's reload time.
+- Getting hit: a white flash, then X eyes. Dying: static, a dark screen, then he falls over; the end screen waits a little longer so you see it.
+- The dodge roll shows only the TV tumbling head over heels with a small hop, no spinning; the timing, distance and invulnerability are the same.
+- The Pop Pistol has a new drawing in the hand.
+
+### Removed
+- The second hand that sat on the gun.
+
 ## v0.7.0 — 2026-10-23
 
 ### Added

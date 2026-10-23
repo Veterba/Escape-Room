@@ -249,17 +249,15 @@ extends Resource
 @export var walk_step_rate: float
 ## How much the sprite squashes on each footstep (0.1 = 10 %).
 @export var footstep_squash: float
-## How much the sprite squashes at the start of a roll.
-@export var roll_squash: float
 ## Seconds for a squash to spring back to normal.
 @export var squash_return_time: float
 ## Seconds the sprite stays white after a hit.
 @export var hit_flash_time: float
 ## Seconds the muzzle flash is visible.
 @export var muzzle_flash_time: float
-## Pixels the gun kicks back on each shot.
+## Pixels the gun and the hand jump back on each shot.
 @export var recoil_kick: float
-## Seconds for the gun to return after the kick.
+## Seconds for the gun and the hand to come back after the kick.
 @export var recoil_return_time: float
 
 @export_group("Shell casings")

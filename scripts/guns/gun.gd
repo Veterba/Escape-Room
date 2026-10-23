@@ -1,5 +1,6 @@
-## The gun in the player's hand: fires bullets, counts ammo, reloads, and plays its own juice
-## (muzzle flash, recoil kick, shell casings). Which gun it is comes from the OwnedGun it holds.
+## The gun in the player's hand: fires bullets from its muzzle, counts ammo, reloads, and plays
+## its own juice (a 2-frame muzzle flash, shell casings). The recoil moves the hand with the gun,
+## so the player does it. Which gun it is comes from the OwnedGun it holds.
 class_name Gun
 extends Node2D
 
@@ -12,6 +13,9 @@ const BULLET := preload("res://scenes/guns/player_bullet.tscn")
 const SHELL_CASING := preload("res://scenes/fx/shell_casing.tscn")
 ## How much casings lean backwards (away from the aim) as they fly out of the gun.
 const EJECT_BACKWARD_TILT := 0.5
+## The muzzle flash: a bigger first frame, then a smaller one.
+const FLASH_BIG := preload("res://art/game/muzzle_flash_big.png")
+const FLASH_SMALL := preload("res://art/game/muzzle_flash_small.png")
 
 ## The character holding the gun. Casings fall to the floor at its feet.
 var holder: Node2D
@@ -30,7 +34,6 @@ var is_reloading := false
 
 var _cooldown_left := 0.0
 var _reload_left := 0.0
-var _rest_position: Vector2
 
 @onready var _sprite: Sprite2D = $Sprite
 @onready var _muzzle: Marker2D = $Muzzle
@@ -39,8 +42,11 @@ var _rest_position: Vector2
 @onready var _sparkles: CPUParticles2D = $Sparkles
 
 
-func _ready() -> void:
-	_rest_position = position
+## How far the reload is, from 0 (just started) to 1 (done); 0 when not reloading.
+func reload_progress() -> float:
+	if not is_reloading:
+		return 0.0
+	return clampf(1.0 - _reload_left / stats.reload_time, 0.0, 1.0)
 
 
 ## Puts `gun` in the hand. Its ammo is kept as it was; a running reload is cancelled.
@@ -123,12 +129,17 @@ func _spawn_bullets() -> void:
 
 func _play_shot_juice() -> void:
 	var cfg := Config.balance
+	_flash.texture = FLASH_BIG
 	_flash.visible = true
+	get_tree().create_timer(cfg.muzzle_flash_time / 2.0).timeout.connect(_shrink_flash)
 	get_tree().create_timer(cfg.muzzle_flash_time).timeout.connect(_hide_flash)
-	position = _rest_position - Vector2(cfg.recoil_kick, 0.0)
-	create_tween().tween_property(self, "position", _rest_position, cfg.recoil_return_time)
 	if stats.ejects_casings:
 		_eject_casing()
+
+
+func _shrink_flash() -> void:
+	if is_instance_valid(_flash):
+		_flash.texture = FLASH_SMALL
 
 
 func _hide_flash() -> void:

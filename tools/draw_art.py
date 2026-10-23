@@ -1,6 +1,7 @@
 """Draws the art we make ourselves (tiles, bullets, casings, flashes, hands, UI frames) into art/game/.
 
-Every sprite is a grid of characters, one per pixel, using only the palette from file 25.
+Every sprite is a grid of characters, one per pixel, using the palette from file 25 (the hero's
+hand and muzzle flash use the approved hero palette from the retexture spec).
 Re-runnable: run `python3 tools/draw_art.py` from the repo root.
 """
 from pathlib import Path
@@ -18,6 +19,12 @@ PALETTE = {
     "M": (0x4A, 0x42, 0x58, 255),  # mortar
     "S": (0x2C, 0x26, 0x36, 255),  # stone
     "A": (0x0B, 0x08, 0x10, 255),  # abyss, outlines and background
+    # The hero's palette (retexture spec), for his hand and muzzle flash.
+    "k": (0x00, 0x00, 0x00, 255),  # outline
+    "t": (0xC0, 0xAD, 0x7E, 255),  # body tan
+    "h": (0xFF, 0xFE, 0xD2, 255),  # highlight
+    "y": (0xFF, 0xFF, 0x81, 255),  # face yellow
+    "l": (0xFF, 0xF7, 0xC2, 255),  # flash core
 }
 
 # 16x16 tiles. The tile set atlas is these tiles side by side, in the order of TILES below.
@@ -268,15 +275,6 @@ GOLD_BULLET = [
 
 # Guns as held in the hand, 10-16 px long, pointing right with the grip at the bottom left.
 # The big drawings in art/source/ are only used as icons.
-HELD_POP_PISTOL = [
-    "AAAAAAAAA.",
-    "AOOOOOOOOA",
-    "AMMMMMMMMA",
-    "AMMAAAAAA.",
-    "AMMA......",
-    "AAAA......",
-]
-
 HELD_BRASS_REVOLVER = [
     ".AAA........",
     "AMMMAAAAAAA.",
@@ -320,21 +318,30 @@ SHELL_CASING = [
     "BBBM",
 ]
 
-MUZZLE_FLASH = [
-    "O..B..O",
-    ".OBBBO.",
-    ".BBOBB.",
-    "BBOOOBB",
-    ".BBOBB.",
-    ".OBBBO.",
-    "O..B..O",
+# The muzzle flash, two frames: the first is bigger. Drawn pointing right; its left edge sits one
+# pixel past the muzzle, its middle row on the muzzle.
+MUZZLE_FLASH_BIG = [
+    ".y...",
+    "lll.y",
+    "llly.",
+    "lll.y",
+    ".y...",
 ]
 
+MUZZLE_FLASH_SMALL = [
+    ".y...",
+    "lll..",
+    "llly.",
+    "lll..",
+    ".y...",
+]
+
+# The hero's one hand: a small tan fist on the gun's grip.
 HAND = [
-    ".AA.",
-    "AOOA",
-    "AOOA",
-    ".AA.",
+    "kkkk",
+    "khtk",
+    "kttk",
+    "kkkk",
 ]
 
 # A 9-slice frame for HUD panels: 3 px margins on every side.
@@ -381,12 +388,12 @@ def main() -> None:
         "door": DOOR,
         "exit_hatch": EXIT_HATCH,
         "shell_casing": SHELL_CASING,
-        "held_pop_pistol": HELD_POP_PISTOL,
         "held_brass_revolver": HELD_BRASS_REVOLVER,
         "held_scattershot": HELD_SCATTERSHOT,
         "held_fuse_launcher": HELD_FUSE_LAUNCHER,
         "held_gold_detonator": HELD_GOLD_DETONATOR,
-        "muzzle_flash": MUZZLE_FLASH,
+        "muzzle_flash_big": MUZZLE_FLASH_BIG,
+        "muzzle_flash_small": MUZZLE_FLASH_SMALL,
         "hand": HAND,
         "ui_panel": UI_PANEL,
     }

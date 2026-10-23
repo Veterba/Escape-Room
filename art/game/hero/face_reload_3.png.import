@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7x3kerswubov"
-path="res://.godot/imported/muzzle_flash.png-942d0d8e3349f342cec87c50f3e54619.ctex"
+uid="uid://cky56avl4dbif"
+path="res://.godot/imported/face_reload_3.png-23889e2d441d5712b62709c8591e1206.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/game/muzzle_flash.png"
-dest_files=["res://.godot/imported/muzzle_flash.png-942d0d8e3349f342cec87c50f3e54619.ctex"]
+source_file="res://art/game/hero/face_reload_3.png"
+dest_files=["res://.godot/imported/face_reload_3.png-23889e2d441d5712b62709c8591e1206.ctex"]
 
 [params]
 

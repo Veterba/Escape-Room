@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="HeroRig" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://config/hero_rig.gd" id="1_rig"]
+[ext_resource type="Texture2D" path="res://art/game/hero/face_shout.png" id="2_shout"]
+[ext_resource type="Texture2D" path="res://art/game/hero/face_hurt.png" id="3_hurt"]
+[ext_resource type="Texture2D" path="res://art/game/hero/face_reload_0.png" id="4_reload_0"]
+[ext_resource type="Texture2D" path="res://art/game/hero/face_reload_1.png" id="5_reload_1"]
+[ext_resource type="Texture2D" path="res://art/game/hero/face_reload_2.png" id="6_reload_2"]
+[ext_resource type="Texture2D" path="res://art/game/hero/face_reload_3.png" id="7_reload_3"]
+
+[resource]
+script = ExtResource("1_rig")
+front_hand = Vector2(8, 2)
+back_hand = Vector2(8, -3)
+hand_orbit = Vector2(1, 1.5)
+back_view_below = -0.3
+aim_origin = Vector2(0, -10)
+kick_per_pixel = 0.12
+reload_tip = 1.1
+face_cell = Vector2(8, 6)
+shout_face = ExtResource("2_shout")
+hurt_face = ExtResource("3_hurt")
+reload_faces = Array[Texture2D]([ExtResource("4_reload_0"), ExtResource("5_reload_1"), ExtResource("6_reload_2"), ExtResource("7_reload_3")])
+shout_face_time = 0.16
+hurt_face_time = 0.45
+walk_dip = PackedInt32Array(1, 0, 1, 0)
+roll_hop = 4.0

@@ -1,31 +1,157 @@
-[gd_resource type="SpriteFrames" load_steps=2 format=3]
+[gd_resource type="SpriteFrames" load_steps=25 format=3]
 
-[ext_resource type="Texture2D" path="res://art/game/hero.png" id="1_hero"]
+[ext_resource type="Texture2D" path="res://art/game/hero/idle_0.png" id="1_idle_0"]
+[ext_resource type="Texture2D" path="res://art/game/hero/idle_1.png" id="2_idle_1"]
+[ext_resource type="Texture2D" path="res://art/game/hero/idle_2.png" id="3_idle_2"]
+[ext_resource type="Texture2D" path="res://art/game/hero/idle_back_0.png" id="4_idle_back_0"]
+[ext_resource type="Texture2D" path="res://art/game/hero/idle_back_1.png" id="5_idle_back_1"]
+[ext_resource type="Texture2D" path="res://art/game/hero/walk_front_0.png" id="6_walk_front_0"]
+[ext_resource type="Texture2D" path="res://art/game/hero/walk_front_1.png" id="7_walk_front_1"]
+[ext_resource type="Texture2D" path="res://art/game/hero/walk_front_2.png" id="8_walk_front_2"]
+[ext_resource type="Texture2D" path="res://art/game/hero/walk_front_3.png" id="9_walk_front_3"]
+[ext_resource type="Texture2D" path="res://art/game/hero/walk_back_0.png" id="10_walk_back_0"]
+[ext_resource type="Texture2D" path="res://art/game/hero/walk_back_1.png" id="11_walk_back_1"]
+[ext_resource type="Texture2D" path="res://art/game/hero/walk_back_2.png" id="12_walk_back_2"]
+[ext_resource type="Texture2D" path="res://art/game/hero/walk_back_3.png" id="13_walk_back_3"]
+[ext_resource type="Texture2D" path="res://art/game/hero/roll_0.png" id="14_roll_0"]
+[ext_resource type="Texture2D" path="res://art/game/hero/roll_1.png" id="15_roll_1"]
+[ext_resource type="Texture2D" path="res://art/game/hero/roll_2.png" id="16_roll_2"]
+[ext_resource type="Texture2D" path="res://art/game/hero/roll_3.png" id="17_roll_3"]
+[ext_resource type="Texture2D" path="res://art/game/hero/roll_4.png" id="18_roll_4"]
+[ext_resource type="Texture2D" path="res://art/game/hero/hit_0.png" id="19_hit_0"]
+[ext_resource type="Texture2D" path="res://art/game/hero/hit_1.png" id="20_hit_1"]
+[ext_resource type="Texture2D" path="res://art/game/hero/die_0.png" id="21_die_0"]
+[ext_resource type="Texture2D" path="res://art/game/hero/die_1.png" id="22_die_1"]
+[ext_resource type="Texture2D" path="res://art/game/hero/die_2.png" id="23_die_2"]
+[ext_resource type="Texture2D" path="res://art/game/hero/die_3.png" id="24_die_3"]
 
 [resource]
 animations = [{
-"frames": [{"duration": 1.0, "texture": ExtResource("1_hero")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_idle_0")
+}, {
+"duration": 0.7,
+"texture": ExtResource("2_idle_1")
+}, {
+"duration": 0.72,
+"texture": ExtResource("1_idle_0")
+}, {
+"duration": 0.12,
+"texture": ExtResource("3_idle_2")
+}, {
+"duration": 0.6,
+"texture": ExtResource("1_idle_0")
+}, {
+"duration": 0.7,
+"texture": ExtResource("2_idle_1")
+}, {
+"duration": 0.96,
+"texture": ExtResource("1_idle_0")
+}],
 "loop": true,
 "name": &"idle",
-"speed": 8.0
+"speed": 1.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_hero")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("4_idle_back_0")
+}, {
+"duration": 0.7,
+"texture": ExtResource("5_idle_back_1")
+}, {
+"duration": 1.42,
+"texture": ExtResource("4_idle_back_0")
+}, {
+"duration": 0.7,
+"texture": ExtResource("5_idle_back_1")
+}, {
+"duration": 0.98,
+"texture": ExtResource("4_idle_back_0")
+}],
+"loop": true,
+"name": &"idle_back",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("6_walk_front_0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_walk_front_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_walk_front_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_walk_front_3")
+}],
 "loop": true,
 "name": &"walk",
 "speed": 8.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_hero")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_walk_back_0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_walk_back_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_walk_back_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_walk_back_3")
+}],
+"loop": true,
+"name": &"walk_back",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_roll_0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_roll_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_roll_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_roll_3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("18_roll_4")
+}],
 "loop": false,
 "name": &"roll",
-"speed": 8.0
+"speed": 0.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_hero")}],
+"frames": [{
+"duration": 0.08,
+"texture": ExtResource("19_hit_0")
+}, {
+"duration": 0.37,
+"texture": ExtResource("20_hit_1")
+}],
 "loop": false,
 "name": &"hit",
-"speed": 8.0
+"speed": 1.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_hero")}],
+"frames": [{
+"duration": 0.45,
+"texture": ExtResource("21_die_0")
+}, {
+"duration": 0.45,
+"texture": ExtResource("22_die_1")
+}, {
+"duration": 0.25,
+"texture": ExtResource("23_die_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("24_die_3")
+}],
 "loop": false,
 "name": &"die",
-"speed": 8.0
+"speed": 1.0
 }]

@@ -16,7 +16,6 @@ UPSCALE_FACTOR = 16
 # Characters cut from a screenshot (non-integer scale): shrink to a target height in pixels.
 # Source file prefix -> (output name, target height).
 CHARACTERS = {
-    "01": ("hero", 24),
     "02": ("boss_ammo_wraith", 64),
     "03": ("enemy_grunt_kin", 22),
     "04": ("enemy_officer_kin", 22),
@@ -48,9 +47,32 @@ NATIVE_ART = {
 FLOOR_ITEMS = ["item_secret_code", "item_heart", "item_ammo_box", "item_smoke_bomb", "item_hourglass"]
 FLOOR_ITEM_SHRINK = 2
 
+# The hero, Telly: every approved frame in one sheet, 1 px = 1 game pixel, in 24x24 cells.
+# Each row is one animation: (output name, number of frames), top to bottom.
+HERO_SHEET = "retexture/17_hero_sheet.png"
+HERO_DIR = "hero"
+HERO_CELL = 24
+HERO_ROWS = [
+    ("idle", 3), ("walk_front", 4), ("walk_back", 4), ("roll", 5),
+    ("hit", 2), ("reload", 4), ("shoot", 1), ("die", 4),
+]
+# The screen-face: where the screen's inside is in a cell (left, top, width, height). The faces
+# for shouting, reloading and being hurt are cut from there, so the game can show them on any
+# body frame (also while walking).
+HERO_FACE = (8, 6, 11, 8)
+HERO_FACES = {"shout": ("shoot", 0), "hurt": ("hit", 1),
+              "reload_0": ("reload", 0), "reload_1": ("reload", 1), "reload_2": ("reload", 2), "reload_3": ("reload", 3)}
+# Standing in the back view is not a frame of its own in the sheet: it is the first walk-back
+# frame (both feet down) without its 1 px dip, made by lifting the body back up onto the legs.
+HERO_LEG_ROWS = 3
+# The starting gun as held in the hand, 1 px = 1 game pixel.
+STARTER_GUN_SOURCE = "retexture/18_gun_starter.png"
+STARTER_GUN_OUTPUT = "held_pop_pistol.png"
+
+# Art from the retexture references lives in art/source/retexture/, under its own numbers.
 # The password menu's TV as a character grid (columns x rows). The source file has the trailing
 # spaces of each row cut off, so every row is padded back to the full width.
-MENU_TV_SOURCE = "15_menu_tv_ascii.txt"
+MENU_TV_SOURCE = "retexture/15_menu_tv_ascii.txt"
 MENU_TV_OUTPUT = "menu_tv.txt"
 MENU_TV_SIZE = (89, 68)
 
@@ -86,6 +108,37 @@ def convert_native(source: Path) -> Image.Image:
     return harden_alpha(image.resize(size, Image.NEAREST))
 
 
+def convert_hero() -> None:
+    sheet = Image.open(SOURCE_DIR / HERO_SHEET).convert("RGBA")
+    out_dir = GAME_DIR / HERO_DIR
+    out_dir.mkdir(exist_ok=True)
+    frames = {}
+    for row, (name, count) in enumerate(HERO_ROWS):
+        for i in range(count):
+            box = (i * HERO_CELL, row * HERO_CELL, (i + 1) * HERO_CELL, (row + 1) * HERO_CELL)
+            frames[(name, i)] = sheet.crop(box)
+            frames[(name, i)].save(out_dir / f"{name}_{i}.png")
+    left, top, width, height = HERO_FACE
+    for face, key in HERO_FACES.items():
+        frames[key].crop((left, top, left + width, top + height)).save(out_dir / f"face_{face}.png")
+    frames[("walk_back", 0)].save(out_dir / "idle_back_1.png")
+    out_dir.joinpath("idle_back_0.png").unlink(missing_ok=True)
+    _lift_onto_legs(frames[("walk_back", 0)], frames[("idle", 0)]).save(out_dir / "idle_back_0.png")
+    print(f"{HERO_DIR}/  {sum(count for _, count in HERO_ROWS) + 2} frames and {len(HERO_FACES)} faces")
+
+
+def _lift_onto_legs(dipped: Image.Image, standing_front: Image.Image) -> Image.Image:
+    """The dipped back-view frame with its body 1 px higher. The legs' top row, hidden under the
+    dipped body, is the standing front view's, mirrored (the back view is the front mirrored)."""
+    size = HERO_CELL
+    legs_top = size - HERO_LEG_ROWS
+    lifted = Image.new("RGBA", (size, size))
+    lifted.paste(dipped.crop((0, 1, size, legs_top + 1)), (0, 0))
+    lifted.paste(standing_front.crop((0, legs_top, size, legs_top + 1)).transpose(Image.FLIP_LEFT_RIGHT), (-1, legs_top))
+    lifted.paste(dipped.crop((0, legs_top + 1, size, size)), (0, legs_top + 1))
+    return lifted
+
+
 def convert_menu_tv() -> None:
     width, height = MENU_TV_SIZE
     rows = (SOURCE_DIR / MENU_TV_SOURCE).read_text().split("\n")
@@ -111,6 +164,9 @@ def main() -> None:
             small.save(GAME_DIR / f"floor_{name}.png")
             print(f"floor_{name}.png  {small.width}x{small.height}")
     convert_menu_tv()
+    convert_hero()
+    Image.open(SOURCE_DIR / STARTER_GUN_SOURCE).convert("RGBA").save(GAME_DIR / STARTER_GUN_OUTPUT)
+    print(STARTER_GUN_OUTPUT)
 
 
 if __name__ == "__main__":

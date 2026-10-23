@@ -6,7 +6,7 @@ How Escape Boom is put together. Updated at the end of every part.
 
 | Folder | What is in it |
 |---|---|
-| `art/source/` | Original art copied from the vault. Never used directly (a `.gdignore` hides it from Godot). |
+| `art/source/` | Original art copied from the vault. Never used directly (a `.gdignore` hides it from Godot). The retexture references are in `art/source/retexture/` under their own numbers. |
 | `art/game/` | Game-ready PNGs made by the two scripts in `tools/`, and `menu_tv.txt`, the menu TV's character grid. |
 | `art/fonts/` | JetBrains Mono ExtraBold for the password menu, with its licence (OFL). |
 | `config/` | `balance.tres` (every tunable number) and the scripts that define its fields. |
@@ -58,12 +58,15 @@ Round (scenes/round/round.tscn)               builds the map, decides the result
 │   ├── chests, barrels, doors, enemies, code placed from the text layout
 │   └── Room (DungeonFloor only, one per room) locks fight and boss rooms; their enemies live here
 │       └── ArenaWaves (arena room only)      sends the waves; EnemySpawn effects become enemies
-├── Player (scenes/player/player.tscn)
-│   ├── Body (AnimatedSprite2D)               hero art, animations from hero_frames.tres
+├── Player (scenes/player/player.tscn)        Telly; how he holds the gun and shows faces: config/hero_rig.tres
 │   ├── Hurtbox (Area2D)                      where enemy bullets hit: the middle of the body
+│   ├── Body (AnimatedSprite2D)               the hero frames, from hero_frames.tres
+│   ├── Face (Sprite2D)                       shout, reload bar or X eyes drawn over the screen
 │   ├── Juice                                 shared game-feel component
-│   ├── GunPivot                              rotates towards the mouse
-│   │   └── Gun (scenes/guns/gun.tscn)        the gun in hand: sprite, hand, muzzle, ejection port
+│   ├── Arm                                   at the hand's spot; before Body in the back view
+│   │   ├── GunPivot                          turns the gun around its grip towards the mouse
+│   │   │   └── Gun (scenes/guns/gun.tscn)    the gun in hand: sprite, muzzle, flash, ejection port
+│   │   └── Hand (Sprite2D)                   the one hand, on the grip
 │   ├── Guns (GunInventory)                   the carried guns and their ammo
 │   ├── Interactor                            finds the nearest chest or gun and handles E
 │   └── Camera (GameCamera)
@@ -191,11 +194,21 @@ Round (scenes/round/round.tscn)               builds the map, decides the result
 - **Pausing.** `get_tree().paused = true` stops every normal node, including `RoundTimer`. The
   pause menu and end screen use `process_mode = Always`, so they keep working.
 - **Animations ready for real sheets.** Every character uses an `AnimatedSprite2D` with a
-  `SpriteFrames` resource that has `idle`, `walk`, `roll`, `hit` and `die`. Today each has one
-  frame. Real sheets go into the `.tres` files; the code only calls `play(&"walk")` and so on.
+  `SpriteFrames` resource that has `idle`, `walk`, `roll`, `hit` and `die`. The enemies still have
+  one frame each. Real sheets go into the `.tres` files; the code only calls `play(&"walk")`.
+- **The hero, Telly.** `tools/import_art.py` cuts the approved sheet (`17_hero_sheet.png`, 24x24
+  cells, one animation per row) into `art/game/hero/`, cuts the screen-faces out of it, and makes
+  the standing back view (the first walk-back frame with its 1 px dip lifted). The walk frames
+  already have the dip, so the player does not get the procedural walk bob. Shouting, the reload
+  bar and the X eyes are a `Face` sprite over the screen, so they show on any body frame (also
+  while walking). The view comes from the aim: back view when aiming up, mirrored when aiming
+  left. The `Arm` sits at the rig's front or back hand spot on the aiming side and is drawn
+  before the body in the back view. A shot pushes the arm back and kicks the muzzle; a reload
+  tips it. All these numbers are in `HeroRig` (`config/hero_rig.tres`), not in the script. The
+  roll sets the 5 tumble frames from its progress, so they always fill `roll_duration`.
 - **Juice in one component.** `scripts/fx/juice.gd` (`Juice`) does the walk bob, footstep squash,
-  roll spin, hit flash and puffs for whatever sprite it points at; the player and every enemy use
-  it. Gun juice (muzzle flash, recoil, casings) lives in `Gun`.
+  roll dust, hit flash and puffs for whatever sprite it points at; the player and every enemy use
+  it. The gun's own juice (the 2-frame muzzle flash, casings) lives in `Gun`.
 - **Fake height for casings.** A casing is a 2D node that tracks how high above the floor it is
   and moves its sprite up by that much. That is enough for a top-down bounce without 3D physics.
 - **Draw order with z_index.** Floor tiles are at -10, casings and dust at -5, items on the floor
