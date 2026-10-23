@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.9.0 — 2026-10-23
+
+### Changed
+- New guns in the hand: the Pop Pistol, Brass Revolver, Scattershot, Fuse Launcher and Gold Detonator each have their approved sprite, held by the grip with bullets and the flash at the muzzle. Guns on the floor use the same sprites.
+- The secret code is now a key: it floats up and down above a small shadow, in a soft golden glow, with a glint now and then.
+- Gun chests are weapon cases: a red strip and padlock while locked, a gently pulsing teal strip and a green tick when ready. Opening, the lid lifts, teal light spills out and the chest's gun rises, then drops in front of it.
+- The code chest is a vault in chains: at the unlock wave the chains break and fall and the padlock drops; opening, golden light shines out and the key rises, then drops in front of it.
+- The Enemy Arena's two gun chests stay locked until the code chest unlocks.
+
+### Removed
+- Gun chests no longer change colour with the gun's rarity.
+
 ## v0.8.0 — 2026-10-23
 
 ### Changed

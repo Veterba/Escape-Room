@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.8.0** (the hero retexture: Telly).
+Current version: **0.9.0** (retexture: guns, the key and the chests).
 
 ## Requirements
 
@@ -37,9 +37,10 @@ Every round picks one of three map types at random, and builds it fresh:
 
 - **Enemy Arena:** a floor of 5–6 rooms joined by corridors, with no loading in between. You
   start in a room with one way out. Fight rooms lock their doors until every enemy is dead;
-  chest rooms hold a gun chest whose colour shows the gun's rarity (bone C, teal B, brass A,
-  red S). The last room is the arena (crates and barrels placed fresh each round): survive the
-  waves; the code chest's chains fall off at wave 4, the last one, then hold E on it for 2 s.
+  chest rooms hold a gun chest. The last room is the arena (crates and barrels placed fresh each
+  round): survive the waves; the code chest's chains break at wave 4, the last one, and the
+  arena's two gun chests unlock then too. Hold E on the code chest for 2 s and the key (the
+  secret code) rises out of it.
   5:00 timer.
 - **Labyrinth:** one big dark maze, the start in a corner and the code at the far end. Officer
   Kin handcuff you (mash E to break free), Shade Kin drift through walls, and an hourglass in a

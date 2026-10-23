@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://lygu723wm0cp"
-path="res://.godot/imported/item_code_chest.png-dcdc7355eac10822d2aa2aecec505175.ctex"
+uid="uid://db7va3is0unc7"
+path="res://.godot/imported/gun_chest_ready.png-851fe21c69f56a037541fddddf9ae684.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/game/item_code_chest.png"
-dest_files=["res://.godot/imported/item_code_chest.png-dcdc7355eac10822d2aa2aecec505175.ctex"]
+source_file="res://art/game/chests/gun_chest_ready.png"
+dest_files=["res://.godot/imported/gun_chest_ready.png-851fe21c69f56a037541fddddf9ae684.ctex"]
 
 [params]
 

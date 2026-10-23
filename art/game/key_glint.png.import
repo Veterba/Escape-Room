@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bsu67ecbbcaeh"
-path="res://.godot/imported/chest_chains.png-9402d361c399bcede5dca81fae7246ec.ctex"
+uid="uid://cm5syt7e51b85"
+path="res://.godot/imported/key_glint.png-5431ff95ffc20218ea9d1d36c8eb67b1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/game/chest_chains.png"
-dest_files=["res://.godot/imported/chest_chains.png-9402d361c399bcede5dca81fae7246ec.ctex"]
+source_file="res://art/game/key_glint.png"
+dest_files=["res://.godot/imported/key_glint.png-5431ff95ffc20218ea9d1d36c8eb67b1.ctex"]
 
 [params]
 

@@ -25,6 +25,9 @@ PALETTE = {
     "h": (0xFF, 0xFE, 0xD2, 255),  # highlight
     "y": (0xFF, 0xFF, 0x81, 255),  # face yellow
     "l": (0xFF, 0xF7, 0xC2, 255),  # flash core
+    # The key's glint (approved retexture page).
+    "g": (0xFF, 0xD1, 0x66, 255),  # gold
+    "W": (0xFF, 0xFF, 0xFF, 255),  # white
 }
 
 # 16x16 tiles. The tile set atlas is these tiles side by side, in the order of TILES below.
@@ -241,19 +244,6 @@ EXIT_HATCH = [
     "AAAAAAAAAAAAAAAA",
 ]
 
-# Chains and a padlock across the code chest while it is locked. Same width as the chest art.
-CHEST_CHAINS = [
-    "............AAAA............",
-    "...........AM..MA...........",
-    "...........AM..MA...........",
-    "..........AAAAAAAA..........",
-    "AMMAMMAMMAABBBBBBAAMMAMMAMMA",
-    "MOOMOOMOOMABBAABBAMOOMOOMOOM",
-    "AMMAMMAMMAABBAABBAAMMAMMAMMA",
-    "..........ABBBBBBA..........",
-    "..........AAAAAAAA..........",
-]
-
 # Fuse Launcher rocket, pointing right.
 ROCKET = [
     ".AAAAA..",
@@ -271,46 +261,6 @@ GOLD_BULLET = [
     "ABTTBA",
     "ABBBBA",
     ".AAAA.",
-]
-
-# Guns as held in the hand, 10-16 px long, pointing right with the grip at the bottom left.
-# The big drawings in art/source/ are only used as icons.
-HELD_BRASS_REVOLVER = [
-    ".AAA........",
-    "AMMMAAAAAAA.",
-    "AMOMBBBBBBBA",
-    "AMMMAAAAAAA.",
-    "AASSA.......",
-    ".ASSA.......",
-    ".AAAA.......",
-]
-
-HELD_SCATTERSHOT = [
-    "....AAAAAAAAAA",
-    "AAAAMMOOOOOOOA",
-    "ASSSMMMMMMMMMA",
-    "ASSAAMAAAAAAA.",
-    "AAA.AMA.......",
-    "....AAA.......",
-]
-
-HELD_FUSE_LAUNCHER = [
-    ".AAAAAAAAAAAAAA.",
-    "AORRBORRRRRBORRA",
-    "ARRRBRRRRRRBRRRA",
-    "ASRRBRRRRRRBRRSA",
-    ".AAAAAAAAAAAAAA.",
-    "....ASA.........",
-    "....AAA.........",
-]
-
-HELD_GOLD_DETONATOR = [
-    ".AAAAAAAAAAA.",
-    "AOBBBBBBBBBBA",
-    "ABBTTBBBBBBMA",
-    "AAABBAAAAAAA.",
-    "..ABBA.......",
-    "..AAAA.......",
 ]
 
 SHELL_CASING = [
@@ -334,6 +284,13 @@ MUZZLE_FLASH_SMALL = [
     "llly.",
     "lll..",
     ".y...",
+]
+
+# The glint that runs across the key now and then: a white spark with gold around it.
+KEY_GLINT = [
+    ".g.",
+    "gWg",
+    ".g.",
 ]
 
 # The hero's one hand: a small tan fist on the gun's grip.
@@ -384,17 +341,13 @@ def main() -> None:
         "bullet_gold": GOLD_BULLET,
         "bullet_wing": WING_BULLET,
         "barrel": BARREL,
-        "chest_chains": CHEST_CHAINS,
         "door": DOOR,
         "exit_hatch": EXIT_HATCH,
         "shell_casing": SHELL_CASING,
-        "held_brass_revolver": HELD_BRASS_REVOLVER,
-        "held_scattershot": HELD_SCATTERSHOT,
-        "held_fuse_launcher": HELD_FUSE_LAUNCHER,
-        "held_gold_detonator": HELD_GOLD_DETONATOR,
         "muzzle_flash_big": MUZZLE_FLASH_BIG,
         "muzzle_flash_small": MUZZLE_FLASH_SMALL,
         "hand": HAND,
+        "key_glint": KEY_GLINT,
         "ui_panel": UI_PANEL,
     }
     for name, grid in sprites.items():

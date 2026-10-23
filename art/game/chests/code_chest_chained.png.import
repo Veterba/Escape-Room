@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://crf0g25qd4jos"
-path="res://.godot/imported/floor_item_secret_code.png-414b6370af55a04cc2c6c2695834dec2.ctex"
+uid="uid://cojiokcqwlxhe"
+path="res://.godot/imported/code_chest_chained.png-054025ce735ea25ee4874bc6a7de4af2.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/game/floor_item_secret_code.png"
-dest_files=["res://.godot/imported/floor_item_secret_code.png-414b6370af55a04cc2c6c2695834dec2.ctex"]
+source_file="res://art/game/chests/code_chest_chained.png"
+dest_files=["res://.godot/imported/code_chest_chained.png-054025ce735ea25ee4874bc6a7de4af2.ctex"]
 
 [params]
 

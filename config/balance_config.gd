@@ -135,6 +135,10 @@ extends Resource
 @export var arena_chest_unlock_wave: int
 ## Seconds E must be held to open the code chest.
 @export var code_chest_open_time: float
+## Seconds a chest takes to open (the lid lifts and the gun or key rises out), and the code
+## chest's chains to break and fall.
+@export var chest_open_time: float
+@export var code_chest_unchain_time: float
 ## Crate groups and barrels in the generated arena (placed in mirrored pairs, so even numbers).
 @export var arena_crate_groups: int
 @export var arena_barrels: int

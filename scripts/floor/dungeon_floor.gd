@@ -28,6 +28,12 @@ func _ready() -> void:
 	for room_plan in plan.rooms:
 		if room_plan.parent:
 			room_of[room_plan].parent_room = room_of[room_plan.parent]
+	# The Enemy Arena's gun chests stay locked until the wave that unlocks the code chest.
+	if objective == &"arena":
+		for child in get_children():
+			var chest := child as GunChest
+			if chest and objective_room.rect.has_point(_floor.local_to_map(chest.position)):
+				chest.lock_until_wave(Config.balance.arena_chest_unlock_wave)
 	# The exit stays shut until the boss is dead.
 	for room in rooms:
 		if room.kind == FloorGenerator.Kind.EXIT:

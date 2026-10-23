@@ -6,6 +6,7 @@ const ROUND := preload("res://scenes/round/round.tscn")
 const BARREL := preload("res://scenes/world/barrel.tscn")
 const PLAYER := preload("res://scenes/player/player.tscn")
 const GRUNT := preload("res://scenes/enemies/grunt_kin.tscn")
+const GUN_CHEST := preload("res://scenes/world/gun_chest.tscn")
 const LOG_PATH := "user://test_runs.csv"
 
 
@@ -80,7 +81,9 @@ func test_code_chest_is_chained_until_the_unlock_wave() -> void:
 	assert_true(chest.locked, "still locked before wave %d" % unlock_wave)
 	assert_eq(status.text, "Chest locked: wave %d/%d" % [unlock_wave - 1, unlock_wave], "HUD line while locked")
 	Events.wave_started.emit(unlock_wave)
-	assert_true(chest.can_interact(), "open from wave %d" % unlock_wave)
+	assert_true(not chest.can_interact(), "the chains are still falling")
+	chest._process(Config.balance.code_chest_unchain_time)
+	assert_true(chest.can_interact(), "open from wave %d, once the chains are off" % unlock_wave)
 	assert_eq(status.text, "Chest open!", "HUD line once open")
 
 
@@ -90,6 +93,7 @@ func test_opening_the_code_chest_takes_a_hold_that_a_hit_cancels() -> void:
 	var player := round_node.player
 	var chest := _code_chest(round_node)
 	chest.unlock()
+	chest._process(cfg.code_chest_unchain_time)
 	player.global_position = chest.global_position + Vector2(0, 16)
 	var interactor: Interactor = player.get_node("Interactor")
 
@@ -104,18 +108,47 @@ func test_opening_the_code_chest_takes_a_hold_that_a_hit_cancels() -> void:
 	for i in steps_for(cfg.code_chest_open_time):
 		interactor.update(STEP, player, true)
 	assert_true(not chest.can_interact(), "a full hold opens it")
+	chest._process(cfg.chest_open_time)
+	await wait(CodeChest.DROP_TIME + 0.05)  # The key drops in front of the chest.
 	var dropped_code := false
 	for child in round_node.map.get_children():
 		dropped_code = dropped_code or (child is Pickup and (child as Pickup).kind == Pickup.Kind.CODE)
-	assert_true(dropped_code, "it drops the code")
+	# The player stands where the key lands, so he may already have picked it up and won.
+	assert_true(dropped_code or round_node.result == Round.Result.WIN, "it drops the code")
 
 
-func test_gun_chests_are_coloured_by_rarity() -> void:
+func test_arena_gun_chests_stay_locked_until_the_unlock_wave() -> void:
+	var unlock_wave := Config.balance.arena_chest_unlock_wave
 	var round_node := _make_arena_round()
-	for child in round_node.map.get_children():
-		var chest := child as GunChest
-		if chest:
-			assert_eq(chest.get_node("Sprite").self_modulate, chest._gun.chest_color, "chest colour matches its gun")
+	var dungeon := round_node.map as DungeonFloor
+	var arena_chests: Array[GunChest] = []
+	for child in dungeon.get_children():
+		if child is GunChest and dungeon.room_at(child.global_position) == dungeon.objective_room:
+			arena_chests.append(child)
+	assert_eq(arena_chests.size(), 2, "the arena has 2 gun chests")
+	for chest in arena_chests:
+		assert_eq(chest.state, GunChest.State.LOCKED, "locked at the start")
+	Events.wave_started.emit(unlock_wave)
+	for chest in arena_chests:
+		assert_eq(chest.state, GunChest.State.READY, "ready from wave %d" % unlock_wave)
+
+
+func test_gun_chest_opens_and_drops_its_gun() -> void:
+	var cfg := Config.balance
+	var chest: GunChest = GUN_CHEST.instantiate()
+	world.add_child(chest)
+	assert_true(chest.can_interact(), "a chest outside the arena is ready")
+	chest.interact(null)
+	assert_true(not chest.can_interact(), "opening")
+	chest._process(cfg.chest_open_time)
+	assert_eq(chest.state, GunChest.State.OPEN, "open after chest_open_time")
+	await wait(GunChest.DROP_TIME + 0.05)
+	var dropped: GunPickup = null
+	for child in world.get_children():
+		if child is GunPickup:
+			dropped = child
+	assert_true(dropped != null, "its gun lies in front of it")
+	assert_eq(dropped.owned.stats, chest._gun, "the gun that rose out of it")
 
 
 func test_barrels_hurt_everyone_and_chain_explode() -> void:

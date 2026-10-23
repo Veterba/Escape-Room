@@ -1,25 +1,27 @@
 [gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/world/code_chest.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://art/game/item_code_chest.png" id="2_texture"]
-[ext_resource type="Texture2D" path="res://art/game/chest_chains.png" id="3_chains"]
+[ext_resource type="Texture2D" path="res://art/game/chests/code_chest_chained.png" id="2_texture"]
+[ext_resource type="Texture2D" path="res://art/game/key.png" id="3_key"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_chest"]
-size = Vector2(26, 14)
+size = Vector2(30, 13)
 
 [node name="CodeChest" type="Node2D"]
 script = ExtResource("1_script")
-prompt_height = 16.0
+prompt_height = 10.0
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_texture")
 
-[node name="Chains" type="Sprite2D" parent="."]
-texture = ExtResource("3_chains")
+[node name="RisingKey" type="Sprite2D" parent="."]
+visible = false
+texture = ExtResource("3_key")
+centered = false
 
 [node name="Body" type="StaticBody2D" parent="."]
 collision_mask = 0
 
 [node name="Shape" type="CollisionShape2D" parent="Body"]
-position = Vector2(0, 3)
+position = Vector2(0, 5)
 shape = SubResource("RectangleShape2D_chest")

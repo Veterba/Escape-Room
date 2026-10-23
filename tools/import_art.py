@@ -37,14 +37,13 @@ NATIVE_ART = {
     "16": "item_heart",
     "17": "item_ammo_box",
     "18": "item_smoke_bomb",
-    "19": "item_code_chest",
     "20": "item_hourglass",
     "21": "item_exit_key",
 }
 
 # Items lying on the floor use a half-size copy, so they stay small next to the 24 px hero.
 # The full-size drawings are still used in the HUD.
-FLOOR_ITEMS = ["item_secret_code", "item_heart", "item_ammo_box", "item_smoke_bomb", "item_hourglass"]
+FLOOR_ITEMS = ["item_heart", "item_ammo_box", "item_smoke_bomb", "item_hourglass"]
 FLOOR_ITEM_SHRINK = 2
 
 # The hero, Telly: every approved frame in one sheet, 1 px = 1 game pixel, in 24x24 cells.
@@ -65,9 +64,25 @@ HERO_FACES = {"shout": ("shoot", 0), "hurt": ("hit", 1),
 # Standing in the back view is not a frame of its own in the sheet: it is the first walk-back
 # frame (both feet down) without its 1 px dip, made by lifting the body back up onto the legs.
 HERO_LEG_ROWS = 3
-# The starting gun as held in the hand, 1 px = 1 game pixel.
-STARTER_GUN_SOURCE = "retexture/18_gun_starter.png"
-STARTER_GUN_OUTPUT = "held_pop_pistol.png"
+# The guns as held in the hand, 1 px = 1 game pixel (their grip and muzzle points are in
+# balance.tres).
+HELD_GUNS = ["pop_pistol", "brass_revolver", "scattershot", "fuse_launcher", "gold_detonator"]
+HELD_GUN_DIR = "retexture/42_guns"
+# The secret code item: a key.
+KEY_SOURCE = "retexture/41_key.png"
+KEY_OUTPUT = "key.png"
+# The chests: still pictures and horizontal strips of equal frames, copied as they are into
+# art/game/chests/. The two opening strips also show the item rising out (a revolver, the key);
+# in the game the chest's own gun or key rises instead, so those pixels are taken out (see
+# open_chest_frame below).
+CHEST_DIR = "retexture/40_chests"
+CHEST_OUTPUT_DIR = "chests"
+CHESTS = ["gun_chest_locked", "gun_chest_ready", "gun_chest_open",
+          "code_chest_chained", "code_chest_unchain", "code_chest_open"]
+# Opening strips: (file, frame size, first frame with the item in it). Frame i shows the chest
+# at k = i / (frames - 1) of its opening.
+OPEN_STRIPS = [("gun_chest_open", 30, 4), ("code_chest_open", 34, 3)]
+OUTLINE = (0x07, 0x06, 0x0D, 255)
 
 # Art from the retexture references lives in art/source/retexture/, under its own numbers.
 # The password menu's TV as a character grid (columns x rows). The source file has the trailing
@@ -139,6 +154,80 @@ def _lift_onto_legs(dipped: Image.Image, standing_front: Image.Image) -> Image.I
     return lifted
 
 
+def _hex(color: str, alpha: int = 255) -> tuple:
+    return (int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16), alpha)
+
+
+def open_chest_frame(name: str, k: float) -> Image.Image:
+    """An opening chest at k (0..1) without the item rising out of it, drawn the way the approved
+    page "Escape Boom Station" draws it (rectangles, then a 1 px outline around everything)."""
+    size = 30 if name == "gun_chest_open" else 34
+    image = Image.new("RGBA", (size, size))
+    def rect(x, y, w, h, color):
+        for yy in range(max(y, 0), min(y + h, size)):
+            for xx in range(max(x, 0), min(x + w, size)):
+                image.putpixel((xx, yy), color)
+    lift = round(min(1, k * 1.6) * 6)
+    if name == "gun_chest_open":
+        oy = 10
+        if k > .25:
+            rect(3, oy + 6 - lift, 24, lift + 2, _hex("#74f2e0", round(min(1, (k - .25) * 2) * .55 * 255)))
+        for x, y, w, h, c in [(1, oy + 7, 28, 12, "#26283c"), (1, oy + 7, 28, 1, "#3a3e58"), (2, oy + 9, 26, 8, "#2c2f46"),
+                              (1, oy + 17, 28, 2, "#191a26"), (0, oy + 10, 2, 4, "#585e72"), (28, oy + 10, 2, 4, "#363a4a"),
+                              (3, oy + 19, 4, 1, "#14151f"), (23, oy + 19, 4, 1, "#14151f")]:
+            rect(x, y, w, h, _hex(c))
+        for x, y in [(3, oy + 9), (26, oy + 9), (3, oy + 15), (26, oy + 15)]:
+            rect(x, y, 1, 1, _hex("#585e72"))
+        ly = oy - lift
+        for x, y, w, h, c in [(1, ly, 28, 7, "#3a3e58"), (1, ly, 28, 1, "#6a7090"), (1, ly + 5, 28, 2, "#2b2e45"),
+                              (6, ly + 2, 18, 2, "#30344c"), (2, ly + 6, 26, 1, "#74f2e0"),
+                              (11, oy + 9, 8, 7, "#14151f"), (11, oy + 9, 8, 1, "#0b0b12")]:
+            rect(x, y, w, h, _hex(c))
+        for x, y in [(12, oy + 12), (13, oy + 13), (14, oy + 14), (15, oy + 13), (16, oy + 12), (17, oy + 11)]:
+            rect(x, y, 1, 1, _hex("#68d57e"))
+    else:
+        oy = 12
+        if k > .2:
+            rect(4, oy + 6 - lift, 26, lift + 2, _hex("#ffd166", round(min(1, (k - .2) * 2) * .6 * 255)))
+        ly = oy - lift
+        for x, y, w, h, c in [(2, oy + 7, 30, 13, "#2b2638"), (2, oy + 7, 30, 1, "#4a4260"), (3, oy + 9, 28, 9, "#332d44"),
+                              (2, oy + 18, 30, 2, "#18151f"), (2, oy + 7, 2, 13, "#cd7e1f"), (30, oy + 7, 2, 13, "#6c3912"),
+                              (2, oy + 18, 30, 1, "#6c3912"), (2, ly, 30, 8, "#3d3650"), (2, ly, 30, 1, "#6a6088"),
+                              (2, ly + 6, 30, 2, "#cd7e1f"), (2, ly + 6, 30, 1, "#ffd166"), (14, oy + 9, 6, 7, "#cd7e1f"),
+                              (15, oy + 10, 4, 5, "#ffd166"), (16, oy + 11, 2, 2, "#3a1f0a"), (16, oy + 13, 2, 2, "#3a1f0a")]:
+            rect(x, y, w, h, _hex(c))
+    filled = {(x, y) for y in range(size) for x in range(size) if image.getpixel((x, y))[3] > 0}
+    for y in range(size):
+        for x in range(size):
+            if (x, y) not in filled and any(n in filled for n in [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]):
+                image.putpixel((x, y), OUTLINE)
+    return image
+
+
+def _close(a: tuple, b: tuple) -> bool:
+    return (a[3] == 0 and b[3] == 0) or all(abs(p - q) <= 3 for p, q in zip(a, b))
+
+
+def convert_chests() -> None:
+    out_dir = GAME_DIR / CHEST_OUTPUT_DIR
+    out_dir.mkdir(exist_ok=True)
+    for name in CHESTS:
+        image = Image.open(SOURCE_DIR / CHEST_DIR / f"{name}.png").convert("RGBA")
+        for strip, size, first_item_frame in OPEN_STRIPS:
+            if name != strip:
+                continue
+            frames = image.width // size
+            for i in range(first_item_frame, frames):
+                clean = open_chest_frame(name, i / (frames - 1))
+                for y in range(size):
+                    for x in range(size):
+                        pixel = image.getpixel((i * size + x, y))
+                        if not _close(pixel, clean.getpixel((x, y))):
+                            image.putpixel((i * size + x, y), clean.getpixel((x, y)))
+        image.save(out_dir / f"{name}.png")
+    print(f"{CHEST_OUTPUT_DIR}/  {len(CHESTS)} chest pictures and strips")
+
+
 def convert_menu_tv() -> None:
     width, height = MENU_TV_SIZE
     rows = (SOURCE_DIR / MENU_TV_SOURCE).read_text().split("\n")
@@ -165,8 +254,11 @@ def main() -> None:
             print(f"floor_{name}.png  {small.width}x{small.height}")
     convert_menu_tv()
     convert_hero()
-    Image.open(SOURCE_DIR / STARTER_GUN_SOURCE).convert("RGBA").save(GAME_DIR / STARTER_GUN_OUTPUT)
-    print(STARTER_GUN_OUTPUT)
+    for gun in HELD_GUNS:
+        Image.open(SOURCE_DIR / HELD_GUN_DIR / f"{gun}.png").convert("RGBA").save(GAME_DIR / f"held_{gun}.png")
+    print(f"held_*.png  {len(HELD_GUNS)} guns")
+    Image.open(SOURCE_DIR / KEY_SOURCE).convert("RGBA").save(GAME_DIR / KEY_OUTPUT)
+    convert_chests()
 
 
 if __name__ == "__main__":

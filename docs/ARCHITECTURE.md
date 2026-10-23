@@ -137,8 +137,15 @@ Round (scenes/round/round.tscn)               builds the map, decides the result
 - **Darkness** is a `CanvasModulate` that turns the whole labyrinth almost black, plus a
   `PointLight2D` with a round gradient texture that follows the player. The HUD is on a
   `CanvasLayer`, so it stays bright.
-- **Chest colours.** A gun chest picks its gun when it appears and is tinted with the gun's
-  `chest_color` (C bone, B teal, A brass, S red: Gungeon's chest colours, moved into our palette).
+- **Chests.** A gun chest picks its gun when it appears; it is locked (the Enemy Arena's, until
+  the unlock wave), ready, opening or open, each with its approved picture or strip (a `Sprite2D`
+  with `hframes`). Opening, the strip plays over `chest_open_time` while the chest's own gun rises
+  out of it, then drops in front as the pickup. The code chest goes chained, unchaining (the
+  chains break), ready, opening (the key rises) and open. The exported opening strips had a
+  revolver and the key drawn in, so `import_art.py` redraws those pixels the way the approved page
+  draws the chest without them (`open_chest_frame()`), and the game draws the real item instead.
+- **The key** (`KeyPickup`) is the secret code item: it floats 2 px over a shadow drawn in
+  `_draw()`, with an additive glow sprite and a glint sprite that hops across its top.
 - **Handcuffs.** `Player` has a `TRAPPED` state: no moving, shooting or rolling, and each press
   of E counts down. Touch is checked by the officer (its `Contact` area), the escape by the
   player, who then stuns the officer. `Player.trapped` / `escaped` signals drive the HUD and the
