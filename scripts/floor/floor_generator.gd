@@ -5,7 +5,7 @@
 class_name FloorGenerator
 extends RefCounted
 
-enum Kind { START, FIGHT, CHEST, OBJECTIVE }
+enum Kind { START, FIGHT, CHEST, OBJECTIVE, EXIT }
 
 ## One room of the floor.
 class RoomPlan:
@@ -36,10 +36,10 @@ var layout: PackedStringArray
 var _grid: Array[PackedStringArray] = []
 
 
-## `objective_size` is the size in tiles of the objective room. Its layout is stamped later with
-## stamp_room(), because the maze needs to know which side its door is on.
-func _init(rng: RandomNumberGenerator, objective_size: Vector2i) -> void:
-	_make_tree(rng)
+## `objective_size` is the size in tiles of the objective room; its layout is stamped later with
+## stamp_room(). With `with_exit`, an exit room is added behind the objective (the boss floor).
+func _init(rng: RandomNumberGenerator, objective_size: Vector2i, with_exit := false) -> void:
+	_make_tree(rng, with_exit)
 	_pick_kinds(rng)
 	for room in rooms:
 		if room.kind == Kind.OBJECTIVE:
@@ -56,11 +56,6 @@ func _init(rng: RandomNumberGenerator, objective_size: Vector2i) -> void:
 			_dig_corridor(room.parent, room)
 
 
-## The direction from the objective room to the room it is joined to (where its door is).
-func objective_door_side() -> Vector2i:
-	return objective.parent.grid - objective.grid
-
-
 ## Copies `room_layout` into the floor at the room's place, keeping the door tiles already dug.
 func stamp_room(room: RoomPlan, room_layout: PackedStringArray) -> void:
 	room.layout = room_layout
@@ -72,9 +67,10 @@ func stamp_room(room: RoomPlan, room_layout: PackedStringArray) -> void:
 	_write_layout()
 
 
-## Start at the middle, then keep adding a room next to a random room until the floor has all
-## but one room; the objective is added last, next to the deepest room that has space.
-func _make_tree(rng: RandomNumberGenerator) -> void:
+## Start at the middle, then keep adding a room next to a random room (never a second one next
+## to the start) until the floor has all but one room. The objective is added last, next to the
+## deepest room that has space (and space behind it for the exit room, if there is one).
+func _make_tree(rng: RandomNumberGenerator, with_exit: bool) -> void:
 	var cfg := Config.balance
 	var count := rng.randi_range(cfg.floor_min_rooms, cfg.floor_max_rooms)
 	var start := RoomPlan.new()
@@ -82,6 +78,9 @@ func _make_tree(rng: RandomNumberGenerator) -> void:
 	rooms.append(start)
 	while rooms.size() < count - 1:
 		var from: RoomPlan = rooms[rng.randi_range(0, rooms.size() - 1)]
+		# The start room has only one way out.
+		if from == start and rooms.size() > 1:
+			continue
 		var free := _free_steps(from.grid)
 		if not free.is_empty():
 			_add_room(from, from.grid + free[rng.randi_range(0, free.size() - 1)])
@@ -89,10 +88,16 @@ func _make_tree(rng: RandomNumberGenerator) -> void:
 	by_depth.sort_custom(func(a: RoomPlan, b: RoomPlan) -> bool: return a.depth > b.depth)
 	for room: RoomPlan in by_depth:
 		var free := _free_steps(room.grid)
-		if not free.is_empty():
-			objective = _add_room(room, room.grid + free[rng.randi_range(0, free.size() - 1)])
-			objective.kind = Kind.OBJECTIVE
-			return
+		if with_exit:
+			free = free.filter(func(step: Vector2i) -> bool: return not _free_steps(room.grid + step).is_empty())
+		if free.is_empty():
+			continue
+		objective = _add_room(room, room.grid + free[rng.randi_range(0, free.size() - 1)])
+		objective.kind = Kind.OBJECTIVE
+		if with_exit:
+			var behind := _free_steps(objective.grid)
+			_add_room(objective, objective.grid + behind[rng.randi_range(0, behind.size() - 1)]).kind = Kind.EXIT
+		return
 
 
 func _add_room(parent: RoomPlan, grid: Vector2i) -> RoomPlan:
@@ -130,6 +135,8 @@ func _template_for(room: RoomPlan, rng: RandomNumberGenerator) -> PackedStringAr
 			return RoomLayouts.START
 		Kind.CHEST:
 			return RoomLayouts.CHEST
+		Kind.EXIT:
+			return RoomLayouts.EXIT
 	return RoomLayouts.FIGHTS[rng.randi_range(0, RoomLayouts.FIGHTS.size() - 1)]
 
 

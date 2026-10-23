@@ -65,10 +65,12 @@ func sees(player: Player) -> bool:
 	return can_see(player.hurtbox_position())
 
 
-## Called by the player on breaking free.
-func stun() -> void:
+## Called by the player on breaking free: stunned, and thrown back along `away`, so he is not
+## still touching the player when the stun wears off.
+func stun(away: Vector2) -> void:
 	mode = Mode.STUN
 	_mode_left = Config.balance.officer_stun_time
+	_knockback = away.normalized() * Config.balance.officer_escape_push
 
 
 func _patrol_velocity() -> Vector2:

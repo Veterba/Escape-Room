@@ -8,7 +8,7 @@ They are **not for public release** and will be replaced with our own art.
 
 ## Other art
 
-Guns and items (files 09–21) were drawn for the project mood board. Tiles, crates, barrels, chains,
+Guns and items (files 09–21) were drawn for the project mood board. Tiles, crates, barrels, chains, doors, the exit hatch,
 bullets, shell casings, the muzzle flash, the hand and UI frames are drawn in code in `tools/draw_art.py`.
 
 ## Engine

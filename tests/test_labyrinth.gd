@@ -55,6 +55,7 @@ func test_ten_presses_of_e_break_the_handcuffs_without_losing_a_heart() -> void:
 	var player: Player = PLAYER.instantiate()
 	world.add_child(player)
 	var officer: OfficerKin = OFFICER.instantiate()
+	officer.position = Vector2(10, 0)
 	world.add_child(officer)
 	assert_true(player.trap(officer), "the officer handcuffs the player")
 	for i in Config.balance.trap_presses - 1:
@@ -64,4 +65,5 @@ func test_ten_presses_of_e_break_the_handcuffs_without_losing_a_heart() -> void:
 	assert_eq(player.state, Player.State.NORMAL, "free after %d presses" % Config.balance.trap_presses)
 	assert_eq(player.hearts, Config.balance.player_hearts, "no heart lost")
 	assert_eq(officer.mode, OfficerKin.Mode.STUN, "the officer is stunned")
+	assert_true(officer._knockback.length() > 0.0, "and thrown back, so he is not still touching the player")
 	assert_true(not player.trap(officer), "officers cannot trap again right away")

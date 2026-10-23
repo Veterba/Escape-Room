@@ -1,6 +1,7 @@
-## One room of a floor. A fight room locks its doors when the player walks in, sends its
-## enemies, and opens the doors once they are all dead. The arena room starts its waves when the
-## player first walks in. Start, chest and the other objective rooms just sit there.
+## One room of a floor. A room with enemies_on_enter (a fight room, the boss room) locks its doors
+## when the player walks in, sends those enemies, and opens the doors once they are all dead,
+## together with any doors in opens_on_clear (the exit, after the boss). The arena room starts
+## its waves when the player first walks in. Start, chest and exit rooms just sit there.
 class_name Room
 extends Node2D
 
@@ -9,14 +10,26 @@ const GRUNT := preload("res://scenes/enemies/grunt_kin.tscn")
 const FUSE := preload("res://scenes/enemies/fuse_kin.tscn")
 const ROCKET := preload("res://scenes/enemies/rocket_kin.tscn")
 const WING := preload("res://scenes/enemies/wing_kin.tscn")
+## The red ring on the boss room's floor: radius and width in pixels.
+const BOSS_RING_RADIUS := 40.0
+const BOSS_RING_WIDTH := 2.0
+const BOSS_RING_COLOR := Color("#E0403A")
 
 var kind: FloorGenerator.Kind
-## Rooms between this one and the start: deeper fight rooms send harder mixes.
+## Rooms between this one and the start.
 var depth := 0
 ## Where the room is, in tiles, walls included.
 var rect := Rect2i()
 var map: GameMap
+## The room this one grew from (null for the start), for the map overlay.
+var parent_room: Room
 var doors: Array[Door] = []
+## Enemies sent when the player walks in; the doors stay locked until they are all dead.
+var enemies_on_enter: Array[PackedScene] = []
+## Doors elsewhere that open when this room is cleared.
+var opens_on_clear: Array[Door] = []
+## The boss room: the boss appears in the middle and a red ring marks the floor.
+var boss_room := false
 ## The arena's waves, if this is the arena room.
 var waves: ArenaWaves
 var entered := false
@@ -42,9 +55,9 @@ func _physics_process(_delta: float) -> void:
 		if trigger.has_point(player.global_position):
 			entered = true
 			_on_entered(player)
-	elif kind == FloorGenerator.Kind.FIGHT and not cleared and enemies_left() == 0:
+	elif not enemies_on_enter.is_empty() and not cleared and enemies_left() == 0:
 		cleared = true
-		for door in doors:
+		for door in doors + opens_on_clear:
 			door.open()
 		Audio.play_sfx(&"doors_open")
 
@@ -59,18 +72,22 @@ func enemies_left() -> int:
 
 
 ## Puts enemies on free floor inside the room, at least the usual distance from the player.
-func spawn(enemies: Array[PackedScene], player: Node2D) -> void:
+## With `near_middle` they take the free spots closest to the room's middle instead of random ones.
+func spawn(enemies: Array[PackedScene], player: Node2D, near_middle := false) -> void:
 	var cells: Array[Vector2i] = []
 	for cell in map.free_floor_cells:
 		var center := map.cell_center(cell)
 		var far_enough := center.distance_to(player.global_position) >= Config.balance.arena_spawn_min_distance
 		if rect.grow(-1).has_point(cell) and far_enough:
 			cells.append(cell)
-	cells.shuffle()
+	if near_middle:
+		var middle := rect.get_center()
+		cells.sort_custom(func(a: Vector2i, b: Vector2i) -> bool: return a.distance_squared_to(middle) < b.distance_squared_to(middle))
+	else:
+		cells.shuffle()
 	for i in mini(enemies.size(), cells.size()):
 		var marker: EnemySpawn = ENEMY_SPAWN.instantiate()
 		marker.scene = enemies[i]
-		marker.leash = inside_area()
 		marker.position = map.cell_center(cells[i])
 		add_child(marker)
 
@@ -84,13 +101,17 @@ static func enemies_for(mix: ArenaWave) -> Array[PackedScene]:
 	return enemies
 
 
+func _draw() -> void:
+	if boss_room:
+		draw_arc(map.cell_center(rect.get_center()), BOSS_RING_RADIUS, 0.0, TAU, 32, BOSS_RING_COLOR, BOSS_RING_WIDTH)
+
+
 func _on_entered(player: Node2D) -> void:
 	if waves:
 		waves.active = true
-	if kind != FloorGenerator.Kind.FIGHT:
+	if enemies_on_enter.is_empty():
 		return
 	for door in doors:
 		door.close()
-	var fights := Config.balance.floor_fights
-	spawn(enemies_for(fights[mini(depth, fights.size()) - 1]), player)
+	spawn(enemies_on_enter, player, boss_room)
 	Audio.play_sfx(&"doors_close")

@@ -10,8 +10,6 @@ const RING_WIDTH := 1.0
 
 ## The enemy to create.
 var scene: PackedScene
-## Handed to the enemy: flying enemies stay inside it (the room they appeared in).
-var leash := Rect2()
 var _time_left := 0.0
 
 
@@ -27,7 +25,6 @@ func _physics_process(delta: float) -> void:
 	var enemy: Enemy = scene.instantiate()
 	enemy.position = position
 	enemy.awake = true
-	enemy.leash = leash
 	get_parent().add_child(enemy)
 	queue_free()
 

@@ -33,6 +33,19 @@ const CHEST: PackedStringArray = [
 	"#############",
 ]
 
+## Behind the boss: its door opens when the boss is dead. Step on the exit (E) to win.
+const EXIT: PackedStringArray = [
+	"###########",
+	"#.........#",
+	"#.........#",
+	"#.........#",
+	"#....E....#",
+	"#.........#",
+	"#.........#",
+	"#.........#",
+	"###########",
+]
+
 ## Fight rooms: the doors lock and enemies appear until the room is clear.
 const FIGHTS: Array[PackedStringArray] = [
 	[

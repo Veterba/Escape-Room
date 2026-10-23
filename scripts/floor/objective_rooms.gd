@@ -36,7 +36,7 @@ static func arena(rng: RandomNumberGenerator) -> PackedStringArray:
 	return _to_layout(grid)
 
 
-## Placeholder until part E: four mirrored pillars, the code at the top, a few enemies.
+## Four mirrored pillars; the Ammo Wraith appears in the middle when the player walks in.
 static func boss(rng: RandomNumberGenerator) -> PackedStringArray:
 	var grid := _empty_room(BOSS_SIZE)
 	var center := BOSS_SIZE / 2
@@ -44,9 +44,6 @@ static func boss(rng: RandomNumberGenerator) -> PackedStringArray:
 	for x in [center.x - offset.x - PILLAR_SIZE.x, center.x + offset.x]:
 		for y in [center.y - offset.y - PILLAR_SIZE.y, center.y + offset.y]:
 			_fill(grid, Rect2i(Vector2i(x, y), PILLAR_SIZE), GameMap.WALL)
-	grid[2][center.x] = "C"
-	for spot in [Vector2i(center.x - 3, 4), Vector2i(center.x + 3, 4), Vector2i(center.x, center.y)]:
-		grid[spot.y][spot.x] = "g" if spot.y == 4 else "f"
 	return _to_layout(grid)
 
 

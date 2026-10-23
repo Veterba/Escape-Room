@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.6.0 — 2026-10-23
+
+### Added
+- The Ammo Wraith, the boss: 250 hit points in three phases. Belt Lash (two sweeping arcs of bullets), then Bullet Rain (rings of 16 bullets), then everything 1.3 times faster plus Fade (it teleports away and fires a ring). It stops and roars between phases. A health bar shows at the bottom of the screen.
+- Beating the boss opens the door to an exit room; stepping on the exit wins the round.
+- Tab shows a map of the rooms you have seen, the corridors between them and where you are.
+
+### Changed
+- Every round is one of three map types, picked at random: the Enemy Arena (a floor of rooms ending in the wave arena), the Labyrinth (one big dark maze again, with a 60–90 s shortest walk) or the Boss Chamber (a floor of rooms ending in the boss).
+- Boss rounds have no timer: you only lose by dying.
+- You always start in a room with one way out.
+- Wing Kin no longer fly over walls, so they can't hover where your bullets can't reach them.
+- The timer is 5:00 for the arena and the maze. To fit, the arena's code chest opens at wave 4, which is now the last wave, and floors have 5–6 rooms.
+- The smoke bomb sends out a wave to the edge of the screen and shakes it, so you can see it work.
+- Breaking free from handcuffs throws the officer back; he goes back to his patrol instead of catching you again.
+- The Mash E prompt counts down the presses still needed.
+- Movement is smooth on high refresh rate screens, and enemies plan their paths less often, so the game runs lighter.
+
+### Fixed
+- The arena no longer sends waves forever.
+- An officer could handcuff you again the moment his stun ended if you stood still.
+
 ## v0.5.0 — 2026-10-23
 
 ### Added

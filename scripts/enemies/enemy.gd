@@ -8,12 +8,15 @@ const ENEMY_BULLET := preload("res://scenes/enemies/enemy_bullet.tscn")
 const EYE_OFFSET := Vector2(0, -10)
 ## Physics layer 1: walls. Only walls block line of sight.
 const WALL_MASK := 1
+## A new path is asked for only when the target has moved this many pixels: asking every frame
+## costs a path search per enemy per frame on a big map.
+const RETARGET_DISTANCE := 8.0
 
 var hp := 1
+## Where it looks and shoots from, above its feet. The boss is taller than the others.
+var eye_offset := EYE_OFFSET
 ## Enemies idle until they see the player or the player comes close; then they stay awake.
 var awake := false
-## Enemies that fly over walls stay inside this area, in global pixels (no limit when empty).
-var leash := Rect2()
 var _knockback := Vector2.ZERO
 var _dead := false
 
@@ -62,7 +65,8 @@ func die() -> void:
 
 ## Velocity that walks towards `point` along the navigation path, around walls.
 func path_velocity(point: Vector2, speed: float) -> Vector2:
-	_nav.target_position = point
+	if _nav.target_position.distance_to(point) > RETARGET_DISTANCE:
+		_nav.target_position = point
 	if _nav.is_navigation_finished():
 		return Vector2.ZERO
 	return global_position.direction_to(_nav.get_next_path_position()) * speed
@@ -82,7 +86,7 @@ func move(desired: Vector2, delta: float) -> void:
 
 ## True if no wall is between this enemy's eyes and `point`.
 func can_see(point: Vector2) -> bool:
-	var query := PhysicsRayQueryParameters2D.create(global_position + EYE_OFFSET, point, WALL_MASK)
+	var query := PhysicsRayQueryParameters2D.create(global_position + eye_offset, point, WALL_MASK)
 	return get_world_2d().direct_space_state.intersect_ray(query).is_empty()
 
 
@@ -97,7 +101,7 @@ func hurt_touching_player(contact: Area2D) -> void:
 
 func shoot(direction: Vector2, speed: float, bullet_scene: PackedScene = ENEMY_BULLET) -> void:
 	var bullet: EnemyBullet = bullet_scene.instantiate()
-	bullet.global_position = global_position + EYE_OFFSET
+	bullet.global_position = global_position + eye_offset
 	bullet.setup(direction, speed)
 	get_tree().current_scene.add_child(bullet)
 	Audio.play_sfx(&"enemy_shot")

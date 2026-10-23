@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/round/round.gd" id="1_script"]
 [ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu.tscn" id="5_pause"]
 [ext_resource type="PackedScene" path="res://scenes/ui/end_screen.tscn" id="6_end"]
 [ext_resource type="PackedScene" path="res://scenes/ui/debug_overlay.tscn" id="7_debug"]
+[ext_resource type="PackedScene" path="res://scenes/ui/floor_map.tscn" id="8_map"]
 
 [node name="Round" type="Node2D"]
 y_sort_enabled = true
@@ -24,3 +25,5 @@ script = ExtResource("3_timer")
 [node name="EndScreen" parent="." instance=ExtResource("6_end")]
 
 [node name="DebugOverlay" parent="." instance=ExtResource("7_debug")]
+
+[node name="FloorMap" parent="." instance=ExtResource("8_map")]

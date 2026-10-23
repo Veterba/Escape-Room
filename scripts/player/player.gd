@@ -12,12 +12,15 @@ signal died
 signal trapped
 ## Broke free from the handcuffs.
 signal escaped
+## While handcuffed: presses of E still needed to break free.
+signal presses_left_changed(presses_left: int)
 
 enum State { NORMAL, ROLLING, DEAD, TRAPPED }
 
 ## The gun is drawn behind the hero when the aim points up more steeply than this (-0.5 = 30 degrees).
 const AIM_UP_BEHIND_THRESHOLD := -0.5
 const SMOKE_PUFF := preload("res://scenes/fx/death_puff.tscn")
+const SMOKE_WAVE := preload("res://scenes/fx/smoke_wave.tscn")
 ## The knife slash when breaking free: how far it swings, in radians, and in how many seconds.
 const KNIFE_SLASH_ARC := PI
 const KNIFE_SLASH_TIME := 0.2
@@ -134,22 +137,25 @@ func trap(officer: OfficerKin) -> bool:
 	body.play(&"idle")
 	juice.update_walk(0.0, false)
 	trapped.emit()
+	presses_left_changed.emit(_presses_left)
 	return true
 
 
-## One press of E while trapped. The last one breaks the handcuffs with a knife slash, stuns the
-## officer, and keeps officers off the player for a moment. No heart is lost.
+## One press of E while trapped. The last one breaks the handcuffs with a knife slash, which
+## stuns the officer and throws him back, and keeps officers off the player for a moment.
+## No heart is lost.
 func mash() -> void:
 	if state != State.TRAPPED:
 		return
 	_presses_left -= 1
 	juice.squash(MASH_SQUASH)
+	presses_left_changed.emit(_presses_left)
 	if _presses_left > 0:
 		return
 	state = State.NORMAL
 	_officer_immunity_left = Config.balance.trap_immunity_time
 	if is_instance_valid(_trapped_by):
-		_trapped_by.stun()
+		_trapped_by.stun(_trapped_by.global_position - global_position)
 	_slash_knife()
 	Audio.play_sfx(&"knife_slash")
 	escaped.emit()
@@ -180,9 +186,11 @@ func use_smoke_bomb() -> bool:
 	for bullet: EnemyBullet in get_tree().get_nodes_in_group(&"enemy_bullets"):
 		if view.has_point(bullet.global_position):
 			bullet.pop()
-	var puff: Node2D = SMOKE_PUFF.instantiate()
-	puff.global_position = global_position
-	get_tree().current_scene.add_child(puff)
+	for effect: PackedScene in [SMOKE_PUFF, SMOKE_WAVE]:
+		var node: Node2D = effect.instantiate()
+		node.global_position = global_position
+		get_tree().current_scene.add_child(node)
+	camera.shake(Config.balance.hit_shake)
 	Audio.play_sfx(&"smoke_bomb")
 	return true
 

@@ -35,8 +35,14 @@ const INTERACT_PROMPT := "E"
 const CHEST_LOCKED_FORMAT := "Chest locked: wave %d/%d"
 const CHEST_OPEN := "Chest open!"
 
-## Shown while an Officer Kin has the player handcuffed.
-const MASH_E := "Mash E!"
+## The map key (Tab) in the labyrinth.
+const NO_MAP := "No map in the labyrinth"
+
+## Above the boss's health bar.
+const BOSS_NAME := "Ammo Wraith"
+
+## Shown while an Officer Kin has the player handcuffed, with the presses still needed: "Mash E! 7".
+const MASH_E_FORMAT := "Mash E! %d"
 
 const PASSWORD_PROMPT := "Password"
 const PASSWORD_HINT := "Press Enter to confirm"

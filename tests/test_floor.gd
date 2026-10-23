@@ -22,6 +22,11 @@ func test_floors_are_connected_and_end_in_the_objective() -> void:
 		for room in plan.rooms:
 			deepest = maxi(deepest, room.depth)
 		assert_eq(plan.objective.depth, deepest, "seed %d: the objective is the deepest room" % i)
+		var start_doors := 0
+		var start_rect := plan.rooms[0].rect
+		for y in range(start_rect.position.y, start_rect.end.y):
+			start_doors += plan.layout[y].substr(start_rect.position.x, start_rect.size.x).count(FloorGenerator.DOOR)
+		assert_eq(start_doors, FloorGenerator.CORRIDOR_WIDTH, "seed %d: the start room has one way out" % i)
 		var reached := _walkable_from_start(plan.layout)
 		var walkable := 0
 		for row in plan.layout:
@@ -38,7 +43,7 @@ func test_fight_room_locks_until_cleared() -> void:
 	round_node.run_log_path = LOG_PATH
 	world.add_child(round_node)
 	var room: Room = null
-	for candidate in round_node.map.rooms:
+	for candidate in (round_node.map as DungeonFloor).rooms:
 		if candidate.kind == FloorGenerator.Kind.FIGHT:
 			room = candidate
 	assert_true(not room.doors.is_empty(), "the fight room has doors")

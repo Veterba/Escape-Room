@@ -7,5 +7,7 @@ signal code_collected
 signal hourglass_collected
 ## An enemy died.
 signal enemy_died(enemy: Node2D)
+## The boss's hit points changed: `share` is what is left, from 1 to 0. The HUD's bar listens.
+signal boss_health_changed(share: float)
 ## A new wave started in the Enemy Arena (wave 1 is the first). The HUD and the code chest listen.
 signal wave_started(wave: int)

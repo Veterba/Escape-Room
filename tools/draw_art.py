@@ -214,6 +214,26 @@ DOOR = [
     "................",
 ]
 
+# The exit of the boss floor: a hatch with steps going down.
+EXIT_HATCH = [
+    "AAAAAAAAAAAAAAAA",
+    "ABBBBBBBBBBBBBBA",
+    "ABAAAAAAAAAAAABA",
+    "ABAMMMMMMMMMMABA",
+    "ABAAAAAAAAAAAABA",
+    "ABASSSSSSSSSSABA",
+    "ABAAAAAAAAAAAABA",
+    "ABAAMMMMMMMMAABA",
+    "ABAAAAAAAAAAAABA",
+    "ABAAASSSSSSAAABA",
+    "ABAAAAAAAAAAAABA",
+    "ABAAAAAAAAAAAABA",
+    "ABAAAAAAAAAAAABA",
+    "ABAAAAAAAAAAAABA",
+    "ABBBBBBBBBBBBBBA",
+    "AAAAAAAAAAAAAAAA",
+]
+
 # Chains and a padlock across the code chest while it is locked. Same width as the chest art.
 CHEST_CHAINS = [
     "............AAAA............",
@@ -359,6 +379,7 @@ def main() -> None:
         "barrel": BARREL,
         "chest_chains": CHEST_CHAINS,
         "door": DOOR,
+        "exit_hatch": EXIT_HATCH,
         "shell_casing": SHELL_CASING,
         "held_pop_pistol": HELD_POP_PISTOL,
         "held_brass_revolver": HELD_BRASS_REVOLVER,

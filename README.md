@@ -1,9 +1,9 @@
 # Escape Boom
 
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
-One random map per round, a 10:00 timer, find the secret code before time runs out.
+One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.5.0** (floors: 6–8 rooms per round, ending in the objective room).
+Current version: **0.6.0** (Part E: the Ammo Wraith; three map types; the floor map).
 
 ## Requirements
 
@@ -21,7 +21,7 @@ godot --path .
 Or open the folder in the Godot editor and press F5. On a fresh clone, run the import step from
 the test section once first (the editor does it automatically).
 
-To skip the menu and force the objective room (for testing), add `--map=boss`, `--map=maze` or `--map=arena`:
+To skip the menu and force the map type (for testing), add `--map=boss`, `--map=maze` or `--map=arena`:
 
 ```sh
 godot --path . --map=arena
@@ -30,17 +30,22 @@ godot --path . --map=arena
 The game opens on a password screen (the password is in `config/balance.tres`, `1234` for now).
 `--map=` skips it.
 
-Every round is one floor of 6–8 rooms joined by corridors, with no loading in between. Fight
-rooms lock their doors until every enemy is dead; chest rooms hold a gun chest whose colour shows
-the gun's rarity (bone C, teal B, brass A, red S). The last room is the objective, picked at
-random:
+Every round picks one of three map types at random, and builds it fresh:
 
-- **Enemy Arena** (crates and barrels placed fresh each round): survive the waves; the code chest's chains fall off at wave 5, then hold E on
-  it for 2 s.
-- **Labyrinth:** a new dark maze. Officer Kin handcuff you (mash E to break free), Shade Kin
-  drift through walls, and an hourglass in a dead end adds 30 s.
-- **Boss Chamber** (pillars placed fresh each round): still a placeholder (part E): a few Grunt
-  and Fuse Kin and the code.
+- **Enemy Arena:** a floor of 5–6 rooms joined by corridors, with no loading in between. You
+  start in a room with one way out. Fight rooms lock their doors until every enemy is dead;
+  chest rooms hold a gun chest whose colour shows the gun's rarity (bone C, teal B, brass A,
+  red S). The last room is the arena (crates and barrels placed fresh each round): survive the
+  waves; the code chest's chains fall off at wave 4, the last one, then hold E on it for 2 s.
+  5:00 timer.
+- **Labyrinth:** one big dark maze, the start in a corner and the code at the far end. Officer
+  Kin handcuff you (mash E to break free), Shade Kin drift through walls, and an hourglass in a
+  dead end adds 30 s. 5:00 timer, and no map.
+- **Boss Chamber:** a floor like the arena's, ending in the boss room. The Ammo Wraith has three
+  phases (Belt Lash; plus Bullet Rain; then faster, with Fade). Beat it and the door to the exit
+  room opens: step on the exit to win. No timer: you only lose by dying.
+
+Press Tab for a map of the rooms you have seen (arena and boss floors).
 
 ### Controls
 
@@ -53,8 +58,9 @@ random:
 | Reload | R |
 | Switch gun | Mouse wheel, or 1 / 2 / 3 |
 | Open a chest (hold), take a gun, break handcuffs (mash) | E |
-| Smoke bomb (clears enemy bullets on screen) | Q |
+| Smoke bomb (a wave that clears every enemy bullet on screen) | Q |
 | Pause | Esc |
+| Map | Tab |
 | Debug overlay | F3 |
 
 ### Run log

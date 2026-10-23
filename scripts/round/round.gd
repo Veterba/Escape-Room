@@ -1,5 +1,6 @@
-## One round: builds the floor, starts the timer, and decides the result. Win: the code is picked up.
-## Lose: the player runs out of hearts, or the timer reaches 0:00. Then it shows the end screen
+## One round: builds the map, starts the timer, and decides the result. Win: the code is picked up
+## (or, on the boss floor, the exit is reached).
+## Lose: the player runs out of hearts, or the timer reaches 0:00 (boss rounds have no timer). Then it shows the end screen
 ## and writes a line to the run log.
 class_name Round
 extends Node2D
@@ -10,7 +11,7 @@ enum Result { NONE, WIN, DEATH, TIMEOUT }
 const RESULT_NAMES := {Result.WIN: "win", Result.DEATH: "death", Result.TIMEOUT: "timeout"}
 const NO_GUN := "none"
 
-var map: DungeonFloor
+var map: GameMap
 ## A random 4-digit code, new every round.
 var secret_code := ""
 var result := Result.NONE
@@ -29,14 +30,15 @@ var _shots_by_gun := {}
 @onready var _pause_menu: PauseMenu = $PauseMenu
 @onready var _end_screen: EndScreen = $EndScreen
 @onready var _debug_overlay: DebugOverlay = $DebugOverlay
+@onready var _floor_map: FloorMap = $FloorMap
 
 
 func _ready() -> void:
-	map = Game.FLOOR_SCENE.instantiate()
-	map.objective = Game.current_map_id
+	map = Game.make_map(Game.current_map_id)
 	add_child(map)
 	move_child(map, 0)  # Drawn first, under everything else.
 	player.global_position = map.spawn_position
+	player.reset_physics_interpolation()
 	player.camera.set_bounds(map.bounds)
 	secret_code = "%04d" % randi_range(0, 9999)
 
@@ -48,9 +50,10 @@ func _ready() -> void:
 	Events.hourglass_collected.connect(_add_hourglass_time)
 	player.trapped.connect(func() -> void: times_trapped += 1)
 
-	timer.start(Config.balance.round_length)
+	timer.start(Config.balance.round_length, Game.has_timer(Game.current_map_id))
 	_hud.bind(player, timer, map.map_id)
 	_debug_overlay.bind(self)
+	_floor_map.bind(self)
 
 
 ## Ends the round once; later calls are ignored (for example a hit after the win).

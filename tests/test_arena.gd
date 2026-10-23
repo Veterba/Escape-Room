@@ -31,7 +31,7 @@ func _code_chest(round_node: Round) -> CodeChest:
 func test_waves_follow_the_mix_and_the_limits() -> void:
 	var cfg := Config.balance
 	var round_node := _make_arena_round()
-	var waves := round_node.map.objective_room.waves
+	var waves := (round_node.map as DungeonFloor).objective_room.waves
 	waves.active = true
 	waves._physics_process(STEP)
 	assert_eq(waves.wave, 1, "wave 1 starts at once")
@@ -50,14 +50,18 @@ func test_waves_follow_the_mix_and_the_limits() -> void:
 	waves._physics_process(STEP)
 	assert_eq(waves.wave, 3, "a new wave at once when fewer than %d are alive" % cfg.arena_min_alive)
 
-	for i in 5:
+	while waves.wave < cfg.arena_chest_unlock_wave:
 		waves.start_next_wave()
 		assert_true(waves.alive_count() <= cfg.arena_max_alive, "never more than %d alive" % cfg.arena_max_alive)
+	for spawn in _spawns():
+		spawn.free()
+	waves._physics_process(cfg.arena_wave_interval)
+	assert_eq(waves.wave, cfg.arena_chest_unlock_wave, "no waves after the one that unlocks the chest")
 
 
 func test_spawn_effect_creates_an_awake_enemy() -> void:
 	var round_node := _make_arena_round()
-	round_node.map.objective_room.waves.start_next_wave()
+	(round_node.map as DungeonFloor).objective_room.waves.start_next_wave()
 	var spawn: EnemySpawn = _spawns()[0]
 	spawn._physics_process(Config.balance.arena_spawn_time + STEP)
 	var enemies := world.get_tree().get_nodes_in_group(&"enemies")

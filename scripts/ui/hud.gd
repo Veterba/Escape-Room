@@ -1,7 +1,8 @@
 ## The in-game HUD: hearts top-left; the timer top-centre (red and pulsing in the last minute);
 ## gun, ammo and smoke bombs top-right; the map name for a moment at the start. In the Enemy
 ## Arena, one line under the timer says whether the code chest is still chained. While an
-## Officer Kin has the player handcuffed, "Mash E!" shows with the knife.
+## Officer Kin has the player handcuffed, "Mash E!" shows with the knife. In a boss fight, the
+## boss's health bar is at the bottom.
 class_name Hud
 extends CanvasLayer
 
@@ -25,6 +26,8 @@ var _pulse_time := 0.0
 @onready var _map_name: Label = $Root/MapName
 @onready var _arena_status: Label = $Root/ArenaStatus
 @onready var _trapped: Control = $Root/Trapped
+@onready var _boss_bar: Control = $Root/BossBar
+@onready var _boss_fill: ColorRect = $Root/BossBar/Fill
 @onready var _gun_icon: TextureRect = $Root/Loadout/Row/GunIcon
 @onready var _ammo_label: Label = $Root/Loadout/Row/AmmoLabel
 @onready var _smoke_label: Label = $Root/Loadout/Row/SmokeLabel
@@ -38,9 +41,12 @@ func bind(player: Player, timer: RoundTimer, map_id: StringName) -> void:
 	player.hearts_changed.connect(_show_hearts)
 	player.smoke_bombs_changed.connect(_show_smoke_bombs)
 	Events.wave_started.connect(_show_arena_status)
-	$Root/Trapped/Label.text = Strings.MASH_E
+	$Root/BossBar/Name.text = Strings.BOSS_NAME
+	_boss_fill.pivot_offset = Vector2.ZERO
+	Events.boss_health_changed.connect(_show_boss_health)
 	player.trapped.connect(_trapped.show)
 	player.escaped.connect(_trapped.hide)
+	player.presses_left_changed.connect(func(left: int) -> void: $Root/Trapped/Label.text = Strings.MASH_E_FORMAT % left)
 	_refresh_gun()
 	_show_hearts(player.hearts)
 	_show_smoke_bombs(player.smoke_bombs)
@@ -50,6 +56,7 @@ func bind(player: Player, timer: RoundTimer, map_id: StringName) -> void:
 func _process(delta: float) -> void:
 	if _timer == null:
 		return
+	_timer_label.visible = _timer.counts_down
 	_timer_label.text = RoundTimer.format(ceili(_timer.time_left))
 	_timer_label.pivot_offset = _timer_label.size / 2.0
 	if _timer.time_left <= Config.balance.timer_warning_time:
@@ -79,6 +86,12 @@ func _show_arena_status(wave: int) -> void:
 		_arena_status.text = Strings.CHEST_OPEN
 	else:
 		_arena_status.text = Strings.CHEST_LOCKED_FORMAT % [wave, unlock_wave]
+
+
+## The bar at the bottom shrinks from the right as the boss loses hit points.
+func _show_boss_health(share: float) -> void:
+	_boss_bar.visible = share > 0.0
+	_boss_fill.scale.x = share
 
 
 func _show_smoke_bombs(count: int) -> void:

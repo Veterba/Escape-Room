@@ -30,8 +30,9 @@ use them by name.
   `hourglass_collected` works the same way: the round adds the time.
   `wave_started` is sent by the arena's waves; the code chest, the HUD line and the F3 overlay
   listen to it, so none of them needs to know where the waves live.
-- `Game` (`scripts/autoload/game.gd`) moves between the menu and rounds and picks the objective
-  room of the round's floor (uniform random, or the one forced with `--map=`).
+- `Game` (`scripts/autoload/game.gd`) moves between the menu and rounds, picks the map type
+  (uniform random, or the one forced with `--map=`) and makes its map: a `DungeonFloor` for the
+  arena and boss types, the `Labyrinth` for the maze.
 
 `scripts/strings.gd` (`Strings`) is not an autoload: it only holds constants, all player-facing text.
 
@@ -40,21 +41,21 @@ use them by name.
 ```
 PasswordScreen (scenes/ui/password_screen.tscn)  --right password-->  MainMenu   (main scene: once per launch)
 MainMenu (scenes/ui/main_menu.tscn)  --Play-->  Game.start_round()  -->  Round
-Round  --win / death / timeout-->  EndScreen  --Play again-->  Game.start_round()  (new floor, new objective)
+Round  --win / death / timeout-->  EndScreen  --Play again-->  Game.start_round()  (new random map type)
                                               --Menu-->        Game.go_to_menu()
 ```
 
 ## The round scene
 
 ```
-Round (scenes/round/round.tscn)               builds the floor, decides the result, writes the run log
-├── DungeonFloor (scenes/floor/dungeon_floor.tscn, added at runtime)   one floor = one map
+Round (scenes/round/round.tscn)               builds the map, decides the result, writes the run log
+├── DungeonFloor or Labyrinth (added at runtime, both GameMaps)
 │   ├── Navigation (NavigationRegion2D)       walkable area, baked at runtime around the walls
 │   │   ├── Floor (TileMapLayer)              floor tiles, always underneath (z_index -10)
 │   │   └── Walls (TileMapLayer)              wall tiles with collision, y-sorted
-│   ├── Darkness, Vision                      CanvasModulate and PointLight2D, on only in the maze
-│   ├── chests, barrels, doors, enemies, code placed from the floor's text layout
-│   └── Room (one per room)                   locks fight rooms; fight and arena enemies live here
+│   ├── Darkness, Vision                      Labyrinth only: CanvasModulate and PointLight2D
+│   ├── chests, barrels, doors, enemies, code placed from the text layout
+│   └── Room (DungeonFloor only, one per room) locks fight and boss rooms; their enemies live here
 │       └── ArenaWaves (arena room only)      sends the waves; EnemySpawn effects become enemies
 ├── Player (scenes/player/player.tscn)
 │   ├── Body (AnimatedSprite2D)               hero art, animations from hero_frames.tres
@@ -65,15 +66,17 @@ Round (scenes/round/round.tscn)               builds the floor, decides the resu
 │   ├── Guns (GunInventory)                   the carried guns and their ammo
 │   ├── Interactor                            finds the nearest chest or gun and handles E
 │   └── Camera (GameCamera)
-├── RoundTimer                                10:00 countdown; a normal node, so pausing stops it
-├── HUD, PauseMenu, EndScreen, DebugOverlay   CanvasLayers drawn on top of the world
+├── RoundTimer                                5:00 countdown (counts up in boss rounds); pausing stops it
+├── HUD, PauseMenu, EndScreen, DebugOverlay, FloorMap   CanvasLayers drawn on top of the world
 └── (bullets, casings, puffs and drops are added here at runtime)
 ```
 
 ## Key decisions
 
 - **One balance resource.** `BalanceConfig` is a `Resource` with typed `@export` fields; the values
-  are in `config/balance.tres`. Each gun is a `GunStats` sub-resource inside it, so a gun's numbers
+  are in `config/balance.tres`, and only there: the fields have no defaults in the script. (The
+  Godot editor drops every value that equals a script default when it saves a `.tres`, which
+  emptied most of the file twice.) Each gun is a `GunStats` sub-resource inside it, so a gun's numbers
   and its art sit together: `icon` (the big drawing, for the HUD), `held_texture` (the small
   drawing in the hand and on the floor) and the grip, muzzle and ejection pixels of the held drawing.
 - **Y-sorting.** `Round`, the map, the navigation region and the `Walls` layer all have
@@ -93,9 +96,15 @@ Round (scenes/round/round.tscn)               builds the floor, decides the resu
   space for nothing, letters for the start, chests, barrels, enemies and the code). The script
   builds the tiles and entities, then bakes the navigation mesh. A crate is a wall tile with
   crate art, so it blocks everything a wall blocks.
-- **A round is one floor, built as one map.** `FloorGenerator` (`scripts/floor/floor_generator.gd`)
+- **Three map types.** The arena and boss types are floors of rooms (below); the maze type is one
+  `Labyrinth` (`scripts/maps/labyrinth.gd`), which extends `GameMap`, gets its layout from
+  `MazeGenerator` before the base `_ready()` builds it, and adds officers with patrol routes.
+  Boss rounds start the `RoundTimer` with `count_down = false`: it only counts the time played.
+- **A floor is built as one map.** `FloorGenerator` (`scripts/floor/floor_generator.gd`)
   grows a tree of 6-8 rooms on a coarse grid (each new room next to a random existing one), puts
-  the objective room next to the deepest room, and makes dead ends chest rooms. Every grid column
+  the objective room next to the deepest room, and makes dead ends chest rooms. The start room
+  never gets a second neighbour, so it has one way out. On a boss floor an exit room is added
+  behind the boss room. Every grid column
   is as wide as its widest room and every row as tall as its tallest, and rooms sit in the
   middle of their cell, so a room and the one it grew from always line up and the corridor
   between them is straight. The rooms' layouts and the corridors are stamped into one big
@@ -105,20 +114,25 @@ Round (scenes/round/round.tscn)               builds the floor, decides the resu
   between rooms needs no loading. `DungeonFloor` (`scripts/floor/dungeon_floor.gd`) extends
   `GameMap`: it gets the floor layout before the base `_ready()` builds it, then adds a `Room`
   node per room.
-- **Rooms.** A `Room` knows its rectangle and its doors (`Door` tiles on its wall). In a fight
-  room, walking two tiles past the doorway closes the doors and spawns the room's mix (deeper
-  rooms get harder mixes from `floor_fights` in `balance.tres`); the enemies are children of
-  the room, so "cleared" just means the room has no enemy children left. The arena room starts
-  its `ArenaWaves` instead. Flying enemies get the room as a leash, so they cannot fly out of it.
-- **The labyrinth is generated, then stamped in as the objective room.** `MazeGenerator`
-  (`scripts/maps/maze_generator.gd`) carves a grid of cells with a recursive backtracker (each
-  cell 2x2 floor tiles, walls one tile thick), finds the distance of every cell from the cell at
-  the maze's door with a BFS, and puts the code in the farthest one. It retries until the
-  shortest walk is inside the time window in `balance.tres`. Officers get patrol routes along
-  corridors after the floor is built (a route cannot be one letter in the layout).
-- **Darkness** is a `CanvasModulate` that turns the whole map almost black, plus a `PointLight2D`
-  with a round gradient texture that follows the player. Both are on only while the player is in
-  the maze. The HUD is on a `CanvasLayer`, so it stays bright.
+- **Rooms.** A `Room` knows its rectangle and its doors (`Door` tiles on its wall). A room with
+  `enemies_on_enter` (fight rooms, with harder mixes deeper in from `floor_fights`, and the boss
+  room, with the Ammo Wraith) closes its doors when the player is two tiles past the doorway and
+  spawns them as its own children, so "cleared" just means it has no enemy children left. Then
+  it opens its doors and the doors in `opens_on_clear`: for the boss room, the exit room's, which
+  start shut. The arena room starts its `ArenaWaves` instead.
+- **The Ammo Wraith** (`scripts/enemies/ammo_wraith.gd`) picks its phase from its share of hit
+  points (`phase_for()`). Phase 3 runs every attack clock 1.3 times faster rather than changing
+  each interval. Belt Lash queues its bullets with a delay each, so one sweep is spread over
+  time. Its health goes to the HUD through `Events.boss_health_changed`.
+- **The floor map** (`scripts/ui/floor_map.gd`) draws the rooms straight from `DungeonFloor.rooms`:
+  rooms walked into are filled, rooms joined to them are outlined.
+- **The maze generator.** `MazeGenerator` (`scripts/maps/maze_generator.gd`) carves a grid of
+  cells with a recursive backtracker (each cell 2x2 floor tiles, walls one tile thick), finds the
+  distance of every cell from the start corner with a BFS, and puts the code in the farthest one.
+  It retries until the shortest walk is inside the 60-90 s window in `balance.tres`.
+- **Darkness** is a `CanvasModulate` that turns the whole labyrinth almost black, plus a
+  `PointLight2D` with a round gradient texture that follows the player. The HUD is on a
+  `CanvasLayer`, so it stays bright.
 - **Chest colours.** A gun chest picks its gun when it appears and is tinted with the gun's
   `chest_color` (C bone, B teal, A brass, S red: Gungeon's chest colours, moved into our palette).
 - **Handcuffs.** `Player` has a `TRAPPED` state: no moving, shooting or rolling, and each press
@@ -148,9 +162,15 @@ Round (scenes/round/round.tscn)               builds the floor, decides the resu
 - **Bullets are monitorable Area2Ds.** In Godot 4.7 an `Area2D` with `monitorable = false` does
   not notice tile walls (`TileMapLayer` bodies), so bullets keep the default `monitorable = true`.
   `tests/test_walls.gd` fires both kinds of bullet at a real tile wall.
+- **Smooth motion.** Physics runs 60 times a second; `physics/common/physics_interpolation`
+  draws everything in between, so motion is smooth on 120 Hz screens too. Teleports (the spawn,
+  the boss's Fade) call `reset_physics_interpolation()` so they jump instead of sliding. Enemies
+  ask their `NavigationAgent2D` for a new path only when the target moved more than 8 px.
 - **Physics layers.** 1 walls (and crates, chests), 2 player, 3 enemies, 4 player bullets,
   5 enemy bullets, 6 player hurtbox, 7 enemy hitboxes, 8 barrels (named in `project.godot`).
-  The Wing Kin and the Shade Kin collide with nothing, which is how they pass over and through walls.
+  The Shade Kin collides with nothing, which is how it drifts through walls. The Wing Kin
+  collides like every other enemy: if it could fly over walls it could hover where the player's
+  bullets never reach it.
 - **Pausing.** `get_tree().paused = true` stops every normal node, including `RoundTimer`. The
   pause menu and end screen use `process_mode = Always`, so they keep working.
 - **Animations ready for real sheets.** Every character uses an `AnimatedSprite2D` with a

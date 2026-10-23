@@ -1,7 +1,7 @@
 ## Sends the Enemy Arena's waves once the player walks into the arena room. Wave 1 starts at
-## once; the next starts every 30 s, or as soon as fewer than 3 enemies are alive. Never more
-## than 12 are alive: a wave that would go over skips the rest. Enemies appear on floor near
-## the arena's walls, away from the player.
+## once; the next starts every 30 s, or as soon as fewer than 3 enemies are alive. The wave that
+## unlocks the code chest is the last one. Never more than 12 are alive: a wave that would go
+## over skips the rest. Enemies appear on floor near the arena's walls, away from the player.
 class_name ArenaWaves
 extends Node
 
@@ -14,7 +14,7 @@ var _next_wave_in := 0.0
 
 
 func _physics_process(delta: float) -> void:
-	if not active:
+	if not active or wave >= Config.balance.arena_chest_unlock_wave:
 		return
 	_next_wave_in -= delta
 	if _next_wave_in <= 0.0 or alive_count() < Config.balance.arena_min_alive:
@@ -38,7 +38,6 @@ func start_next_wave() -> void:
 	for i in mini(mini(room_left, enemies.size()), cells.size()):
 		var marker: EnemySpawn = Room.ENEMY_SPAWN.instantiate()
 		marker.scene = enemies[i]
-		marker.leash = room.inside_area()
 		marker.position = room.map.cell_center(cells[i])
 		room.add_child(marker)
 	Events.wave_started.emit(wave)

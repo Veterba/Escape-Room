@@ -1,9 +1,9 @@
 ## An item on the floor that is picked up by walking over it: a heart, an ammo box, a smoke bomb,
-## the code or the hourglass. Hearts, ammo and smoke bombs stay on the floor if they would do nothing right now.
+## the code, the hourglass, or the exit of the boss floor (which wins like the code). Hearts, ammo and smoke bombs stay on the floor if they would do nothing right now.
 class_name Pickup
 extends Area2D
 
-enum Kind { HEART, AMMO, CODE, SMOKE_BOMB, HOURGLASS }
+enum Kind { HEART, AMMO, CODE, SMOKE_BOMB, HOURGLASS, EXIT }
 
 ## Pixels the item floats up and down.
 const BOB_HEIGHT := 2.0
@@ -22,6 +22,8 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if kind == Kind.EXIT:
+		return  # The exit is a hatch in the floor: it does not bob.
 	_time += delta
 	_sprite.position.y = -roundf(absf(sin(_time * BOB_RATE * PI)) * BOB_HEIGHT)
 
@@ -40,7 +42,7 @@ func _apply(player: Player) -> bool:
 			return player.heal()
 		Kind.AMMO:
 			return player.guns.refill_current_reserve(Config.balance.ammo_box_refill)
-		Kind.CODE:
+		Kind.CODE, Kind.EXIT:
 			Events.code_collected.emit()
 			return true
 		Kind.SMOKE_BOMB:

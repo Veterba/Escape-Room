@@ -1,6 +1,6 @@
-## Wing Kin: flies over walls and pits (but stays in its room), keeps about 100 px from the
-## player, and fires a spread of 3 teal bullets (15 degrees apart) every 2 s, only when it can
-## see them.
+## Wing Kin: a flying enemy that keeps about 100 px from the player and fires a spread of 3 teal
+## bullets (15 degrees apart) every 2 s, only when it can see them. It flies over pits, but not
+## over walls: otherwise it could hover where the player's bullets cannot reach it.
 class_name WingKin
 extends Enemy
 
@@ -20,15 +20,15 @@ func _physics_process(delta: float) -> void:
 	if player == null:
 		move(Vector2.ZERO, delta)
 		return
-	# Closer than the keep distance it backs off, farther it comes closer. It has no wall
-	# collision, so it flies straight instead of using the navigation path.
+	# Farther than the keep distance it comes closer along the navigation path; closer, it backs
+	# straight off (sliding along walls).
 	var gap := global_position.distance_to(player.global_position) - cfg.wing_keep_distance
 	var desired := Vector2.ZERO
-	if absf(gap) > cfg.wing_distance_slack:
-		desired = global_position.direction_to(player.global_position) * signf(gap) * cfg.wing_speed
+	if gap > cfg.wing_distance_slack:
+		desired = path_velocity(player.global_position, cfg.wing_speed)
+	elif gap < -cfg.wing_distance_slack:
+		desired = player.global_position.direction_to(global_position) * cfg.wing_speed
 	move(desired, delta)
-	if leash.has_area():
-		global_position = global_position.clamp(leash.position, leash.end)
 
 	_fire_cooldown -= delta
 	var aim_point := player.hurtbox_position()

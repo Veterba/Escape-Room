@@ -17,9 +17,8 @@ radius = 5.0
 radius = 8.0
 
 [node name="WingKin" type="CharacterBody2D" groups=["enemies"]]
-z_index = 1
 collision_layer = 4
-collision_mask = 0
+collision_mask = 133
 motion_mode = 1
 script = ExtResource("1_script")
 
@@ -47,4 +46,6 @@ script = ExtResource("4_juice")
 sprite = NodePath("../Body")
 
 [node name="Nav" type="NavigationAgent2D" parent="."]
+path_desired_distance = 6.0
+target_desired_distance = 6.0
 radius = 6.0
