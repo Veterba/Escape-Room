@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map per round, a 10:00 timer, find the secret code before time runs out.
 
-Current version: **0.2.2** (Part B plus fixes, and Windows and macOS builds).
+Current version: **0.3.0** (Part C: the Enemy Arena in full, and the password screen).
 
 ## Requirements
 
@@ -27,8 +27,13 @@ To skip the menu and force a map (for testing), add `--map=boss`, `--map=maze` o
 godot --path . --map=arena
 ```
 
-The maps are placeholder rooms until parts C to E: each has a gun chest, a few Grunt and Fuse Kin,
-and the secret code somewhere far from the start.
+The game opens on a password screen (the password is in `config/balance.tres`, `1234` for now).
+`--map=` skips it.
+
+The Enemy Arena is finished: survive the waves, wait for the code chest's chains to fall off at
+wave 7, then hold E on it for 2 s. The Boss Chamber and the Labyrinth are still placeholder rooms
+(parts D and E): each has a gun chest, a few Grunt and Fuse Kin, and the secret code far from the
+start.
 
 ### Controls
 
@@ -36,7 +41,7 @@ and the secret code somewhere far from the start.
 |---|---|
 | Move | WASD |
 | Aim | Mouse |
-| Shoot (hold for auto-fire) | Left mouse button |
+| Shoot (hold for auto-fire) | Left mouse button, or F |
 | Dodge roll | Space or right mouse button |
 | Reload | R |
 | Switch gun | Mouse wheel, or 1 / 2 / 3 |

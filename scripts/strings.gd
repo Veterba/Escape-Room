@@ -31,5 +31,13 @@ const RELOADING := "Reloading"
 ## Shown above chests and guns on the floor.
 const INTERACT_PROMPT := "E"
 
-## F3 overlay: FPS, map, seconds left, player position, enemy count.
-const DEBUG_FORMAT := "FPS %d\nMap %s\nTime left %.1f s\nPlayer %d, %d\nEnemies %d"
+## Enemy Arena: shown while the code chest is chained, for example "Chest locked: wave 3/7".
+const CHEST_LOCKED_FORMAT := "Chest locked: wave %d/%d"
+const CHEST_OPEN := "Chest open!"
+
+const PASSWORD_PROMPT := "Password"
+const PASSWORD_HINT := "Press Enter to confirm"
+
+## F3 overlay: FPS, map, seconds left, player position, enemy count, arena wave ("-" elsewhere).
+const DEBUG_FORMAT := "FPS %d\nMap %s\nTime left %.1f s\nPlayer %d, %d\nEnemies %d\nWave %s"
+const NO_WAVE := "-"

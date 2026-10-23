@@ -23,12 +23,19 @@ func setup(direction: Vector2, gun: GunStats) -> void:
 
 func _ready() -> void:
 	_sprite.texture = _stats.bullet_texture
-	body_entered.connect(_on_hit.unbind(1))  # Walls and chests: no damage.
+	body_entered.connect(_on_body_hit)
 	area_entered.connect(func(hitbox: Area2D) -> void: _on_hit(hitbox.owner as Enemy))
 
 
 func _physics_process(delta: float) -> void:
 	position += _velocity * delta
+
+
+## Walls and chests take no damage; a barrel is lit.
+func _on_body_hit(body: Node2D) -> void:
+	if body is Barrel and not _spent:
+		(body as Barrel).ignite()
+	_on_hit()
 
 
 ## `enemy` is null when the bullet hit a wall.

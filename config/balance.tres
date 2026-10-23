@@ -1,36 +1,43 @@
-[gd_resource type="Resource" script_class="BalanceConfig" load_steps=21 format=3]
+[gd_resource type="Resource" script_class="BalanceConfig" format=3 uid="uid://dprx3j3xn2kg5"]
 
-[ext_resource type="Script" path="res://config/balance_config.gd" id="1_balance"]
-[ext_resource type="Script" path="res://config/gun_stats.gd" id="2_gun_stats"]
-[ext_resource type="Texture2D" path="res://art/game/gun_pop_pistol.png" id="3_pop_pistol"]
-[ext_resource type="Texture2D" path="res://art/game/gun_brass_revolver.png" id="4_brass_revolver"]
-[ext_resource type="Texture2D" path="res://art/game/gun_scattershot.png" id="5_scattershot"]
-[ext_resource type="Texture2D" path="res://art/game/gun_fuse_launcher.png" id="6_fuse_launcher"]
-[ext_resource type="Texture2D" path="res://art/game/gun_gold_detonator.png" id="7_gold_detonator"]
-[ext_resource type="Texture2D" path="res://art/game/bullet_player.png" id="8_bullet"]
-[ext_resource type="Texture2D" path="res://art/game/bullet_rocket.png" id="9_rocket"]
-[ext_resource type="Texture2D" path="res://art/game/bullet_gold.png" id="10_gold"]
-[ext_resource type="Texture2D" path="res://art/game/held_pop_pistol.png" id="11_held_pop_pistol"]
-[ext_resource type="Texture2D" path="res://art/game/held_brass_revolver.png" id="12_held_brass_revolver"]
-[ext_resource type="Texture2D" path="res://art/game/held_scattershot.png" id="13_held_scattershot"]
-[ext_resource type="Texture2D" path="res://art/game/held_fuse_launcher.png" id="14_held_fuse_launcher"]
-[ext_resource type="Texture2D" path="res://art/game/held_gold_detonator.png" id="15_held_gold_detonator"]
+[ext_resource type="Script" uid="uid://cddrgcvig5e3q" path="res://config/balance_config.gd" id="1_balance"]
+[ext_resource type="Script" uid="uid://k6rp1tlqa4hm" path="res://config/gun_stats.gd" id="2_gun_stats"]
+[ext_resource type="Texture2D" uid="uid://vt7sud2dioom" path="res://art/game/gun_pop_pistol.png" id="3_pop_pistol"]
+[ext_resource type="Texture2D" uid="uid://dnkqfoothvvw2" path="res://art/game/gun_brass_revolver.png" id="4_brass_revolver"]
+[ext_resource type="Texture2D" uid="uid://b0dvh6ao6t5j0" path="res://art/game/gun_scattershot.png" id="5_scattershot"]
+[ext_resource type="Texture2D" uid="uid://dansg63d8tdik" path="res://art/game/gun_fuse_launcher.png" id="6_fuse_launcher"]
+[ext_resource type="Texture2D" uid="uid://e3f10fckuyju" path="res://art/game/gun_gold_detonator.png" id="7_gold_detonator"]
+[ext_resource type="Texture2D" uid="uid://ddoyqw3g8vfmn" path="res://art/game/bullet_player.png" id="8_bullet"]
+[ext_resource type="Texture2D" uid="uid://c1jh2u4k4r0bl" path="res://art/game/bullet_rocket.png" id="9_rocket"]
+[ext_resource type="Texture2D" uid="uid://cf363qbnt5rg3" path="res://art/game/bullet_gold.png" id="10_gold"]
+[ext_resource type="Texture2D" uid="uid://b58djj8trkwdq" path="res://art/game/held_pop_pistol.png" id="11_held_pop_pistol"]
+[ext_resource type="Texture2D" uid="uid://31hj4ndq8v7u" path="res://art/game/held_brass_revolver.png" id="12_held_brass_revolver"]
+[ext_resource type="Texture2D" uid="uid://boi0lol4g0wd7" path="res://art/game/held_scattershot.png" id="13_held_scattershot"]
+[ext_resource type="Texture2D" uid="uid://1qvsip4o3v0b" path="res://art/game/held_fuse_launcher.png" id="14_held_fuse_launcher"]
+[ext_resource type="Texture2D" uid="uid://b8ldxx0bv26lk" path="res://art/game/held_gold_detonator.png" id="15_held_gold_detonator"]
+[ext_resource type="Script" uid="uid://d0h5tq8ordo1v" path="res://config/arena_wave.gd" id="16_arena_wave"]
 
-[sub_resource type="Resource" id="GunStats_pop_pistol"]
-script = ExtResource("2_gun_stats")
-id = &"pop_pistol"
-icon = ExtResource("3_pop_pistol")
-held_texture = ExtResource("11_held_pop_pistol")
-bullet_texture = ExtResource("8_bullet")
-grip = Vector2(2, 4)
-muzzle = Vector2(10, 2)
-eject = Vector2(5, 0)
-damage = 1
-fire_rate = 4.0
-magazine_size = 8
-reserve_ammo = 0
-infinite_reserve = true
-reload_time = 1.0
+[sub_resource type="Resource" id="ArenaWave_1"]
+script = ExtResource("16_arena_wave")
+grunts = 4
+
+[sub_resource type="Resource" id="ArenaWave_2"]
+script = ExtResource("16_arena_wave")
+grunts = 3
+fuses = 2
+
+[sub_resource type="Resource" id="ArenaWave_3"]
+script = ExtResource("16_arena_wave")
+grunts = 3
+rockets = 1
+wings = 1
+
+[sub_resource type="Resource" id="ArenaWave_4"]
+script = ExtResource("16_arena_wave")
+grunts = 3
+fuses = 2
+rockets = 1
+wings = 2
 
 [sub_resource type="Resource" id="GunStats_brass_revolver"]
 script = ExtResource("2_gun_stats")
@@ -48,24 +55,6 @@ reserve_ammo = 60
 reload_time = 1.4
 chest_weight = 50.0
 
-[sub_resource type="Resource" id="GunStats_scattershot"]
-script = ExtResource("2_gun_stats")
-id = &"scattershot"
-icon = ExtResource("5_scattershot")
-held_texture = ExtResource("13_held_scattershot")
-bullet_texture = ExtResource("8_bullet")
-grip = Vector2(5, 3)
-muzzle = Vector2(14, 2)
-eject = Vector2(7, 0)
-damage = 1
-fire_rate = 1.2
-magazine_size = 4
-reserve_ammo = 40
-reload_time = 1.6
-pellets = 6
-spread_degrees = 30.0
-chest_weight = 30.0
-
 [sub_resource type="Resource" id="GunStats_fuse_launcher"]
 script = ExtResource("2_gun_stats")
 id = &"fuse_launcher"
@@ -82,7 +71,6 @@ magazine_size = 2
 reserve_ammo = 12
 reload_time = 2.0
 blast_radius = 40.0
-blast_hurts_player = true
 chest_weight = 15.0
 
 [sub_resource type="Resource" id="GunStats_gold_detonator"]
@@ -94,80 +82,48 @@ bullet_texture = ExtResource("10_gold")
 grip = Vector2(3, 4)
 muzzle = Vector2(13, 2)
 eject = Vector2(6, 0)
+sparkles = true
 damage = 3
-fire_rate = 4.0
 magazine_size = 12
 reserve_ammo = 120
 reload_time = 1.2
 blast_radius = 24.0
 blast_hurts_player = false
 chest_weight = 5.0
-sparkles = true
+
+[sub_resource type="Resource" id="GunStats_pop_pistol"]
+script = ExtResource("2_gun_stats")
+id = &"pop_pistol"
+icon = ExtResource("3_pop_pistol")
+held_texture = ExtResource("11_held_pop_pistol")
+bullet_texture = ExtResource("8_bullet")
+grip = Vector2(2, 4)
+muzzle = Vector2(10, 2)
+eject = Vector2(5, 0)
+infinite_reserve = true
+
+[sub_resource type="Resource" id="GunStats_scattershot"]
+script = ExtResource("2_gun_stats")
+id = &"scattershot"
+icon = ExtResource("5_scattershot")
+held_texture = ExtResource("13_held_scattershot")
+bullet_texture = ExtResource("8_bullet")
+grip = Vector2(5, 3)
+muzzle = Vector2(14, 2)
+eject = Vector2(7, 0)
+fire_rate = 1.2
+magazine_size = 4
+reserve_ammo = 40
+reload_time = 1.6
+pellets = 6
+spread_degrees = 30.0
+chest_weight = 30.0
 
 [resource]
 script = ExtResource("1_balance")
-round_length = 600.0
-timer_warning_time = 60.0
-map_name_show_time = 2.0
-end_screen_delay = 0.8
-player_hearts = 3
-player_move_speed = 110.0
-hit_invulnerable_time = 1.0
-hit_blink_rate = 12.0
-smoke_bombs_start = 1
-smoke_bombs_max = 2
-interact_range = 24.0
-roll_duration = 0.45
-roll_distance = 70.0
-roll_invulnerable_time = 0.35
-roll_cooldown = 0.6
-player_bullet_speed = 300.0
 pop_pistol = SubResource("GunStats_pop_pistol")
 brass_revolver = SubResource("GunStats_brass_revolver")
 scattershot = SubResource("GunStats_scattershot")
 fuse_launcher = SubResource("GunStats_fuse_launcher")
 gold_detonator = SubResource("GunStats_gold_detonator")
-gun_slots = 3
-gun_chest_open_time = 0.5
-ammo_drop_chance = 0.1
-heart_drop_chance = 0.05
-smoke_drop_chance = 0.03
-ammo_box_refill = 0.5
-enemy_wake_distance = 160.0
-enemy_knockback_speed = 90.0
-player_knockback_speed = 120.0
-knockback_decay = 900.0
-grunt_hp = 5
-grunt_speed = 50.0
-grunt_stop_distance = 120.0
-grunt_fire_interval = 1.5
-grunt_bullet_speed = 120.0
-fuse_hp = 3
-fuse_speed = 90.0
-fuse_trigger_distance = 40.0
-fuse_time = 1.2
-fuse_blast_radius = 36.0
-fuse_blast_damage = 5
-fuse_blink_rate_start = 3.0
-fuse_blink_rate_end = 20.0
-camera_smoothing_speed = 8.0
-screen_shake_enabled = true
-screen_shake_decay = 30.0
-hit_shake = 3.0
-explosion_shake = 4.0
-walk_bob_height = 2.0
-walk_step_rate = 6.0
-footstep_squash = 0.12
-roll_squash = 0.25
-squash_return_time = 0.12
-hit_flash_time = 0.08
-muzzle_flash_time = 0.05
-recoil_kick = 2.0
-recoil_return_time = 0.08
-casing_eject_speed = 50.0
-casing_randomness = 0.3
-casing_eject_lift = 80.0
-casing_gravity = 500.0
-casing_bounciness = 0.4
-casing_bounces = 2
-casing_spin = 18.0
+arena_waves = Array[ExtResource("16_arena_wave")]([SubResource("ArenaWave_1"), SubResource("ArenaWave_2"), SubResource("ArenaWave_3"), SubResource("ArenaWave_4")])

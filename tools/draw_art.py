@@ -20,7 +20,8 @@ PALETTE = {
     "A": (0x0B, 0x08, 0x10, 255),  # abyss, outlines and background
 }
 
-# 16x16 tiles. The tile set atlas is these four tiles side by side, in this order.
+# 16x16 tiles. The tile set atlas is these tiles side by side, in the order of TILES below.
+# New tiles go at the end, so the atlas coordinates of the old ones never change.
 FLOOR_PLAIN = [
     "SSSSSSSSSSSSSSSA",
     "SSSSSSSSSSSSSSSA",
@@ -56,6 +57,46 @@ FLOOR_CRACKED = [
     "SSSSSSSSSSSSSSSA",
     "SSSSSSSSSSSSMSSA",
     "SSSSSSSSSSSSSSSA",
+    "AAAAAAAAAAAAAAAA",
+]
+
+# A floor tile with its top-left corner chipped off.
+FLOOR_CHIPPED = [
+    "AAAMSSSSSSSSSSSA",
+    "AAMSSSSSSSSSSSSA",
+    "AMSSSSSSSSSSSSSA",
+    "MSSSSSSSSSSSSSSA",
+    "SSSSSSSSSSSSSSSA",
+    "SSSSSSSSSSSSSSSA",
+    "SSSSSSSSSSSSSSSA",
+    "SSSSSSSSSMSSSSSA",
+    "SSSSSSSSSSSSSSSA",
+    "SSSSSSSSSSSSSSSA",
+    "SSSSSSSSSSSSSSSA",
+    "SSSSSSSSSSSSSSSA",
+    "SSSMSSSSSSSSSSSA",
+    "SSSSSSSSSSSSSSSA",
+    "SSSSSSSSSSSSSSSA",
+    "AAAAAAAAAAAAAAAA",
+]
+
+# A crate in the arena: cover that never breaks. Top face, then the front with a diagonal brace.
+CRATE = [
+    "AAAAAAAAAAAAAAAA",
+    "AOOOOOOOOOOOOOOA",
+    "AOBBBBBBBBBBBBBA",
+    "AOBBBBBBBBBBBBBA",
+    "ABBBBBBBBBBBBBBA",
+    "AAAAAAAAAAAAAAAA",
+    "ABBBBBBBBBBBBBBA",
+    "ABMMMMMMMMMMBBBA",
+    "ABMMMMMMMMBBMMBA",
+    "ABMMMMMMBBMMMMBA",
+    "ABMMMMBBMMMMMMBA",
+    "ABMMBBMMMMMMMMBA",
+    "ABBBMMMMMMMMMMBA",
+    "ABBBBBBBBBBBBBBA",
+    "AAAAAAAAAAAAAAAA",
     "AAAAAAAAAAAAAAAA",
 ]
 
@@ -99,7 +140,7 @@ WALL_FACE = [
     "AAAAAAAAAAAAAAAA",
 ]
 
-TILES = [FLOOR_PLAIN, FLOOR_CRACKED, WALL_TOP, WALL_FACE]
+TILES = [FLOOR_PLAIN, FLOOR_CRACKED, WALL_TOP, WALL_FACE, FLOOR_CHIPPED, CRATE]
 
 PLAYER_BULLET = [
     ".AAAA.",
@@ -120,6 +161,50 @@ ENEMY_BULLET = [
     "ORRRRRRO",
     ".ORRRRO.",
     "..OOOO..",
+]
+
+# Wing Kin bullet: the same shape in teal.
+WING_BULLET = [
+    "..OOOO..",
+    ".OTTTTO.",
+    "OTTOOTTO",
+    "OTTOOTTO",
+    "OTTTTTTO",
+    "OTTTTTTO",
+    ".OTTTTO.",
+    "..OOOO..",
+]
+
+# Red barrel: explodes when shot.
+BARREL = [
+    "..AAAAAAAA..",
+    ".ARRRRRRRRA.",
+    "ARMMMMMMMMRA",
+    "ARRRRRRRRRRA",
+    "AMMMMMMMMMMA",
+    "AROORRRRRRRA",
+    "AROORRRRRRRA",
+    "ARORRRRRRRRA",
+    "ARRRRRRRRRRA",
+    "AMMMMMMMMMMA",
+    "AROORRRRRRRA",
+    "ARORRRRRRRRA",
+    "ARRRRRRRRRRA",
+    ".ARRRRRRRRA.",
+    "..AAAAAAAA..",
+]
+
+# Chains and a padlock across the code chest while it is locked. Same width as the chest art.
+CHEST_CHAINS = [
+    "............AAAA............",
+    "...........AM..MA...........",
+    "...........AM..MA...........",
+    "..........AAAAAAAA..........",
+    "AMMAMMAMMAABBBBBBAAMMAMMAMMA",
+    "MOOMOOMOOMABBAABBAMOOMOOMOOM",
+    "AMMAMMAMMAABBAABBAAMMAMMAMMA",
+    "..........ABBBBBBA..........",
+    "..........AAAAAAAA..........",
 ]
 
 # Fuse Launcher rocket, pointing right.
@@ -250,6 +335,9 @@ def main() -> None:
         "bullet_enemy": ENEMY_BULLET,
         "bullet_rocket": ROCKET,
         "bullet_gold": GOLD_BULLET,
+        "bullet_wing": WING_BULLET,
+        "barrel": BARREL,
+        "chest_chains": CHEST_CHAINS,
         "shell_casing": SHELL_CASING,
         "held_pop_pistol": HELD_POP_PISTOL,
         "held_brass_revolver": HELD_BRASS_REVOLVER,

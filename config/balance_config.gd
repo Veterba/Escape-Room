@@ -90,6 +90,62 @@ extends Resource
 @export var fuse_blink_rate_start: float = 3.0
 @export var fuse_blink_rate_end: float = 20.0
 
+@export_group("Rocket Kin")
+@export var rocket_hp: int = 6
+@export var rocket_speed: float = 40.0
+## While wandering, it walks to a random point up to this many pixels away.
+@export var rocket_wander_distance: float = 64.0
+## Seconds it shakes and shows its aim line before dashing.
+@export var rocket_telegraph_time: float = 0.6
+@export var rocket_dash_speed: float = 260.0
+## Seconds it is stunned after the dash hits something.
+@export var rocket_stun_time: float = 1.0
+
+@export_group("Wing Kin")
+@export var wing_hp: int = 4
+@export var wing_speed: float = 70.0
+## The distance it tries to keep from the player.
+@export var wing_keep_distance: float = 100.0
+## It stops moving while it is within this many pixels of the keep distance.
+@export var wing_distance_slack: float = 10.0
+## Seconds between spreads.
+@export var wing_fire_interval: float = 2.0
+@export var wing_bullets: int = 3
+## Degrees between two neighbouring bullets of one spread.
+@export var wing_spread_step: float = 15.0
+@export var wing_bullet_speed: float = 120.0
+
+@export_group("Enemy Arena")
+## Wave 1 is the first entry. Waves after the last entry repeat the last entry.
+@export var arena_waves: Array[ArenaWave] = []
+## Seconds between waves.
+@export var arena_wave_interval: float = 30.0
+## The next wave starts at once when fewer than this many enemies are alive.
+@export var arena_min_alive: int = 3
+## Never more than this many enemies alive; a wave that would go over skips the rest.
+@export var arena_max_alive: int = 12
+## Seconds the spawn effect plays before the enemy appears.
+@export var arena_spawn_time: float = 0.8
+## Enemies never appear closer than this to the player, in pixels.
+@export var arena_spawn_min_distance: float = 120.0
+## Enemies appear on floor this many tiles or less from the edge of the map.
+@export var arena_spawn_edge_tiles: int = 3
+## The code chest is chained shut until this wave starts.
+@export var arena_chest_unlock_wave: int = 7
+## Seconds E must be held to open the code chest.
+@export var code_chest_open_time: float = 2.0
+
+@export_group("Barrels")
+@export var barrel_blast_radius: float = 40.0
+## Damage the blast does to enemies (the player always loses one heart).
+@export var barrel_damage: int = 8
+## Seconds between a barrel being hit and its explosion, so chains go off one by one.
+@export var barrel_fuse_time: float = 0.1
+
+@export_group("Password screen")
+## The password from the previous escape room task.
+@export var password: String = "1234"
+
 @export_group("Camera")
 ## How fast the camera catches up with the player. Higher is snappier.
 @export var camera_smoothing_speed: float = 8.0

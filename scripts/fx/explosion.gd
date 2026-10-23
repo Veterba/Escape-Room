@@ -1,6 +1,7 @@
 ## An explosion. One rule for all of them (Fuse Launcher, Gold Detonator, Fuse Kin, barrels):
 ## it damages every enemy and the player inside its radius, unless a wall is in the way.
 ## Only the Gold Detonator's blasts spare the player (hurts_player = false).
+## Barrels inside the radius are lit too, which makes them chain-explode.
 class_name Explosion
 extends Node2D
 
@@ -29,6 +30,9 @@ func _ready() -> void:
 	for enemy: Enemy in get_tree().get_nodes_in_group(&"enemies"):
 		if _reaches(enemy.hitbox_position()):
 			enemy.take_damage(enemy_damage, enemy.global_position - global_position)
+	for barrel: Barrel in get_tree().get_nodes_in_group(&"barrels"):
+		if _reaches(barrel.global_position):
+			barrel.ignite()
 	var player := get_tree().get_first_node_in_group(&"player") as Player
 	if player:
 		if hurts_player and _reaches(player.hurtbox_position()):

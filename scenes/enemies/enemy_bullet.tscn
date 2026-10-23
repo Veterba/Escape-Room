@@ -9,7 +9,7 @@ radius = 3.0
 [node name="EnemyBullet" type="Area2D" groups=["enemy_bullets"]]
 z_index = 5
 collision_layer = 16
-collision_mask = 33
+collision_mask = 161
 monitorable = false
 script = ExtResource("1_script")
 

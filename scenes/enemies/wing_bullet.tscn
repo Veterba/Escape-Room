@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy_bullet.tscn" id="1_bullet"]
+[ext_resource type="Texture2D" path="res://art/game/bullet_wing.png" id="2_texture"]
+
+[node name="WingBullet" instance=ExtResource("1_bullet")]
+
+[node name="Sprite" parent="." index="0"]
+texture = ExtResource("2_texture")

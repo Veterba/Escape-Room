@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.3.0 — 2026-10-23
+
+### Added
+- The game opens on a password screen; a wrong password shakes the field and clears it. It is asked once per launch.
+- The Enemy Arena in full: a 48×32 hall with crates for cover, red barrels and two gun chests.
+- Waves: a new wave every 30 s, or at once when fewer than 3 enemies are left; never more than 12 at a time. Enemies appear at the edges with a short red ring, never right next to you.
+- The code chest stands at one of four spots and is chained shut until wave 7 starts; the HUD shows "Chest locked: wave X/7", then "Chest open!" as the chains fall off. Hold E for 2 s to open it; getting hit cancels it.
+- Red barrels explode when shot: 8 damage to enemies, one heart off you, and nearby barrels go off one after another.
+- Rocket Kin: wanders, shakes with a red aim line, then dashes until it hits something and is stunned. Touching it costs a heart.
+- Wing Kin: flies over walls, keeps its distance, and fires a spread of 3 teal bullets.
+- F also shoots, for Mac trackpads.
+- A third floor tile with a chipped corner.
+- The F3 overlay shows the arena wave.
+
 ## v0.2.2 — 2026-10-23
 
 ### Added

@@ -2,25 +2,33 @@
 ## After building, it bakes the navigation mesh that enemies use to walk around walls.
 ## Walls, characters and chests are y-sorted: whatever stands lower on screen is drawn in front.
 ##
-## Layout legend: '#' wall, '.' floor, 'P' player start, 'C' secret code,
-## 'G' gun chest, 'g' Grunt Kin, 'f' Fuse Kin. Every letter stands on floor.
+## Layout legend: '#' wall, 'x' crate (a wall that looks like a crate), '.' floor,
+## 'P' player start, 'C' secret code, 'K' a spot for the code chest (one of them is picked at
+## random), 'G' gun chest, 'b' red barrel, 'g' Grunt Kin, 'f' Fuse Kin. Every letter but '#'
+## and 'x' stands on floor.
 class_name GameMap
 extends Node2D
 
 const TILE_SIZE := 16
 const SOURCE_ID := 0
 ## Atlas coordinates of the tiles in art/game/tiles.png.
-const FLOOR_TILES: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0)]
-## How often each floor tile is picked: mostly plain, some cracked.
-const FLOOR_WEIGHTS: Array[float] = [9.0, 1.0]
+const FLOOR_TILES: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(4, 0)]
+## How often each floor tile is picked: mostly plain, some cracked, some chipped.
+const FLOOR_WEIGHTS: Array[float] = [8.0, 1.0, 1.0]
 const WALL_TOP := Vector2i(2, 0)
 const WALL_FACE := Vector2i(3, 0)
+const CRATE_TILE := Vector2i(5, 0)
 const WALL := "#"
+const CRATE := "x"
+const FLOOR := "."
 const PLAYER_START := "P"
+const CODE_CHEST_SPOT := "K"
+const CODE_CHEST := preload("res://scenes/world/code_chest.tscn")
 ## What each letter in the layout places on the map.
 const ENTITIES := {
 	"C": preload("res://scenes/world/code_pickup.tscn"),
 	"G": preload("res://scenes/world/gun_chest.tscn"),
+	"b": preload("res://scenes/world/barrel.tscn"),
 	"g": preload("res://scenes/enemies/grunt_kin.tscn"),
 	"f": preload("res://scenes/enemies/fuse_kin.tscn"),
 }
@@ -33,6 +41,8 @@ const ENTITIES := {
 var spawn_position := Vector2.ZERO
 ## The whole map in pixels, used to keep the camera inside.
 var bounds := Rect2i()
+## Cells with plain floor and nothing on them (where arena enemies may appear).
+var free_floor_cells: Array[Vector2i] = []
 
 @onready var _navigation: NavigationRegion2D = $Navigation
 @onready var _floor: TileMapLayer = $Navigation/Floor
@@ -47,6 +57,7 @@ func _ready() -> void:
 
 func _build() -> void:
 	var rng := RandomNumberGenerator.new()
+	var code_chest_spots: Array[Vector2] = []
 	for y in layout.size():
 		for x in layout[y].length():
 			var cell := Vector2i(x, y)
@@ -54,14 +65,30 @@ func _build() -> void:
 			if symbol == WALL:
 				_walls.set_cell(cell, SOURCE_ID, _wall_tile_at(x, y))
 				continue
+			if symbol == CRATE:
+				_walls.set_cell(cell, SOURCE_ID, CRATE_TILE)
+				continue
 			_floor.set_cell(cell, SOURCE_ID, FLOOR_TILES[rng.rand_weighted(FLOOR_WEIGHTS)])
 			var center := _floor.map_to_local(cell)
-			if symbol == PLAYER_START:
+			if symbol == FLOOR:
+				free_floor_cells.append(cell)
+			elif symbol == PLAYER_START:
 				spawn_position = center
+			elif symbol == CODE_CHEST_SPOT:
+				code_chest_spots.append(center)
 			elif ENTITIES.has(symbol):
 				var entity: Node2D = ENTITIES[symbol].instantiate()
 				entity.position = center
 				add_child(entity)
+	if not code_chest_spots.is_empty():
+		var chest: Node2D = CODE_CHEST.instantiate()
+		chest.position = code_chest_spots.pick_random()
+		add_child(chest)
+
+
+## The centre of `cell` in pixels.
+func cell_center(cell: Vector2i) -> Vector2:
+	return _floor.map_to_local(cell)
 
 
 ## A wall with floor right below it shows its front face; any other wall shows its top.

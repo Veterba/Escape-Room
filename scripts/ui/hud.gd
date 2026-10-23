@@ -1,5 +1,6 @@
 ## The in-game HUD: hearts top-left; the timer top-centre (red and pulsing in the last minute);
-## gun, ammo and smoke bombs top-right; the map name for a moment at the start.
+## gun, ammo and smoke bombs top-right; the map name for a moment at the start. In the Enemy
+## Arena, one line under the timer says whether the code chest is still chained.
 class_name Hud
 extends CanvasLayer
 
@@ -21,6 +22,7 @@ var _pulse_time := 0.0
 @onready var _hearts: HBoxContainer = $Root/Hearts
 @onready var _timer_label: Label = $Root/TimerLabel
 @onready var _map_name: Label = $Root/MapName
+@onready var _arena_status: Label = $Root/ArenaStatus
 @onready var _gun_icon: TextureRect = $Root/Loadout/Row/GunIcon
 @onready var _ammo_label: Label = $Root/Loadout/Row/AmmoLabel
 @onready var _smoke_label: Label = $Root/Loadout/Row/SmokeLabel
@@ -33,6 +35,7 @@ func bind(player: Player, timer: RoundTimer, map_id: StringName) -> void:
 	player.gun.changed.connect(_refresh_gun)
 	player.hearts_changed.connect(_show_hearts)
 	player.smoke_bombs_changed.connect(_show_smoke_bombs)
+	Events.wave_started.connect(_show_arena_status)
 	_refresh_gun()
 	_show_hearts(player.hearts)
 	_show_smoke_bombs(player.smoke_bombs)
@@ -61,6 +64,16 @@ func _show_hearts(count: int) -> void:
 		heart.texture = HEART_TEXTURE
 		heart.modulate = Color.WHITE if i < count else LOST_HEART_TINT
 		_hearts.add_child(heart)
+
+
+## Only the arena sends waves, so the line never shows on the other maps.
+func _show_arena_status(wave: int) -> void:
+	var unlock_wave := Config.balance.arena_chest_unlock_wave
+	_arena_status.visible = true
+	if wave >= unlock_wave:
+		_arena_status.text = Strings.CHEST_OPEN
+	else:
+		_arena_status.text = Strings.CHEST_LOCKED_FORMAT % [wave, unlock_wave]
 
 
 func _show_smoke_bombs(count: int) -> void:

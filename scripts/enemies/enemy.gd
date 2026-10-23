@@ -84,8 +84,9 @@ func can_see(point: Vector2) -> bool:
 	return get_world_2d().direct_space_state.intersect_ray(query).is_empty()
 
 
-func shoot(direction: Vector2, speed: float) -> void:
-	var bullet: EnemyBullet = ENEMY_BULLET.instantiate()
+## Fires one bullet from the eyes. `bullet_scene` picks the look (the Wing Kin's are teal).
+func shoot(direction: Vector2, speed: float, bullet_scene: PackedScene = ENEMY_BULLET) -> void:
+	var bullet: EnemyBullet = bullet_scene.instantiate()
 	bullet.global_position = global_position + EYE_OFFSET
 	bullet.setup(direction, speed)
 	get_tree().current_scene.add_child(bullet)
