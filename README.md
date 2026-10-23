@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map per round, a 10:00 timer, find the secret code before time runs out.
 
-Current version: **0.2.1** (Part B plus fixes: small guns in hand, y-sorting, one explosion rule, smoke bomb drops, idle enemies).
+Current version: **0.2.2** (Part B plus fixes, and Windows and macOS builds).
 
 ## Requirements
 
@@ -73,6 +73,26 @@ python3 tools/draw_art.py     # our own pixel art: tiles, bullet, casing, flash,
 
 Both scripts are safe to run again at any time. Replace a file in `art/source/` with the same
 number prefix and re-run `import_art.py` to swap in new art.
+
+## Build for Windows and macOS
+
+Install the export templates for Godot 4.7.2 once: open the Godot editor, choose
+Editor → Manage Export Templates → Download and Install. They must match the Godot version
+exactly. Then, from the repo root:
+
+```sh
+tools/export.sh
+```
+
+It writes `builds/EscapeBoom-windows.zip` (one `.exe` with the game inside) and
+`builds/EscapeBoom-macos.zip` (one app for Apple Silicon and Intel Macs). If `godot` is not on
+the PATH, point the script at it: `GODOT=/path/to/godot tools/export.sh`.
+
+The builds are not signed with a developer certificate, so both systems warn the first time:
+
+- **macOS:** unzip, then right-click `Escape Boom.app`, choose Open, then Open again.
+- **Windows:** unzip, run `EscapeBoom.exe`; when SmartScreen appears, click More info, then
+  Run anyway.
 
 ## Tuning
 

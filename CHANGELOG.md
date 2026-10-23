@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.2 — 2026-10-23
+
+### Added
+- The game can be built for Windows (a single .exe) and macOS (one app for Apple Silicon and Intel Macs).
+
 ## v0.2.1 — 2026-10-19
 
 ### Added

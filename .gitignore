@@ -2,6 +2,7 @@
 .godot/
 /build/
 /export/
+/builds/
 
 # Python
 __pycache__/

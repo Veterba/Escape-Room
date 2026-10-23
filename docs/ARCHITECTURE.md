@@ -13,7 +13,7 @@ How Escape Boom is put together. Updated at the end of every part.
 | `scripts/` | The GDScript for those scenes, in the same groups. |
 | `shaders/` | The hit flash shader. |
 | `tests/` | The headless test runner and the tests. |
-| `tools/` | Python art scripts. |
+| `tools/` | Python art scripts, and `export.sh`, which builds the Windows and macOS releases from `export_presets.cfg`. |
 
 ## Autoloads
 
