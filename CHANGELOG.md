@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.10.0 — 2026-10-23
+
+### Changed
+- Officer Kin are now Watchers: dome cameras on wheels with a siren. The lens sweeps while they patrol, and they stare and light up while they chase you.
+- Rocket Kin are now Rams: heavy robots with a striped dozer blade. The visor flares while they shake before a charge.
+- Wing Kin are now Trojans: flying pyramids with one eye and dangling cables, bobbing over their shadow. The eye opens wide half a second before the 3-bullet spread.
+- Shade Kin are now Glitches: one-eyed ghost files, half see-through, floating smoothly over their shadow instead of flickering.
+- Every 3–6 s a Glitch either twitches or teleports: it tears apart, is gone for a moment and appears again 50–90 px from you, with sparks at both places. It can't hurt you or be hit while teleporting.
+- These four enemies leave their dying frame behind, fading out, when they die.
+
 ## v0.9.0 — 2026-10-23
 
 ### Changed

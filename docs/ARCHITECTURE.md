@@ -158,6 +158,16 @@ Round (scenes/round/round.tscn)               builds the map, decides the result
   a blast lights it; after a short fuse it explodes through the shared `Explosion`, which lights
   every barrel it reaches, so rows of barrels go off one by one. Enemies path around barrels; once
   one is gone they still walk around the empty spot (the navigation is not rebaked).
+- **Enemy looks.** The Officer, Rocket, Shade and Wing Kin wear the approved retexture looks
+  (Watcher, Ram, Glitch, Trojan), cut by `import_art.py` from `37_enemies_sheet.png` into
+  `art/game/enemies/`. Their scripts and names stay the same; each `SpriteFrames` has `idle`,
+  `walk`, `tell` (the warning before an attack), `hit` and `die`. Three switches on `Enemy` serve
+  these frames: `procedural_walk` off (the frames already move), `hover` for flyers (they bob over
+  a `GroundShadow`), and `fades_on_death` (the dying frame stays and fades). The Grunt and Fuse
+  Kin keep their old look until their new one is chosen.
+- **Shade Kin teleports.** `ShadeKin` floats in `FLOAT`; every 3-6 s it `TWITCH`es (looks only) or
+  teleports through `TEAR`, `GONE` and `UNFOLD`. While teleporting its hitbox is off, contact
+  damage is skipped and `take_damage()` does nothing, so it can neither hurt nor be hit.
 - **Rocket Kin** is a small state machine (`WANDER`, `TELEGRAPH`, `DASH`, `STUN`). Contact damage
   checks the overlapping player hurtbox every frame, and the player's own invulnerability keeps it
   to one heart per touch.

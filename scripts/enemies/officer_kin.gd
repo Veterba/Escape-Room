@@ -1,6 +1,7 @@
 ## Officer Kin: patrols fixed waypoints back and forth. If the player steps into his vision cone
 ## (80 px, 60 degrees) he chases for up to 4 s. Touching the player handcuffs them (no heart
 ## lost, only time). When the player breaks free he is stunned for 3 s. He never shoots.
+## Looks: the Watcher, a dome camera on wheels; it stares and lights up while it chases.
 class_name OfficerKin
 extends Enemy
 
@@ -49,6 +50,8 @@ func _physics_process(delta: float) -> void:
 			if _mode_left <= 0.0:
 				mode = Mode.PATROL
 	move(desired, delta)
+	if mode == Mode.CHASE:
+		body.play(&"tell")
 	if desired != Vector2.ZERO:
 		_facing = desired.normalized()
 	body.flip_h = _facing.x < 0.0

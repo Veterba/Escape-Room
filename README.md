@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.9.0** (retexture: guns, the key and the chests).
+Current version: **0.10.0** (retexture: the enemies).
 
 ## Requirements
 
@@ -43,7 +43,8 @@ Every round picks one of three map types at random, and builds it fresh:
   secret code) rises out of it.
   5:00 timer.
 - **Labyrinth:** one big dark maze, the start in a corner and the code at the far end. Officer
-  Kin handcuff you (mash E to break free), Shade Kin drift through walls, and an hourglass in a
+  Kin (Watcher cameras) handcuff you (mash E to break free), Shade Kin (Glitch ghosts) drift
+  through walls and teleport now and then, and an hourglass in a
   dead end adds 30 s. 5:00 timer, and no map.
 - **Boss Chamber:** a floor like the arena's, ending in the boss room. The Ammo Wraith has three
   phases (Belt Lash; plus Bullet Rain; then faster, with Fade). Beat it and the door to the exit

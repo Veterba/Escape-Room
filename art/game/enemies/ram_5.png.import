@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dkuyoqym81k0x"
-path="res://.godot/imported/enemy_shade_kin.png-bcd107fd1ce2a38bc2b65853f2f6935b.ctex"
+uid="uid://b62yylu2jn2g6"
+path="res://.godot/imported/ram_5.png-030ae6776c8abbf877f409127542f2cc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/game/enemy_shade_kin.png"
-dest_files=["res://.godot/imported/enemy_shade_kin.png-bcd107fd1ce2a38bc2b65853f2f6935b.ctex"]
+source_file="res://art/game/enemies/ram_5.png"
+dest_files=["res://.godot/imported/ram_5.png-030ae6776c8abbf877f409127542f2cc.ctex"]
 
 [params]
 

@@ -18,11 +18,7 @@ UPSCALE_FACTOR = 16
 CHARACTERS = {
     "02": ("boss_ammo_wraith", 64),
     "03": ("enemy_grunt_kin", 22),
-    "04": ("enemy_officer_kin", 22),
     "05": ("enemy_fuse_kin", 22),
-    "06": ("enemy_rocket_kin", 28),
-    "07": ("enemy_wing_kin", 22),
-    "08": ("enemy_shade_kin", 22),
 }
 
 # Guns and items: source file prefix -> output name.
@@ -84,6 +80,14 @@ CHESTS = ["gun_chest_locked", "gun_chest_ready", "gun_chest_open",
 OPEN_STRIPS = [("gun_chest_open", 30, 4), ("code_chest_open", 34, 3)]
 OUTLINE = (0x07, 0x06, 0x0D, 255)
 
+# The approved enemies, one row each, in 32x32 cells with their feet on the cell's bottom edge.
+# Columns: move 1-4, warning 1-2, hit (white), dying; the Glitch has three more: twitch and two
+# teleport frames. Output: art/game/enemies/<name>_<column>.png.
+ENEMY_SHEET = "retexture/37_enemies_sheet.png"
+ENEMY_DIR = "enemies"
+ENEMY_CELL = 32
+ENEMY_ROWS = [("watcher", 8), ("ram", 8), ("glitch", 11), ("trojan", 8)]
+
 # Art from the retexture references lives in art/source/retexture/, under its own numbers.
 # The password menu's TV as a character grid (columns x rows). The source file has the trailing
 # spaces of each row cut off, so every row is padded back to the full width.
@@ -121,6 +125,17 @@ def convert_native(source: Path) -> Image.Image:
     size = (image.width // UPSCALE_FACTOR, image.height // UPSCALE_FACTOR)
     # Pillow's nearest filter samples the centre of each 16x16 block.
     return harden_alpha(image.resize(size, Image.NEAREST))
+
+
+def convert_enemies() -> None:
+    sheet = Image.open(SOURCE_DIR / ENEMY_SHEET).convert("RGBA")
+    out_dir = GAME_DIR / ENEMY_DIR
+    out_dir.mkdir(exist_ok=True)
+    for row, (name, count) in enumerate(ENEMY_ROWS):
+        for i in range(count):
+            box = (i * ENEMY_CELL, row * ENEMY_CELL, (i + 1) * ENEMY_CELL, (row + 1) * ENEMY_CELL)
+            sheet.crop(box).save(out_dir / f"{name}_{i}.png")
+    print(f"{ENEMY_DIR}/  {sum(count for _, count in ENEMY_ROWS)} frames")
 
 
 def convert_hero() -> None:
@@ -254,6 +269,7 @@ def main() -> None:
             print(f"floor_{name}.png  {small.width}x{small.height}")
     convert_menu_tv()
     convert_hero()
+    convert_enemies()
     for gun in HELD_GUNS:
         Image.open(SOURCE_DIR / HELD_GUN_DIR / f"{gun}.png").convert("RGBA").save(GAME_DIR / f"held_{gun}.png")
     print(f"held_*.png  {len(HELD_GUNS)} guns")

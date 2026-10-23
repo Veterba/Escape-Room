@@ -115,6 +115,8 @@ extends Resource
 ## Degrees between two neighbouring bullets of one spread.
 @export var wing_spread_step: float
 @export var wing_bullet_speed: float
+## Seconds before a spread in which its eye opens wide as a warning.
+@export var wing_tell_time: float
 
 @export_group("Enemy Arena")
 ## Wave 1 is the first entry. Waves after the last entry repeat the last entry.
@@ -190,6 +192,18 @@ extends Resource
 @export_group("Shade Kin")
 @export var shade_hp: int
 @export var shade_speed: float
+## Seconds between its twitches and teleports (random between the two).
+@export var shade_event_min: float
+@export var shade_event_max: float
+## Chance that the next event is a twitch (looks only) rather than a teleport.
+@export var shade_twitch_chance: float
+@export var shade_twitch_time: float
+## A teleport: seconds to tear apart (and to unfold again), seconds gone, and how far from the
+## player it appears (random between the two, in pixels).
+@export var shade_tear_time: float
+@export var shade_gone_time: float
+@export var shade_appear_min: float
+@export var shade_appear_max: float
 
 @export_group("Ammo Wraith")
 @export var boss_hp: int

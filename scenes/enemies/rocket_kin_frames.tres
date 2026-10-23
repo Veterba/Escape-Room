@@ -1,46 +1,82 @@
-[gd_resource type="SpriteFrames" format=3 uid="uid://cetgqc76jbu7j"]
+[gd_resource type="SpriteFrames" load_steps=9 format=3]
 
-[ext_resource type="Texture2D" uid="uid://8pbh63lfaxqj" path="res://art/game/enemy_rocket_kin.png" id="1_art"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/ram_0.png" id="1_ram_0"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/ram_1.png" id="2_ram_1"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/ram_2.png" id="3_ram_2"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/ram_3.png" id="4_ram_3"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/ram_4.png" id="5_ram_4"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/ram_5.png" id="6_ram_5"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/ram_6.png" id="7_ram_6"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/ram_7.png" id="8_ram_7"]
 
 [resource]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_art")
-}],
-"loop": 0,
-"name": &"die",
-"speed": 8.0
+"texture": ExtResource("1_ram_0")
 }, {
-"frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_art")
-}],
-"loop": 0,
-"name": &"hit",
-"speed": 8.0
+"texture": ExtResource("2_ram_1")
 }, {
-"frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_art")
+"texture": ExtResource("3_ram_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ram_3")
 }],
-"loop": 1,
+"loop": true,
 "name": &"idle",
-"speed": 8.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_art")
-}],
-"loop": 0,
-"name": &"roll",
-"speed": 8.0
+"texture": ExtResource("1_ram_0")
 }, {
-"frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_art")
+"texture": ExtResource("2_ram_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_ram_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_ram_3")
 }],
-"loop": 1,
+"loop": true,
 "name": &"walk",
-"speed": 8.0
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_ram_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_ram_5")
+}],
+"loop": true,
+"name": &"tell",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_ram_0")
+}],
+"loop": false,
+"name": &"roll",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_ram_6")
+}],
+"loop": false,
+"name": &"hit",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_ram_7")
+}],
+"loop": false,
+"name": &"die",
+"speed": 1.0
 }]

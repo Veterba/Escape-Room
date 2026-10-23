@@ -1,5 +1,6 @@
 ## Base for every enemy: waking up, hit points, hit flash and knockback, pathfinding towards a
-## point, line of sight, shooting, and the death puff with a chance of a drop.
+## point, line of sight, shooting, and the death puff with a chance of a drop. The look options
+## below are for the approved retexture enemies, whose frames already walk and die.
 class_name Enemy
 extends CharacterBody2D
 
@@ -11,6 +12,18 @@ const WALL_MASK := 1
 ## A new path is asked for only when the target has moved this many pixels: asking every frame
 ## costs a path search per enemy per frame on a big map.
 const RETARGET_DISTANCE := 8.0
+## Flyers bob this many pixels up and down while they hover, this fast (radians per second).
+const HOVER_BOB := 2.0
+const HOVER_SPEED := 2.4
+## Seconds the dying frame takes to fade out.
+const DEATH_FADE_TIME := 0.4
+
+## Off for enemies whose walk frames already move: no procedural bob and squash then.
+@export var procedural_walk := true
+## Pixels a flyer hovers above its shadow (0 on the ground).
+@export var hover := 0.0
+## Leaves its dying frame behind, fading out, when it dies.
+@export var fades_on_death := false
 
 var hp := 1
 ## Where it looks and shoots from, above its feet. The boss is taller than the others.
@@ -23,6 +36,8 @@ var _dead := false
 @onready var body: AnimatedSprite2D = $Body
 @onready var juice: Juice = $Juice
 @onready var _nav: NavigationAgent2D = $Nav
+@onready var _body_rest: Vector2 = $Body.position
+var _hover_time := randf() * TAU
 
 
 ## The player to go after, or null while this enemy is idle or the player is dead.
@@ -56,6 +71,8 @@ func take_damage(amount: int, direction: Vector2) -> void:
 ## Death puff, maybe a drop, and gone.
 func die() -> void:
 	_dead = true
+	if fades_on_death:
+		_leave_dying_frame()
 	juice.spawn_death_puff()
 	_drop_loot()
 	Events.enemy_died.emit(self)
@@ -81,7 +98,13 @@ func move(desired: Vector2, delta: float) -> void:
 	if awake and player:
 		body.flip_h = player.global_position.x < global_position.x
 	body.play(&"walk" if desired != Vector2.ZERO else &"idle")
-	juice.update_walk(delta, desired != Vector2.ZERO)
+	if procedural_walk:
+		juice.update_walk(delta, desired != Vector2.ZERO)
+	else:
+		body.position = _body_rest
+	if hover > 0.0:
+		_hover_time += delta
+		body.position.y = _body_rest.y - hover + roundf(sin(_hover_time * HOVER_SPEED) * HOVER_BOB)
 
 
 ## True if no wall is between this enemy's eyes and `point`.
@@ -105,6 +128,19 @@ func shoot(direction: Vector2, speed: float, bullet_scene: PackedScene = ENEMY_B
 	bullet.setup(direction, speed)
 	get_tree().current_scene.add_child(bullet)
 	Audio.play_sfx(&"enemy_shot")
+
+
+## The dying frame stays where the enemy was and fades out.
+func _leave_dying_frame() -> void:
+	var corpse := Sprite2D.new()
+	corpse.texture = body.sprite_frames.get_frame_texture(&"die", 0)
+	corpse.flip_h = body.flip_h
+	corpse.modulate = body.modulate
+	corpse.global_position = body.global_position
+	get_tree().current_scene.add_child(corpse)
+	var fade := corpse.create_tween()
+	fade.tween_property(corpse, "modulate:a", 0.0, DEATH_FADE_TIME)
+	fade.tween_callback(corpse.queue_free)
 
 
 func _drop_loot() -> void:

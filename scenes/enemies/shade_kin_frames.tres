@@ -1,31 +1,107 @@
-[gd_resource type="SpriteFrames" load_steps=2 format=3]
+[gd_resource type="SpriteFrames" load_steps=12 format=3]
 
-[ext_resource type="Texture2D" path="res://art/game/enemy_shade_kin.png" id="1_art"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_0.png" id="1_glitch_0"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_1.png" id="2_glitch_1"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_2.png" id="3_glitch_2"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_3.png" id="4_glitch_3"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_4.png" id="5_glitch_4"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_5.png" id="6_glitch_5"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_6.png" id="7_glitch_6"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_7.png" id="8_glitch_7"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_8.png" id="9_glitch_8"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_9.png" id="10_glitch_9"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/glitch_10.png" id="11_glitch_10"]
 
 [resource]
 animations = [{
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_glitch_0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_glitch_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_glitch_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_glitch_3")
+}],
 "loop": true,
 "name": &"idle",
-"speed": 8.0
+"speed": 3.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_glitch_0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_glitch_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_glitch_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_glitch_3")
+}],
 "loop": true,
 "name": &"walk",
-"speed": 8.0
+"speed": 3.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_glitch_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_glitch_5")
+}],
+"loop": true,
+"name": &"tell",
+"speed": 3.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_glitch_0")
+}],
 "loop": false,
 "name": &"roll",
-"speed": 8.0
+"speed": 1.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_glitch_6")
+}],
 "loop": false,
 "name": &"hit",
-"speed": 8.0
+"speed": 1.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_glitch_7")
+}],
 "loop": false,
 "name": &"die",
-"speed": 8.0
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_glitch_8")
+}],
+"loop": false,
+"name": &"twitch",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_glitch_8")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_glitch_9")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_glitch_10")
+}],
+"loop": false,
+"name": &"teleport",
+"speed": 0.0
 }]

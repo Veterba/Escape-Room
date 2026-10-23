@@ -1,6 +1,7 @@
 ## Wing Kin: a flying enemy that keeps about 100 px from the player and fires a spread of 3 teal
 ## bullets (15 degrees apart) every 2 s, only when it can see them. It flies over pits, but not
 ## over walls: otherwise it could hover where the player's bullets cannot reach it.
+## Looks: the Trojan, a flying pyramid with one eye, which opens wide just before it fires.
 class_name WingKin
 extends Enemy
 
@@ -32,6 +33,8 @@ func _physics_process(delta: float) -> void:
 
 	_fire_cooldown -= delta
 	var aim_point := player.hurtbox_position()
+	if _fire_cooldown <= cfg.wing_tell_time and can_see(aim_point):
+		body.play(&"tell")
 	if _fire_cooldown <= 0.0 and can_see(aim_point):
 		fire_spread(aim_point - (global_position + EYE_OFFSET))
 		_fire_cooldown = cfg.wing_fire_interval

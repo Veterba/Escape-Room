@@ -1,31 +1,82 @@
-[gd_resource type="SpriteFrames" load_steps=2 format=3]
+[gd_resource type="SpriteFrames" load_steps=9 format=3]
 
-[ext_resource type="Texture2D" path="res://art/game/enemy_officer_kin.png" id="1_art"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/watcher_0.png" id="1_watcher_0"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/watcher_1.png" id="2_watcher_1"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/watcher_2.png" id="3_watcher_2"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/watcher_3.png" id="4_watcher_3"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/watcher_4.png" id="5_watcher_4"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/watcher_5.png" id="6_watcher_5"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/watcher_6.png" id="7_watcher_6"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/watcher_7.png" id="8_watcher_7"]
 
 [resource]
 animations = [{
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_watcher_0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_watcher_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_watcher_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_watcher_3")
+}],
 "loop": true,
 "name": &"idle",
-"speed": 8.0
+"speed": 6.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_watcher_0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_watcher_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_watcher_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_watcher_3")
+}],
 "loop": true,
 "name": &"walk",
-"speed": 8.0
+"speed": 6.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_watcher_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_watcher_5")
+}],
+"loop": true,
+"name": &"tell",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_watcher_0")
+}],
 "loop": false,
 "name": &"roll",
-"speed": 8.0
+"speed": 1.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_watcher_6")
+}],
 "loop": false,
 "name": &"hit",
-"speed": 8.0
+"speed": 1.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_watcher_7")
+}],
 "loop": false,
 "name": &"die",
-"speed": 8.0
+"speed": 1.0
 }]

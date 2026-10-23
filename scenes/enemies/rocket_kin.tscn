@@ -24,6 +24,8 @@ collision_layer = 4
 collision_mask = 133
 motion_mode = 1
 script = ExtResource("1_script")
+procedural_walk = false
+fades_on_death = true
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 position = Vector2(0, -4)
@@ -55,7 +57,7 @@ default_color = Color(0.878, 0.251, 0.227, 1)
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_flash")
-position = Vector2(0, -14)
+position = Vector2(0, -16)
 sprite_frames = ExtResource("2_frames")
 animation = &"idle"
 

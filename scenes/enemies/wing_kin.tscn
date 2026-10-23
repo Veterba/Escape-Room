@@ -1,9 +1,10 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/enemies/wing_kin.gd" id="1_script"]
 [ext_resource type="SpriteFrames" path="res://scenes/enemies/wing_kin_frames.tres" id="2_frames"]
 [ext_resource type="Shader" path="res://shaders/hit_flash.gdshader" id="3_flash"]
 [ext_resource type="Script" path="res://scripts/fx/juice.gd" id="4_juice"]
+[ext_resource type="Script" path="res://scripts/fx/ground_shadow.gd" id="5_shadow"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_flash"]
 resource_local_to_scene = true
@@ -21,6 +22,9 @@ collision_layer = 4
 collision_mask = 133
 motion_mode = 1
 script = ExtResource("1_script")
+procedural_walk = false
+fades_on_death = true
+hover = 8.0
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 position = Vector2(0, -4)
@@ -35,9 +39,12 @@ monitoring = false
 position = Vector2(0, -14)
 shape = SubResource("CircleShape2D_hitbox")
 
+[node name="Shadow" type="Node2D" parent="."]
+script = ExtResource("5_shadow")
+
 [node name="Body" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_flash")
-position = Vector2(0, -15)
+position = Vector2(0, -16)
 sprite_frames = ExtResource("2_frames")
 animation = &"idle"
 

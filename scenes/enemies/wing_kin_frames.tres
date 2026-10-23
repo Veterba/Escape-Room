@@ -1,46 +1,82 @@
-[gd_resource type="SpriteFrames" format=3 uid="uid://c85fum0cktw8k"]
+[gd_resource type="SpriteFrames" load_steps=9 format=3]
 
-[ext_resource type="Texture2D" uid="uid://dn6rfqf5kauma" path="res://art/game/enemy_wing_kin.png" id="1_art"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/trojan_0.png" id="1_trojan_0"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/trojan_1.png" id="2_trojan_1"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/trojan_2.png" id="3_trojan_2"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/trojan_3.png" id="4_trojan_3"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/trojan_4.png" id="5_trojan_4"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/trojan_5.png" id="6_trojan_5"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/trojan_6.png" id="7_trojan_6"]
+[ext_resource type="Texture2D" path="res://art/game/enemies/trojan_7.png" id="8_trojan_7"]
 
 [resource]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_art")
-}],
-"loop": 0,
-"name": &"die",
-"speed": 8.0
+"texture": ExtResource("1_trojan_0")
 }, {
-"frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_art")
-}],
-"loop": 0,
-"name": &"hit",
-"speed": 8.0
+"texture": ExtResource("2_trojan_1")
 }, {
-"frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_art")
+"texture": ExtResource("3_trojan_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_trojan_3")
 }],
-"loop": 1,
+"loop": true,
 "name": &"idle",
-"speed": 8.0
+"speed": 6.0
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_art")
-}],
-"loop": 0,
-"name": &"roll",
-"speed": 8.0
+"texture": ExtResource("1_trojan_0")
 }, {
-"frames": [{
 "duration": 1.0,
-"texture": ExtResource("1_art")
+"texture": ExtResource("2_trojan_1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_trojan_2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_trojan_3")
 }],
-"loop": 1,
+"loop": true,
 "name": &"walk",
-"speed": 8.0
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_trojan_4")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_trojan_5")
+}],
+"loop": true,
+"name": &"tell",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_trojan_0")
+}],
+"loop": false,
+"name": &"roll",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_trojan_6")
+}],
+"loop": false,
+"name": &"hit",
+"speed": 1.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_trojan_7")
+}],
+"loop": false,
+"name": &"die",
+"speed": 1.0
 }]

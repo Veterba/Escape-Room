@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://8pbh63lfaxqj"
-path="res://.godot/imported/enemy_rocket_kin.png-59d463b7107afe2e0ee148ed9756bd98.ctex"
+uid="uid://bwhylc8grqgy"
+path="res://.godot/imported/watcher_1.png-f9743d3bbd8d6fc65f60794d081c1752.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/game/enemy_rocket_kin.png"
-dest_files=["res://.godot/imported/enemy_rocket_kin.png-59d463b7107afe2e0ee148ed9756bd98.ctex"]
+source_file="res://art/game/enemies/watcher_1.png"
+dest_files=["res://.godot/imported/watcher_1.png-f9743d3bbd8d6fc65f60794d081c1752.ctex"]
 
 [params]
 

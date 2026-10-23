@@ -2,9 +2,12 @@
 
 ## Character sprites
 
-The character sprites of the Ammo Wraith and all the Kin enemies (files 02–08 in `art/source/`)
-are **placeholders** taken from a community Enter the Gungeon sprite sheet. They are **not for
+The character sprites of the Ammo Wraith, the Grunt Kin and the Fuse Kin (files 02, 03 and 05 in
+`art/source/`) are **placeholders** taken from a community Enter the Gungeon sprite sheet. They are **not for
 public release** and will be replaced with our own art.
+
+The Watcher, Ram, Glitch and Trojan (`art/source/retexture/37_enemies_sheet.png`) are the owner's
+approved retexture enemies.
 
 The hero, Telly (`art/source/retexture/17_hero_sheet.png`), and the starting gun
 (`18_gun_starter.png`) are the approved retexture designs. Telly copies a reference robot sprite

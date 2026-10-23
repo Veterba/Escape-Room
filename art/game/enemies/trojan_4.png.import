@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b3elt7nu3kxf5"
-path="res://.godot/imported/enemy_officer_kin.png-a986399df889bd8f082423e8a98a8ebc.ctex"
+uid="uid://c2xt50l1yl50x"
+path="res://.godot/imported/trojan_4.png-15977c6f9694ac70a45475779d08625d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/game/enemy_officer_kin.png"
-dest_files=["res://.godot/imported/enemy_officer_kin.png-a986399df889bd8f082423e8a98a8ebc.ctex"]
+source_file="res://art/game/enemies/trojan_4.png"
+dest_files=["res://.godot/imported/trojan_4.png-15977c6f9694ac70a45475779d08625d.ctex"]
 
 [params]
 

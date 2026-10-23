@@ -1,6 +1,7 @@
 ## Rocket Kin: wanders until it can see the player. Then it shakes for 0.6 s with a red line
 ## showing where it will go, dashes in a straight line until it hits something, and is
 ## stunned for 1 s. Touching it costs a heart.
+## Looks: the Ram, a heavy robot with a dozer blade; its visor flares while it telegraphs.
 class_name RocketKin
 extends Enemy
 
@@ -35,6 +36,7 @@ func _physics_process(delta: float) -> void:
 			_wander(delta, player)
 		Mode.TELEGRAPH:
 			move(Vector2.ZERO, delta)
+			body.play(&"tell")
 			body.position.x += roundf(randf_range(-SHAKE, SHAKE))
 			_mode_left -= delta
 			if _mode_left <= 0.0:
