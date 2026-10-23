@@ -1,9 +1,9 @@
-## An item on the floor that is picked up by walking over it: a heart, an ammo box, a smoke bomb
-## or the code. Hearts, ammo and smoke bombs stay on the floor if they would do nothing right now.
+## An item on the floor that is picked up by walking over it: a heart, an ammo box, a smoke bomb,
+## the code or the hourglass. Hearts, ammo and smoke bombs stay on the floor if they would do nothing right now.
 class_name Pickup
 extends Area2D
 
-enum Kind { HEART, AMMO, CODE, SMOKE_BOMB }
+enum Kind { HEART, AMMO, CODE, SMOKE_BOMB, HOURGLASS }
 
 ## Pixels the item floats up and down.
 const BOB_HEIGHT := 2.0
@@ -45,4 +45,7 @@ func _apply(player: Player) -> bool:
 			return true
 		Kind.SMOKE_BOMB:
 			return player.add_smoke_bomb()
+		Kind.HOURGLASS:
+			Events.hourglass_collected.emit()
+			return true
 	return false

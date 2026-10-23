@@ -4,8 +4,8 @@
 ##
 ## Layout legend: '#' wall, 'x' crate (a wall that looks like a crate), '.' floor,
 ## 'P' player start, 'C' secret code, 'K' a spot for the code chest (one of them is picked at
-## random), 'G' gun chest, 'b' red barrel, 'g' Grunt Kin, 'f' Fuse Kin. Every letter but '#'
-## and 'x' stands on floor.
+## random), 'G' gun chest, 'H' hourglass, 'b' red barrel, 'g' Grunt Kin, 'f' Fuse Kin,
+## 's' Shade Kin, 'w' Wing Kin. Every letter but '#' and 'x' stands on floor.
 class_name GameMap
 extends Node2D
 
@@ -28,9 +28,12 @@ const CODE_CHEST := preload("res://scenes/world/code_chest.tscn")
 const ENTITIES := {
 	"C": preload("res://scenes/world/code_pickup.tscn"),
 	"G": preload("res://scenes/world/gun_chest.tscn"),
+	"H": preload("res://scenes/world/hourglass_pickup.tscn"),
 	"b": preload("res://scenes/world/barrel.tscn"),
 	"g": preload("res://scenes/enemies/grunt_kin.tscn"),
 	"f": preload("res://scenes/enemies/fuse_kin.tscn"),
+	"s": preload("res://scenes/enemies/shade_kin.tscn"),
+	"w": preload("res://scenes/enemies/wing_kin.tscn"),
 }
 
 @export var map_id: StringName

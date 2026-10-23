@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Escape Boom"
-config/version="0.3.0"
+config/version="0.4.0"
 run/main_scene="res://scenes/ui/password_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 

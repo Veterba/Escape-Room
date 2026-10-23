@@ -3,6 +3,8 @@ extends Node
 
 ## The secret code was picked up: the round is won.
 signal code_collected
+## The hourglass was picked up: the round adds time to the timer.
+signal hourglass_collected
 ## An enemy died.
 signal enemy_died(enemy: Node2D)
 ## A new wave started in the Enemy Arena (wave 1 is the first). The HUD and the code chest listen.

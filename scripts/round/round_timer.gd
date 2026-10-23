@@ -8,6 +8,8 @@ var time_left := 0.0
 ## Seconds played this round (for the win screen and the run log).
 var elapsed := 0.0
 var running := false
+## The hourglass bonus is given at most once per round.
+var bonus_given := false
 
 
 static func format(total_seconds: int) -> String:
@@ -18,6 +20,16 @@ func start(seconds: float) -> void:
 	time_left = seconds
 	elapsed = 0.0
 	running = true
+	bonus_given = false
+
+
+## Adds `seconds` the first time it is called in a round. Returns false if the bonus was already given.
+func add_bonus_once(seconds: float) -> bool:
+	if bonus_given:
+		return false
+	bonus_given = true
+	time_left += seconds
+	return true
 
 
 func stop() -> void:

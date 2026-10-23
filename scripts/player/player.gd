@@ -1,5 +1,5 @@
 ## The player: walks, aims, shoots, rolls, switches guns, uses things with E, throws smoke bombs,
-## and loses hearts when hit.
+## loses hearts when hit, and can be handcuffed by an Officer Kin (mash E to break free).
 class_name Player
 extends CharacterBody2D
 
@@ -8,12 +8,21 @@ signal smoke_bombs_changed(count: int)
 ## Lost a heart.
 signal hurt
 signal died
+## Handcuffed by an Officer Kin.
+signal trapped
+## Broke free from the handcuffs.
+signal escaped
 
-enum State { NORMAL, ROLLING, DEAD }
+enum State { NORMAL, ROLLING, DEAD, TRAPPED }
 
 ## The gun is drawn behind the hero when the aim points up more steeply than this (-0.5 = 30 degrees).
 const AIM_UP_BEHIND_THRESHOLD := -0.5
 const SMOKE_PUFF := preload("res://scenes/fx/death_puff.tscn")
+## The knife slash when breaking free: how far it swings, in radians, and in how many seconds.
+const KNIFE_SLASH_ARC := PI
+const KNIFE_SLASH_TIME := 0.2
+## How much each press of E squashes the hero while trapped.
+const MASH_SQUASH := 0.1
 
 var state := State.NORMAL
 var hearts: int = Config.balance.player_hearts
@@ -24,6 +33,11 @@ var _roll_elapsed := 0.0
 var _roll_cooldown_left := 0.0
 var _hit_invulnerable_left := 0.0
 var _knockback := Vector2.ZERO
+## Presses of E still needed to break free, and the officer who did it.
+var _presses_left := 0
+var _trapped_by: OfficerKin
+## Seconds in which officers cannot trap the player again.
+var _officer_immunity_left := 0.0
 
 @onready var body: AnimatedSprite2D = $Body
 @onready var juice: Juice = $Juice
@@ -32,6 +46,7 @@ var _knockback := Vector2.ZERO
 @onready var guns: GunInventory = $Guns
 @onready var camera: GameCamera = $Camera
 @onready var _interactor: Interactor = $Interactor
+@onready var _knife: Sprite2D = $Knife
 
 
 func _ready() -> void:
@@ -43,8 +58,13 @@ func _physics_process(delta: float) -> void:
 	if state == State.DEAD:
 		return
 	_roll_cooldown_left = maxf(_roll_cooldown_left - delta, 0.0)
+	_officer_immunity_left = maxf(_officer_immunity_left - delta, 0.0)
 	_update_hit_invulnerability(delta)
-	if state == State.ROLLING:
+	if state == State.TRAPPED:
+		velocity = Vector2.ZERO
+		if Input.is_action_just_pressed(&"interact"):
+			mash()
+	elif state == State.ROLLING:
 		_update_roll(delta)
 	else:
 		_update_normal(delta)
@@ -101,6 +121,38 @@ func add_smoke_bomb() -> bool:
 	smoke_bombs += 1
 	smoke_bombs_changed.emit(smoke_bombs)
 	return true
+
+
+## Handcuffs the player: no moving, shooting or rolling until E is pressed 10 times. Returns
+## false if that cannot happen now (rolling, dead, already trapped, or just broke free).
+func trap(officer: OfficerKin) -> bool:
+	if state != State.NORMAL or _officer_immunity_left > 0.0:
+		return false
+	state = State.TRAPPED
+	_presses_left = Config.balance.trap_presses
+	_trapped_by = officer
+	body.play(&"idle")
+	juice.update_walk(0.0, false)
+	trapped.emit()
+	return true
+
+
+## One press of E while trapped. The last one breaks the handcuffs with a knife slash, stuns the
+## officer, and keeps officers off the player for a moment. No heart is lost.
+func mash() -> void:
+	if state != State.TRAPPED:
+		return
+	_presses_left -= 1
+	juice.squash(MASH_SQUASH)
+	if _presses_left > 0:
+		return
+	state = State.NORMAL
+	_officer_immunity_left = Config.balance.trap_immunity_time
+	if is_instance_valid(_trapped_by):
+		_trapped_by.stun()
+	_slash_knife()
+	Audio.play_sfx(&"knife_slash")
+	escaped.emit()
 
 
 ## Starts a dodge roll in `direction`. Returns false if a roll is running or on cooldown.
@@ -183,6 +235,14 @@ func _update_hit_invulnerability(delta: float) -> void:
 	_hit_invulnerable_left = maxf(_hit_invulnerable_left - delta, 0.0)
 	var blink_phase := fmod(_hit_invulnerable_left * Config.balance.hit_blink_rate, 1.0)
 	body.visible = _hit_invulnerable_left == 0.0 or blink_phase >= 0.5
+
+
+func _slash_knife() -> void:
+	_knife.visible = true
+	_knife.rotation = -KNIFE_SLASH_ARC / 2.0
+	var slash := create_tween()
+	slash.tween_property(_knife, "rotation", KNIFE_SLASH_ARC / 2.0, KNIFE_SLASH_TIME)
+	slash.tween_callback(_knife.hide)
 
 
 func _die() -> void:

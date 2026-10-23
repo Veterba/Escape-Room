@@ -1,6 +1,7 @@
 ## The in-game HUD: hearts top-left; the timer top-centre (red and pulsing in the last minute);
 ## gun, ammo and smoke bombs top-right; the map name for a moment at the start. In the Enemy
-## Arena, one line under the timer says whether the code chest is still chained.
+## Arena, one line under the timer says whether the code chest is still chained. While an
+## Officer Kin has the player handcuffed, "Mash E!" shows with the knife.
 class_name Hud
 extends CanvasLayer
 
@@ -23,6 +24,7 @@ var _pulse_time := 0.0
 @onready var _timer_label: Label = $Root/TimerLabel
 @onready var _map_name: Label = $Root/MapName
 @onready var _arena_status: Label = $Root/ArenaStatus
+@onready var _trapped: Control = $Root/Trapped
 @onready var _gun_icon: TextureRect = $Root/Loadout/Row/GunIcon
 @onready var _ammo_label: Label = $Root/Loadout/Row/AmmoLabel
 @onready var _smoke_label: Label = $Root/Loadout/Row/SmokeLabel
@@ -36,6 +38,9 @@ func bind(player: Player, timer: RoundTimer, map_id: StringName) -> void:
 	player.hearts_changed.connect(_show_hearts)
 	player.smoke_bombs_changed.connect(_show_smoke_bombs)
 	Events.wave_started.connect(_show_arena_status)
+	$Root/Trapped/Label.text = Strings.MASH_E
+	player.trapped.connect(_trapped.show)
+	player.escaped.connect(_trapped.hide)
 	_refresh_gun()
 	_show_hearts(player.hearts)
 	_show_smoke_bombs(player.smoke_bombs)

@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map per round, a 10:00 timer, find the secret code before time runs out.
 
-Current version: **0.3.0** (Part C: the Enemy Arena in full, and the password screen).
+Current version: **0.4.0** (Part D: the Labyrinth).
 
 ## Requirements
 
@@ -31,9 +31,13 @@ The game opens on a password screen (the password is in `config/balance.tres`, `
 `--map=` skips it.
 
 The Enemy Arena is finished: survive the waves, wait for the code chest's chains to fall off at
-wave 7, then hold E on it for 2 s. The Boss Chamber and the Labyrinth are still placeholder rooms
-(parts D and E): each has a gun chest, a few Grunt and Fuse Kin, and the secret code far from the
-start.
+wave 7, then hold E on it for 2 s.
+
+The Labyrinth is finished: a new dark maze every round. Officer Kin handcuff you (mash E to break
+free), Shade Kin drift through walls, and an hourglass in a dead end adds 30 s.
+
+The Boss Chamber is still a placeholder room (part E): a gun chest, a few Grunt and Fuse Kin, and
+the secret code far from the start.
 
 ### Controls
 
@@ -45,7 +49,7 @@ start.
 | Dodge roll | Space or right mouse button |
 | Reload | R |
 | Switch gun | Mouse wheel, or 1 / 2 / 3 |
-| Open a chest (hold), take a gun | E |
+| Open a chest (hold), take a gun, break handcuffs (mash) | E |
 | Smoke bomb (clears enemy bullets on screen) | Q |
 | Pause | Esc |
 | Debug overlay | F3 |

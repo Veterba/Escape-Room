@@ -35,6 +35,9 @@ const INTERACT_PROMPT := "E"
 const CHEST_LOCKED_FORMAT := "Chest locked: wave %d/%d"
 const CHEST_OPEN := "Chest open!"
 
+## Shown while an Officer Kin has the player handcuffed.
+const MASH_E := "Mash E!"
+
 const PASSWORD_PROMPT := "Password"
 const PASSWORD_HINT := "Press Enter to confirm"
 

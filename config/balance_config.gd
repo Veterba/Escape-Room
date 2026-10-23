@@ -142,6 +142,45 @@ extends Resource
 ## Seconds between a barrel being hit and its explosion, so chains go off one by one.
 @export var barrel_fuse_time: float = 0.1
 
+@export_group("Labyrinth")
+## Size of the maze in cells. Each cell is 2x2 floor tiles plus a wall tile.
+@export var maze_cols: int = 20
+@export var maze_rows: int = 14
+## The generator keeps only mazes where walking the shortest path to the code takes this long.
+@export var maze_min_walk_time: float = 60.0
+@export var maze_max_walk_time: float = 90.0
+@export var maze_officers: int = 4
+@export var maze_shades: int = 2
+@export var maze_wings: int = 1
+## Cells an officer's patrol route walks along.
+@export var maze_patrol_cells: int = 5
+## Enemies are placed at least this many cells (along the corridors) from the start.
+@export var maze_enemy_min_cells: int = 6
+## The player sees only this far, in pixels; the rest is dark.
+@export var maze_vision_radius: float = 140.0
+## Seconds the hourglass adds to the timer, at most once per round.
+@export var hourglass_bonus_time: float = 30.0
+
+@export_group("Officer Kin")
+@export var officer_hp: int = 8
+@export var officer_patrol_speed: float = 45.0
+@export var officer_chase_speed: float = 85.0
+## The vision cone: how far, and how wide in degrees.
+@export var officer_vision_distance: float = 80.0
+@export var officer_vision_angle: float = 60.0
+## Seconds a chase lasts at most.
+@export var officer_chase_time: float = 4.0
+## Seconds the officer is stunned after the player breaks free.
+@export var officer_stun_time: float = 3.0
+## Presses of E that break the handcuffs.
+@export var trap_presses: int = 10
+## Seconds after breaking free in which officers cannot trap the player again.
+@export var trap_immunity_time: float = 3.0
+
+@export_group("Shade Kin")
+@export var shade_hp: int = 4
+@export var shade_speed: float = 35.0
+
 @export_group("Password screen")
 ## The password from the previous escape room task.
 @export var password: String = "1234"

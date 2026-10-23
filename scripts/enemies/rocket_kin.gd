@@ -29,7 +29,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	var cfg := Config.balance
 	var player := target_player()
-	_hurt_touching_player()
+	hurt_touching_player(_contact)
 	match mode:
 		Mode.WANDER:
 			_wander(delta, player)
@@ -73,9 +73,3 @@ func _wander(delta: float, player: Player) -> void:
 		_has_wander_point = true
 	move(path_velocity(_wander_point, cfg.rocket_speed), delta)
 
-
-## Costs the player a heart while they touch it (the player's own invulnerability limits it to one).
-func _hurt_touching_player() -> void:
-	for area in _contact.get_overlapping_areas():
-		var player := area.owner as Player
-		player.take_hit(player.global_position - global_position)

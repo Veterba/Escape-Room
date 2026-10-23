@@ -15,7 +15,7 @@ var map: GameMap
 var secret_code := ""
 var result := Result.NONE
 var hearts_lost := 0
-## Always 0 until the Officer Kin arrives in part D.
+## How often an Officer Kin handcuffed the player.
 var times_trapped := 0
 ## Where the run log is written. Tests point it somewhere else.
 var run_log_path := RunLog.DEFAULT_PATH
@@ -44,6 +44,8 @@ func _ready() -> void:
 	player.gun.fired.connect(_count_shot)
 	timer.timed_out.connect(end_round.bind(Result.TIMEOUT))
 	Events.code_collected.connect(end_round.bind(Result.WIN))
+	Events.hourglass_collected.connect(_add_hourglass_time)
+	player.trapped.connect(func() -> void: times_trapped += 1)
 
 	timer.start(Config.balance.round_length)
 	_hud.bind(player, timer, map.map_id)
@@ -72,6 +74,10 @@ func gun_used_most() -> String:
 			best = gun_id
 			best_shots = _shots_by_gun[gun_id]
 	return best
+
+
+func _add_hourglass_time() -> void:
+	timer.add_bonus_once(Config.balance.hourglass_bonus_time)
 
 
 func _show_end_screen() -> void:

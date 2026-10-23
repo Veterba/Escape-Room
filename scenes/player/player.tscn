@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="1_player"]
 [ext_resource type="SpriteFrames" path="res://scenes/player/hero_frames.tres" id="2_frames"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/player/game_camera.gd" id="6_camera"]
 [ext_resource type="Script" path="res://scripts/player/gun_inventory.gd" id="7_guns"]
 [ext_resource type="Script" path="res://scripts/player/interactor.gd" id="8_interactor"]
+[ext_resource type="Texture2D" path="res://art/game/item_rusty_knife.png" id="9_knife"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_flash"]
 resource_local_to_scene = true
@@ -63,3 +64,10 @@ script = ExtResource("8_interactor")
 
 [node name="Camera" type="Camera2D" parent="."]
 script = ExtResource("6_camera")
+
+[node name="Knife" type="Sprite2D" parent="."]
+visible = false
+z_index = 5
+position = Vector2(0, -10)
+texture = ExtResource("9_knife")
+offset = Vector2(0, -12)

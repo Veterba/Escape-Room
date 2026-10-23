@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.4.0 — 2026-10-23
+
+### Added
+- The Labyrinth: a new maze every round with 2-tile corridors, the start in a corner and the code in the farthest spot. The shortest walk to the code takes 60–90 s (checked over 50 mazes).
+- Darkness in the Labyrinth: you see only about 140 px around you.
+- Officer Kin patrol the corridors and chase you for up to 4 s when you step into their view. If one touches you, you are handcuffed: mash E 10 times to break free with a knife slash. No heart is lost, the officer is stunned for 3 s, and officers can't catch you again for 3 s.
+- Shade Kin drift slowly through walls, half see-through and flickering. Touching one costs a heart.
+- A Wing Kin, a gun chest in one dead end and an hourglass in another: the hourglass adds 30 s to the timer, once per round.
+- The run log counts how often you were handcuffed.
+
 ## v0.3.0 — 2026-10-23
 
 ### Added

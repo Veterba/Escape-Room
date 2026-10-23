@@ -85,6 +85,14 @@ func can_see(point: Vector2) -> bool:
 
 
 ## Fires one bullet from the eyes. `bullet_scene` picks the look (the Wing Kin's are teal).
+## Costs the player a heart while their hurtbox overlaps `contact` (the player's own
+## invulnerability after a hit limits it to one heart per touch).
+func hurt_touching_player(contact: Area2D) -> void:
+	for area in contact.get_overlapping_areas():
+		var player := area.owner as Player
+		player.take_hit(player.global_position - global_position)
+
+
 func shoot(direction: Vector2, speed: float, bullet_scene: PackedScene = ENEMY_BULLET) -> void:
 	var bullet: EnemyBullet = bullet_scene.instantiate()
 	bullet.global_position = global_position + EYE_OFFSET
