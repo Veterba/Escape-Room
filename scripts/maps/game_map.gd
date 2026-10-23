@@ -5,7 +5,8 @@
 ## Layout legend: '#' wall, 'x' crate (a wall that looks like a crate), '.' floor,
 ## 'P' player start, 'C' secret code, 'K' a spot for the code chest (one of them is picked at
 ## random), 'G' gun chest, 'H' hourglass, 'b' red barrel, 'g' Grunt Kin, 'f' Fuse Kin,
-## 's' Shade Kin, 'w' Wing Kin. Every letter but '#' and 'x' stands on floor.
+## 's' Shade Kin, 'w' Wing Kin, 'D' door, ' ' nothing at all (the dark outside the rooms).
+## Every letter but '#', 'x' and ' ' stands on floor.
 class_name GameMap
 extends Node2D
 
@@ -21,6 +22,7 @@ const CRATE_TILE := Vector2i(5, 0)
 const WALL := "#"
 const CRATE := "x"
 const FLOOR := "."
+const VOID := " "
 const PLAYER_START := "P"
 const CODE_CHEST_SPOT := "K"
 const CODE_CHEST := preload("res://scenes/world/code_chest.tscn")
@@ -30,6 +32,7 @@ const ENTITIES := {
 	"G": preload("res://scenes/world/gun_chest.tscn"),
 	"H": preload("res://scenes/world/hourglass_pickup.tscn"),
 	"b": preload("res://scenes/world/barrel.tscn"),
+	"D": preload("res://scenes/floor/door.tscn"),
 	"g": preload("res://scenes/enemies/grunt_kin.tscn"),
 	"f": preload("res://scenes/enemies/fuse_kin.tscn"),
 	"s": preload("res://scenes/enemies/shade_kin.tscn"),
@@ -65,6 +68,8 @@ func _build() -> void:
 		for x in layout[y].length():
 			var cell := Vector2i(x, y)
 			var symbol := layout[y][x]
+			if symbol == VOID:
+				continue
 			if symbol == WALL:
 				_walls.set_cell(cell, SOURCE_ID, _wall_tile_at(x, y))
 				continue
@@ -97,7 +102,7 @@ func cell_center(cell: Vector2i) -> Vector2:
 ## A wall with floor right below it shows its front face; any other wall shows its top.
 func _wall_tile_at(x: int, y: int) -> Vector2i:
 	var is_last_row := y + 1 >= layout.size()
-	if not is_last_row and layout[y + 1][x] != WALL:
+	if not is_last_row and not layout[y + 1][x] in [WALL, VOID, CRATE]:
 		return WALL_FACE
 	return WALL_TOP
 

@@ -1,16 +1,14 @@
-## Autoload: moves between the menu and rounds, and picks the map for each round.
+## Autoload: moves between the menu and rounds, and picks the objective room for each round's floor.
 extends Node
 
-const MAP_SCENES := {
-	&"boss": preload("res://scenes/maps/boss_chamber.tscn"),
-	&"maze": preload("res://scenes/maps/labyrinth.tscn"),
-	&"arena": preload("res://scenes/maps/enemy_arena.tscn"),
-}
+## The objective rooms a floor can end in.
+const MAP_IDS: Array[StringName] = [&"boss", &"maze", &"arena"]
+const FLOOR_SCENE := preload("res://scenes/floor/dungeon_floor.tscn")
 const ROUND_SCENE := "res://scenes/round/round.tscn"
 const MENU_SCENE := "res://scenes/ui/main_menu.tscn"
 const MAP_ARGUMENT := "--map="
 
-## The map of the round being played (or about to start).
+## The objective of the round being played (or about to start).
 var current_map_id: StringName
 
 
@@ -19,7 +17,7 @@ func forced_map_id() -> StringName:
 	for argument in OS.get_cmdline_args() + OS.get_cmdline_user_args():
 		if argument.begins_with(MAP_ARGUMENT):
 			var map_id := StringName(argument.trim_prefix(MAP_ARGUMENT))
-			if MAP_SCENES.has(map_id):
+			if MAP_IDS.has(map_id):
 				return map_id
 			push_error("Unknown map '%s'. Use boss, maze or arena." % map_id)
 	return &""
@@ -30,7 +28,7 @@ func pick_map_id() -> StringName:
 	var forced := forced_map_id()
 	if forced != &"":
 		return forced
-	return MAP_SCENES.keys().pick_random()
+	return MAP_IDS.pick_random()
 
 
 ## Starts a round on `map_id`, or on a freshly picked map if none is given.

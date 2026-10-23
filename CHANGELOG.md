@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.5.0 — 2026-10-23
+
+### Added
+- Every round is now a floor of 6–8 rooms joined by corridors, like Enter the Gungeon, with no loading between rooms. The last room is the objective: the Boss Chamber, the Labyrinth or the Enemy Arena, picked at random.
+- Fight rooms: walking in closes the doors and enemies appear; the doors open once every enemy is dead. Deeper rooms send harder enemies.
+- Chest rooms at dead ends, each with a gun chest.
+- Gun chests are coloured by the rarity of the gun inside: bone C, teal B, brass A, red S.
+- The Enemy Arena and the Boss Chamber are generated fresh every round too: mirrored crates and barrels in the arena (the code chest still stands at one of its four spots), four mirrored pillars in the boss room.
+
+### Changed
+- The Labyrinth is smaller (the shortest walk to the code takes 40–60 s) and the arena's code chest opens at wave 5, so a whole floor still fits the time target.
+- `--map=boss|maze|arena` now picks the floor's objective room.
+- The Labyrinth's darkness covers only the maze; the rest of the floor is lit.
+- Guns and items lying on the floor are drawn small (the gun's in-hand drawing, half-size items); the HUD keeps the big drawings.
+- The Boss Chamber placeholder is the spec's 30×20 tiles.
+
+### Fixed
+- Your bullets and enemy bullets no longer fly through walls.
+
 ## v0.4.0 — 2026-10-23
 
 ### Added

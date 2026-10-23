@@ -4,9 +4,9 @@ extends Resource
 
 ## Short name used in the run log, for example "pop_pistol".
 @export var id: StringName
-## The big drawing: used in the HUD and for guns lying on the floor.
+## The big drawing: used in the HUD.
 @export var icon: Texture2D
-## The small drawing (10-16 px long) shown in the hero's hand.
+## The small drawing (10-16 px long) shown in the hero's hand and for guns lying on the floor.
 @export var held_texture: Texture2D
 @export var bullet_texture: Texture2D
 ## Pixel in held_texture where the hand holds the gun. The gun rotates around this point.
@@ -38,3 +38,5 @@ extends Resource
 @export var blast_hurts_player: bool = true
 ## Chance weight when a gun chest picks a gun. 0 means chests never give it.
 @export var chest_weight: float = 0.0
+## Tint of a gun chest holding this gun, so its colour shows the rarity.
+@export var chest_color: Color = Color.WHITE

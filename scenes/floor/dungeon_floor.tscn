@@ -1,11 +1,11 @@
 [gd_scene load_steps=6 format=3]
 
-[ext_resource type="Script" path="res://scripts/maps/labyrinth.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/floor/dungeon_floor.gd" id="1_script"]
 [ext_resource type="TileSet" path="res://scenes/maps/dungeon_tiles.tres" id="2_tiles"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_floor"]
 parsed_geometry_type = 1
-parsed_collision_mask = 1
+parsed_collision_mask = 129
 agent_radius = 6.0
 
 [sub_resource type="Gradient" id="Gradient_vision"]
@@ -20,10 +20,9 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 fill_to = Vector2(1, 0.5)
 
-[node name="Labyrinth" type="Node2D"]
+[node name="DungeonFloor" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_script")
-map_id = &"maze"
 
 [node name="Navigation" type="NavigationRegion2D" parent="."]
 y_sort_enabled = true
@@ -38,7 +37,9 @@ y_sort_enabled = true
 tile_set = ExtResource("2_tiles")
 
 [node name="Darkness" type="CanvasModulate" parent="."]
+visible = false
 color = Color(0.03, 0.02, 0.05, 1)
 
 [node name="Vision" type="PointLight2D" parent="."]
+visible = false
 texture = SubResource("GradientTexture2D_vision")

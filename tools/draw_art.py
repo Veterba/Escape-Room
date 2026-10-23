@@ -194,6 +194,26 @@ BARREL = [
     "..AAAAAAAA..",
 ]
 
+# A gate across a doorway while a fight room is locked: iron bars between brass rails.
+DOOR = [
+    "AAAAAAAAAAAAAAAA",
+    "ABBBBBBBBBBBBBBA",
+    "AAAAAAAAAAAAAAAA",
+    ".AM.AM.AM.AM.AM.",
+    ".AM.AM.AM.AM.AM.",
+    ".AM.AM.AM.AM.AM.",
+    ".AM.AM.AM.AM.AM.",
+    ".AO.AO.AO.AO.AO.",
+    ".AM.AM.AM.AM.AM.",
+    ".AM.AM.AM.AM.AM.",
+    ".AM.AM.AM.AM.AM.",
+    ".AM.AM.AM.AM.AM.",
+    "AAAAAAAAAAAAAAAA",
+    "ABBBBBBBBBBBBBBA",
+    "AAAAAAAAAAAAAAAA",
+    "................",
+]
+
 # Chains and a padlock across the code chest while it is locked. Same width as the chest art.
 CHEST_CHAINS = [
     "............AAAA............",
@@ -338,6 +358,7 @@ def main() -> None:
         "bullet_wing": WING_BULLET,
         "barrel": BARREL,
         "chest_chains": CHEST_CHAINS,
+        "door": DOOR,
         "shell_casing": SHELL_CASING,
         "held_pop_pistol": HELD_POP_PISTOL,
         "held_brass_revolver": HELD_BRASS_REVOLVER,

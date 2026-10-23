@@ -43,6 +43,11 @@ NATIVE_ART = {
     "21": "item_exit_key",
 }
 
+# Items lying on the floor use a half-size copy, so they stay small next to the 24 px hero.
+# The full-size drawings are still used in the HUD.
+FLOOR_ITEMS = ["item_secret_code", "item_heart", "item_ammo_box", "item_smoke_bomb", "item_hourglass"]
+FLOOR_ITEM_SHRINK = 2
+
 # Files 22-25 are map layout references and the palette: they are never used in game.
 
 
@@ -85,6 +90,10 @@ def main() -> None:
         out = convert_native(find_source(prefix))
         out.save(GAME_DIR / f"{name}.png")
         print(f"{name}.png  {out.width}x{out.height}")
+        if name in FLOOR_ITEMS:
+            small = out.resize((out.width // FLOOR_ITEM_SHRINK, out.height // FLOOR_ITEM_SHRINK), Image.NEAREST)
+            small.save(GAME_DIR / f"floor_{name}.png")
+            print(f"floor_{name}.png  {small.width}x{small.height}")
 
 
 if __name__ == "__main__":

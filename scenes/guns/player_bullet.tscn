@@ -9,7 +9,6 @@ radius = 3.0
 z_index = 5
 collision_layer = 8
 collision_mask = 193
-monitorable = false
 script = ExtResource("1_script")
 
 [node name="Sprite" type="Sprite2D" parent="."]

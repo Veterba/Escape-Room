@@ -1,4 +1,4 @@
-## One round: loads the map, starts the timer, and decides the result. Win: the code is picked up.
+## One round: builds the floor, starts the timer, and decides the result. Win: the code is picked up.
 ## Lose: the player runs out of hearts, or the timer reaches 0:00. Then it shows the end screen
 ## and writes a line to the run log.
 class_name Round
@@ -10,7 +10,7 @@ enum Result { NONE, WIN, DEATH, TIMEOUT }
 const RESULT_NAMES := {Result.WIN: "win", Result.DEATH: "death", Result.TIMEOUT: "timeout"}
 const NO_GUN := "none"
 
-var map: GameMap
+var map: DungeonFloor
 ## A random 4-digit code, new every round.
 var secret_code := ""
 var result := Result.NONE
@@ -32,7 +32,8 @@ var _shots_by_gun := {}
 
 
 func _ready() -> void:
-	map = Game.MAP_SCENES[Game.current_map_id].instantiate()
+	map = Game.FLOOR_SCENE.instantiate()
+	map.objective = Game.current_map_id
 	add_child(map)
 	move_child(map, 0)  # Drawn first, under everything else.
 	player.global_position = map.spawn_position

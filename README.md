@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map per round, a 10:00 timer, find the secret code before time runs out.
 
-Current version: **0.4.0** (Part D: the Labyrinth).
+Current version: **0.5.0** (floors: 6–8 rooms per round, ending in the objective room).
 
 ## Requirements
 
@@ -21,7 +21,7 @@ godot --path .
 Or open the folder in the Godot editor and press F5. On a fresh clone, run the import step from
 the test section once first (the editor does it automatically).
 
-To skip the menu and force a map (for testing), add `--map=boss`, `--map=maze` or `--map=arena`:
+To skip the menu and force the objective room (for testing), add `--map=boss`, `--map=maze` or `--map=arena`:
 
 ```sh
 godot --path . --map=arena
@@ -30,14 +30,17 @@ godot --path . --map=arena
 The game opens on a password screen (the password is in `config/balance.tres`, `1234` for now).
 `--map=` skips it.
 
-The Enemy Arena is finished: survive the waves, wait for the code chest's chains to fall off at
-wave 7, then hold E on it for 2 s.
+Every round is one floor of 6–8 rooms joined by corridors, with no loading in between. Fight
+rooms lock their doors until every enemy is dead; chest rooms hold a gun chest whose colour shows
+the gun's rarity (bone C, teal B, brass A, red S). The last room is the objective, picked at
+random:
 
-The Labyrinth is finished: a new dark maze every round. Officer Kin handcuff you (mash E to break
-free), Shade Kin drift through walls, and an hourglass in a dead end adds 30 s.
-
-The Boss Chamber is still a placeholder room (part E): a gun chest, a few Grunt and Fuse Kin, and
-the secret code far from the start.
+- **Enemy Arena** (crates and barrels placed fresh each round): survive the waves; the code chest's chains fall off at wave 5, then hold E on
+  it for 2 s.
+- **Labyrinth:** a new dark maze. Officer Kin handcuff you (mash E to break free), Shade Kin
+  drift through walls, and an hourglass in a dead end adds 30 s.
+- **Boss Chamber** (pillars placed fresh each round): still a placeholder (part E): a few Grunt
+  and Fuse Kin and the code.
 
 ### Controls
 

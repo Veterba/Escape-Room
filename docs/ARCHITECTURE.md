@@ -30,8 +30,8 @@ use them by name.
   `hourglass_collected` works the same way: the round adds the time.
   `wave_started` is sent by the arena's waves; the code chest, the HUD line and the F3 overlay
   listen to it, so none of them needs to know where the waves live.
-- `Game` (`scripts/autoload/game.gd`) moves between the menu and rounds, picks the map
-  (uniform random, or the one forced with `--map=`), and lists the three map scenes.
+- `Game` (`scripts/autoload/game.gd`) moves between the menu and rounds and picks the objective
+  room of the round's floor (uniform random, or the one forced with `--map=`).
 
 `scripts/strings.gd` (`Strings`) is not an autoload: it only holds constants, all player-facing text.
 
@@ -40,20 +40,22 @@ use them by name.
 ```
 PasswordScreen (scenes/ui/password_screen.tscn)  --right password-->  MainMenu   (main scene: once per launch)
 MainMenu (scenes/ui/main_menu.tscn)  --Play-->  Game.start_round()  -->  Round
-Round  --win / death / timeout-->  EndScreen  --Play again-->  Game.start_round()  (new random map)
+Round  --win / death / timeout-->  EndScreen  --Play again-->  Game.start_round()  (new floor, new objective)
                                               --Menu-->        Game.go_to_menu()
 ```
 
 ## The round scene
 
 ```
-Round (scenes/round/round.tscn)               loads the map, decides the result, writes the run log
-├── <map>  (added at runtime, e.g. scenes/maps/enemy_arena.tscn)
+Round (scenes/round/round.tscn)               builds the floor, decides the result, writes the run log
+├── DungeonFloor (scenes/floor/dungeon_floor.tscn, added at runtime)   one floor = one map
 │   ├── Navigation (NavigationRegion2D)       walkable area, baked at runtime around the walls
 │   │   ├── Floor (TileMapLayer)              floor tiles, always underneath (z_index -10)
 │   │   └── Walls (TileMapLayer)              wall tiles with collision, y-sorted
-│   ├── chests, barrels, enemies, the code    placed from the map's text layout
-│   └── Waves (ArenaWaves, arena only)        sends the waves; EnemySpawn effects become enemies
+│   ├── Darkness, Vision                      CanvasModulate and PointLight2D, on only in the maze
+│   ├── chests, barrels, doors, enemies, code placed from the floor's text layout
+│   └── Room (one per room)                   locks fight rooms; fight and arena enemies live here
+│       └── ArenaWaves (arena room only)      sends the waves; EnemySpawn effects become enemies
 ├── Player (scenes/player/player.tscn)
 │   ├── Body (AnimatedSprite2D)               hero art, animations from hero_frames.tres
 │   ├── Hurtbox (Area2D)                      where enemy bullets hit: the middle of the body
@@ -72,8 +74,8 @@ Round (scenes/round/round.tscn)               loads the map, decides the result,
 
 - **One balance resource.** `BalanceConfig` is a `Resource` with typed `@export` fields; the values
   are in `config/balance.tres`. Each gun is a `GunStats` sub-resource inside it, so a gun's numbers
-  and its art sit together: `icon` (the big drawing, for the HUD and the floor), `held_texture`
-  (the small drawing in the hand) and the grip, muzzle and ejection pixels of the held drawing.
+  and its art sit together: `icon` (the big drawing, for the HUD), `held_texture` (the small
+  drawing in the hand and on the floor) and the grip, muzzle and ejection pixels of the held drawing.
 - **Y-sorting.** `Round`, the map, the navigation region and the `Walls` layer all have
   `y_sort_enabled`, so their children are drawn in order of their y position, as if they were one
   list: a character lower on screen is drawn in front. Wall tiles sort by the top of the tile
@@ -86,21 +88,39 @@ Round (scenes/round/round.tscn)               loads the map, decides the result,
   centre is never inside the wall.
 - **Idle enemies.** An enemy stays idle until it sees the player (a ray to the player hits no
   wall) or the player comes within `enemy_wake_distance`; after that it stays awake.
-- **Maps as text.** A map is a `GameMap` scene with a `layout`: one string per row of tiles
-  (`#` wall, `x` crate, `.` floor, `P` start, `C` code, `K` code chest spot, `G` gun chest,
-  `b` barrel, `g` Grunt Kin, `f` Fuse Kin). The script builds the tiles and entities, then bakes
-  the navigation mesh. A crate is a wall tile with crate art, so it blocks everything a wall
-  blocks. With several `K` spots, one is picked at random for the code chest.
-- **The labyrinth is generated, then built like any map.** `MazeGenerator`
+- **Maps as text.** A map is a `GameMap` with a `layout`: one string per row of tiles (the
+  legend is at the top of `scripts/maps/game_map.gd`: `#` wall, `x` crate, `.` floor, `D` door,
+  space for nothing, letters for the start, chests, barrels, enemies and the code). The script
+  builds the tiles and entities, then bakes the navigation mesh. A crate is a wall tile with
+  crate art, so it blocks everything a wall blocks.
+- **A round is one floor, built as one map.** `FloorGenerator` (`scripts/floor/floor_generator.gd`)
+  grows a tree of 6-8 rooms on a coarse grid (each new room next to a random existing one), puts
+  the objective room next to the deepest room, and makes dead ends chest rooms. Every grid column
+  is as wide as its widest room and every row as tall as its tallest, and rooms sit in the
+  middle of their cell, so a room and the one it grew from always line up and the corridor
+  between them is straight. The rooms' layouts and the corridors are stamped into one big
+  layout. Start, chest and fight rooms are hand-made (`scripts/floor/room_layouts.gd`); the arena
+  and the boss room are generated (`scripts/floor/objective_rooms.gd`, mirrored left to right,
+  every crate and pillar keeping a free tile around it so nothing gets walled off), so the whole floor is one `GameMap` and walking
+  between rooms needs no loading. `DungeonFloor` (`scripts/floor/dungeon_floor.gd`) extends
+  `GameMap`: it gets the floor layout before the base `_ready()` builds it, then adds a `Room`
+  node per room.
+- **Rooms.** A `Room` knows its rectangle and its doors (`Door` tiles on its wall). In a fight
+  room, walking two tiles past the doorway closes the doors and spawns the room's mix (deeper
+  rooms get harder mixes from `floor_fights` in `balance.tres`); the enemies are children of
+  the room, so "cleared" just means the room has no enemy children left. The arena room starts
+  its `ArenaWaves` instead. Flying enemies get the room as a leash, so they cannot fly out of it.
+- **The labyrinth is generated, then stamped in as the objective room.** `MazeGenerator`
   (`scripts/maps/maze_generator.gd`) carves a grid of cells with a recursive backtracker (each
-  cell 2x2 floor tiles, walls one tile thick), finds the distance of every cell from the start
-  with a BFS, and puts the code in the farthest one. It retries until the shortest walk takes
-  60-90 s, then writes a normal text layout. `Labyrinth` (`scripts/maps/labyrinth.gd`) extends
-  `GameMap`: it fills in the layout before the base `_ready()` builds it, then adds the officers
-  with patrol routes along corridors (routes cannot be written as one letter in the layout).
+  cell 2x2 floor tiles, walls one tile thick), finds the distance of every cell from the cell at
+  the maze's door with a BFS, and puts the code in the farthest one. It retries until the
+  shortest walk is inside the time window in `balance.tres`. Officers get patrol routes along
+  corridors after the floor is built (a route cannot be one letter in the layout).
 - **Darkness** is a `CanvasModulate` that turns the whole map almost black, plus a `PointLight2D`
-  with a round gradient texture that follows the player. The HUD is on a `CanvasLayer`, so it
-  stays bright.
+  with a round gradient texture that follows the player. Both are on only while the player is in
+  the maze. The HUD is on a `CanvasLayer`, so it stays bright.
+- **Chest colours.** A gun chest picks its gun when it appears and is tinted with the gun's
+  `chest_color` (C bone, B teal, A brass, S red: Gungeon's chest colours, moved into our palette).
 - **Handcuffs.** `Player` has a `TRAPPED` state: no moving, shooting or rolling, and each press
   of E counts down. Touch is checked by the officer (its `Contact` area), the escape by the
   player, who then stuns the officer. `Player.trapped` / `escaped` signals drive the HUD and the
@@ -125,6 +145,9 @@ Round (scenes/round/round.tscn)               loads the map, decides the result,
 - **Hitboxes separate from feet.** Characters collide with walls at their feet (top-down
   convention), but bullets hit a circle around the body: the player's `Hurtbox` and each enemy's
   `Hitbox`. Otherwise bullets aimed at the body would fly past.
+- **Bullets are monitorable Area2Ds.** In Godot 4.7 an `Area2D` with `monitorable = false` does
+  not notice tile walls (`TileMapLayer` bodies), so bullets keep the default `monitorable = true`.
+  `tests/test_walls.gd` fires both kinds of bullet at a real tile wall.
 - **Physics layers.** 1 walls (and crates, chests), 2 player, 3 enemies, 4 player bullets,
   5 enemy bullets, 6 player hurtbox, 7 enemy hitboxes, 8 barrels (named in `project.godot`).
   The Wing Kin and the Shade Kin collide with nothing, which is how they pass over and through walls.

@@ -1,31 +1,46 @@
-[gd_resource type="SpriteFrames" load_steps=2 format=3]
+[gd_resource type="SpriteFrames" format=3 uid="uid://cetgqc76jbu7j"]
 
-[ext_resource type="Texture2D" path="res://art/game/enemy_rocket_kin.png" id="1_art"]
+[ext_resource type="Texture2D" uid="uid://8pbh63lfaxqj" path="res://art/game/enemy_rocket_kin.png" id="1_art"]
 
 [resource]
 animations = [{
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
-"loop": true,
-"name": &"idle",
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_art")
+}],
+"loop": 0,
+"name": &"die",
 "speed": 8.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
-"loop": true,
-"name": &"walk",
-"speed": 8.0
-}, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
-"loop": false,
-"name": &"roll",
-"speed": 8.0
-}, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
-"loop": false,
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_art")
+}],
+"loop": 0,
 "name": &"hit",
 "speed": 8.0
 }, {
-"frames": [{"duration": 1.0, "texture": ExtResource("1_art")}],
-"loop": false,
-"name": &"die",
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_art")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_art")
+}],
+"loop": 0,
+"name": &"roll",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_art")
+}],
+"loop": 1,
+"name": &"walk",
 "speed": 8.0
 }]

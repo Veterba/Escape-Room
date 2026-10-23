@@ -12,6 +12,8 @@ const WALL_MASK := 1
 var hp := 1
 ## Enemies idle until they see the player or the player comes close; then they stay awake.
 var awake := false
+## Enemies that fly over walls stay inside this area, in global pixels (no limit when empty).
+var leash := Rect2()
 var _knockback := Vector2.ZERO
 var _dead := false
 

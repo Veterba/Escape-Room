@@ -131,9 +131,12 @@ extends Resource
 ## Enemies appear on floor this many tiles or less from the edge of the map.
 @export var arena_spawn_edge_tiles: int = 3
 ## The code chest is chained shut until this wave starts.
-@export var arena_chest_unlock_wave: int = 7
+@export var arena_chest_unlock_wave: int = 5
 ## Seconds E must be held to open the code chest.
 @export var code_chest_open_time: float = 2.0
+## Crate groups and barrels in the generated arena (placed in mirrored pairs, so even numbers).
+@export var arena_crate_groups: int = 10
+@export var arena_barrels: int = 10
 
 @export_group("Barrels")
 @export var barrel_blast_radius: float = 40.0
@@ -144,11 +147,11 @@ extends Resource
 
 @export_group("Labyrinth")
 ## Size of the maze in cells. Each cell is 2x2 floor tiles plus a wall tile.
-@export var maze_cols: int = 20
-@export var maze_rows: int = 14
+@export var maze_cols: int = 16
+@export var maze_rows: int = 12
 ## The generator keeps only mazes where walking the shortest path to the code takes this long.
-@export var maze_min_walk_time: float = 60.0
-@export var maze_max_walk_time: float = 90.0
+@export var maze_min_walk_time: float = 40.0
+@export var maze_max_walk_time: float = 60.0
 @export var maze_officers: int = 4
 @export var maze_shades: int = 2
 @export var maze_wings: int = 1
@@ -180,6 +183,20 @@ extends Resource
 @export_group("Shade Kin")
 @export var shade_hp: int = 4
 @export var shade_speed: float = 35.0
+
+@export_group("Floor")
+## How many rooms a floor has, the start and the objective room included.
+@export var floor_min_rooms: int = 6
+@export var floor_max_rooms: int = 8
+## Chest rooms on a floor (at most; they go at dead ends).
+@export var floor_chest_rooms: int = 2
+## Tiles of corridor between two rooms side by side.
+@export var floor_corridor_tiles: int = 4
+## The doors of a fight room close once the player is this many tiles inside it.
+@export var floor_lock_inset_tiles: int = 2
+## The enemies of a fight room by its depth: the first entry for rooms next to the start, and
+## rooms deeper than the list use the last entry.
+@export var floor_fights: Array[ArenaWave] = []
 
 @export_group("Password screen")
 ## The password from the previous escape room task.

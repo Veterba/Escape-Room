@@ -1,4 +1,4 @@
-## The 0.8 s spawn effect in the Enemy Arena: a red ring closes in, then the enemy appears,
+## The 0.8 s spawn effect in arena and fight rooms: a red ring closes in, then the enemy appears,
 ## already awake. It counts as alive while it plays, so waves never overshoot the limit.
 class_name EnemySpawn
 extends Node2D
@@ -10,6 +10,8 @@ const RING_WIDTH := 1.0
 
 ## The enemy to create.
 var scene: PackedScene
+## Handed to the enemy: flying enemies stay inside it (the room they appeared in).
+var leash := Rect2()
 var _time_left := 0.0
 
 
@@ -25,6 +27,7 @@ func _physics_process(delta: float) -> void:
 	var enemy: Enemy = scene.instantiate()
 	enemy.position = position
 	enemy.awake = true
+	enemy.leash = leash
 	get_parent().add_child(enemy)
 	queue_free()
 

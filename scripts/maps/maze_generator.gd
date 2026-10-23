@@ -1,7 +1,7 @@
 ## Builds the labyrinth with a recursive backtracker: a grid of cells, each cell 2x2 floor tiles
 ## with walls one tile thick between them, so every corridor is 2 tiles wide. The start is the
-## top-left corner; the code goes in the cell farthest from it (by BFS along the corridors).
-## generate() retries until walking the shortest path to the code takes 60-90 s.
+## cell at the maze's door; the code goes in the cell farthest from it (by BFS along the
+## corridors). generate() retries until the shortest walk to the code is inside the time window.
 class_name MazeGenerator
 extends RefCounted
 
@@ -24,11 +24,11 @@ var dead_ends: Array[Vector2i] = []
 
 
 ## A new maze whose shortest walk to the code is inside the time window in balance.tres.
-static func generate(rng: RandomNumberGenerator) -> MazeGenerator:
+static func generate(rng: RandomNumberGenerator, start_cell := Vector2i.ZERO) -> MazeGenerator:
 	var cfg := Config.balance
 	var maze: MazeGenerator
 	for attempt in MAX_ATTEMPTS:
-		maze = MazeGenerator.new(cfg.maze_cols, cfg.maze_rows, rng)
+		maze = MazeGenerator.new(cfg.maze_cols, cfg.maze_rows, rng, start_cell)
 		var seconds := maze.walk_time()
 		if seconds >= cfg.maze_min_walk_time and seconds <= cfg.maze_max_walk_time:
 			return maze
@@ -41,9 +41,21 @@ static func cell_center(cell: Vector2i) -> Vector2:
 	return Vector2(cell * CELL_TILES + Vector2i.ONE) * GameMap.TILE_SIZE + Vector2.ONE * GameMap.TILE_SIZE
 
 
-func _init(maze_cols: int, maze_rows: int, rng: RandomNumberGenerator) -> void:
+## The size of the maze in tiles, walls included.
+static func tile_size() -> Vector2i:
+	var cfg := Config.balance
+	return Vector2i(cfg.maze_cols, cfg.maze_rows) * CELL_TILES + Vector2i.ONE
+
+
+## The cell that holds `tile` (a tile position inside the maze, walls included).
+static func cell_at(tile: Vector2i) -> Vector2i:
+	return (tile - Vector2i.ONE) / CELL_TILES
+
+
+func _init(maze_cols: int, maze_rows: int, rng: RandomNumberGenerator, start_cell := Vector2i.ZERO) -> void:
 	cols = maze_cols
 	rows = maze_rows
+	start = start_cell
 	_carve(rng)
 	distances = _distances_from(start)
 	for cell: Vector2i in distances:

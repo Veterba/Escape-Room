@@ -31,7 +31,8 @@ func _code_chest(round_node: Round) -> CodeChest:
 func test_waves_follow_the_mix_and_the_limits() -> void:
 	var cfg := Config.balance
 	var round_node := _make_arena_round()
-	var waves: ArenaWaves = round_node.map.get_node("Waves")
+	var waves := round_node.map.objective_room.waves
+	waves.active = true
 	waves._physics_process(STEP)
 	assert_eq(waves.wave, 1, "wave 1 starts at once")
 	assert_eq(_spawns().size(), cfg.arena_waves[0].grunts, "wave 1 sends its mix")
@@ -56,7 +57,7 @@ func test_waves_follow_the_mix_and_the_limits() -> void:
 
 func test_spawn_effect_creates_an_awake_enemy() -> void:
 	var round_node := _make_arena_round()
-	round_node.map.get_node("Waves").start_next_wave()
+	round_node.map.objective_room.waves.start_next_wave()
 	var spawn: EnemySpawn = _spawns()[0]
 	spawn._physics_process(Config.balance.arena_spawn_time + STEP)
 	var enemies := world.get_tree().get_nodes_in_group(&"enemies")
@@ -103,6 +104,14 @@ func test_opening_the_code_chest_takes_a_hold_that_a_hit_cancels() -> void:
 	for child in round_node.map.get_children():
 		dropped_code = dropped_code or (child is Pickup and (child as Pickup).kind == Pickup.Kind.CODE)
 	assert_true(dropped_code, "it drops the code")
+
+
+func test_gun_chests_are_coloured_by_rarity() -> void:
+	var round_node := _make_arena_round()
+	for child in round_node.map.get_children():
+		var chest := child as GunChest
+		if chest:
+			assert_eq(chest.get_node("Sprite").self_modulate, chest._gun.chest_color, "chest colour matches its gun")
 
 
 func test_barrels_hurt_everyone_and_chain_explode() -> void:
