@@ -48,6 +48,12 @@ NATIVE_ART = {
 FLOOR_ITEMS = ["item_secret_code", "item_heart", "item_ammo_box", "item_smoke_bomb", "item_hourglass"]
 FLOOR_ITEM_SHRINK = 2
 
+# The password menu's TV as a character grid (columns x rows). The source file has the trailing
+# spaces of each row cut off, so every row is padded back to the full width.
+MENU_TV_SOURCE = "15_menu_tv_ascii.txt"
+MENU_TV_OUTPUT = "menu_tv.txt"
+MENU_TV_SIZE = (89, 68)
+
 # Files 22-25 are map layout references and the palette: they are never used in game.
 
 
@@ -80,6 +86,16 @@ def convert_native(source: Path) -> Image.Image:
     return harden_alpha(image.resize(size, Image.NEAREST))
 
 
+def convert_menu_tv() -> None:
+    width, height = MENU_TV_SIZE
+    rows = (SOURCE_DIR / MENU_TV_SOURCE).read_text().split("\n")
+    rows = [row.rstrip("\r") for row in rows][:height]
+    if len(rows) != height or max(len(row) for row in rows) > width:
+        raise ValueError(f"{MENU_TV_SOURCE} must be at most {width} columns and exactly {height} rows")
+    (GAME_DIR / MENU_TV_OUTPUT).write_text("\n".join(row.ljust(width) for row in rows) + "\n")
+    print(f"{MENU_TV_OUTPUT}  {width}x{height} characters")
+
+
 def main() -> None:
     GAME_DIR.mkdir(parents=True, exist_ok=True)
     for prefix, (name, height) in CHARACTERS.items():
@@ -94,6 +110,7 @@ def main() -> None:
             small = out.resize((out.width // FLOOR_ITEM_SHRINK, out.height // FLOOR_ITEM_SHRINK), Image.NEAREST)
             small.save(GAME_DIR / f"floor_{name}.png")
             print(f"floor_{name}.png  {small.width}x{small.height}")
+    convert_menu_tv()
 
 
 if __name__ == "__main__":

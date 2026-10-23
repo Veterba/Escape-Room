@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.6.0** (Part E: the Ammo Wraith; three map types; the floor map).
+Current version: **0.7.0** (the ASCII TV password menu).
 
 ## Requirements
 
@@ -27,7 +27,10 @@ To skip the menu and force the map type (for testing), add `--map=boss`, `--map=
 godot --path . --map=arena
 ```
 
-The game opens on a password screen (the password is in `config/balance.tres`, `1234` for now).
+The game opens on the password menu: an ASCII television in green phosphor. Type the 4-digit
+access code (Backspace erases) and press Enter or click TRY CODE; the right code goes straight
+into a round. The code is in `config/balance.tres` (`1234` for now). The main menu (from the
+Menu buttons in the pause and end screens) is the same TV with PLAY and QUIT.
 `--map=` skips it.
 
 Every round picks one of three map types at random, and builds it fresh:

@@ -1,40 +1,67 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/pause_menu.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/ui/ascii_art.gd" id="2_art"]
+[ext_resource type="Shader" path="res://shaders/crt.gdshader" id="3_crt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("3_crt")
 
 [node name="PauseMenu" type="CanvasLayer"]
 process_mode = 3
 layer = 9
 script = ExtResource("1_script")
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="View" type="Control" parent="."]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Center"]
-layout_mode = 2
+[node name="Dim" type="ColorRect" parent="View"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
 
-[node name="Items" type="VBoxContainer" parent="Center/Panel"]
-layout_mode = 2
-theme_override_constants/separation = 6
+[node name="Back" type="ColorRect" parent="View"]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
 
-[node name="Title" type="Label" parent="Center/Panel/Items"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 32
-text = "Paused"
-horizontal_alignment = 1
+[node name="Art" type="Control" parent="View"]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("2_art")
 
-[node name="Resume" type="Button" parent="Center/Panel/Items"]
-layout_mode = 2
-text = "Resume"
+[node name="Items" type="VBoxContainer" parent="View/Art"]
+layout_mode = 0
+alignment = 1
 
-[node name="Restart" type="Button" parent="Center/Panel/Items"]
+[node name="Title" type="Label" parent="View/Art/Items"]
 layout_mode = 2
-text = "Restart round"
+size_flags_horizontal = 4
 
-[node name="Menu" type="Button" parent="Center/Panel/Items"]
+[node name="Resume" type="Button" parent="View/Art/Items"]
 layout_mode = 2
-text = "Menu"
+size_flags_horizontal = 4
+
+[node name="Restart" type="Button" parent="View/Art/Items"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Menu" type="Button" parent="View/Art/Items"]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="Crt" type="ColorRect" parent="View"]
+material = SubResource("ShaderMaterial_crt")
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2

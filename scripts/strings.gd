@@ -44,8 +44,11 @@ const BOSS_NAME := "Ammo Wraith"
 ## Shown while an Officer Kin has the player handcuffed, with the presses still needed: "Mash E! 7".
 const MASH_E_FORMAT := "Mash E! %d"
 
-const PASSWORD_PROMPT := "Password"
-const PASSWORD_HINT := "Press Enter to confirm"
+## The password menu on the TV.
+const ACCESS_PROMPT := "ENTER ACCESS CODE"
+const TRY_CODE := "TRY CODE"
+const ACCESS_HINT := "TYPE THE CODE · ENTER TO TRY"
+const ACCESS_GRANTED := "ACCESS GRANTED"
 
 ## F3 overlay: FPS, map, seconds left, player position, enemy count, arena wave ("-" elsewhere).
 const DEBUG_FORMAT := "FPS %d\nMap %s\nTime left %.1f s\nPlayer %d, %d\nEnemies %d\nWave %s"

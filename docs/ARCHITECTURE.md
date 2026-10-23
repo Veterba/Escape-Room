@@ -7,7 +7,8 @@ How Escape Boom is put together. Updated at the end of every part.
 | Folder | What is in it |
 |---|---|
 | `art/source/` | Original art copied from the vault. Never used directly (a `.gdignore` hides it from Godot). |
-| `art/game/` | Game-ready PNGs made by the two scripts in `tools/`. |
+| `art/game/` | Game-ready PNGs made by the two scripts in `tools/`, and `menu_tv.txt`, the menu TV's character grid. |
+| `art/fonts/` | JetBrains Mono ExtraBold for the password menu, with its licence (OFL). |
 | `config/` | `balance.tres` (every tunable number) and the scripts that define its fields. |
 | `scenes/` | Godot scenes (`.tscn`) and resources (`.tres`), grouped by feature. |
 | `scripts/` | The GDScript for those scenes, in the same groups. |
@@ -39,8 +40,8 @@ use them by name.
 ## Game flow
 
 ```
-PasswordScreen (scenes/ui/password_screen.tscn)  --right password-->  MainMenu   (main scene: once per launch)
-MainMenu (scenes/ui/main_menu.tscn)  --Play-->  Game.start_round()  -->  Round
+PasswordScreen (scenes/ui/password_screen.tscn)  --right code-->  Game.start_round()  -->  Round   (main scene: once per launch)
+MainMenu (scenes/ui/main_menu.tscn)  --Play-->  Game.start_round()  -->  Round   (reached from the Menu buttons)
 Round  --win / death / timeout-->  EndScreen  --Play again-->  Game.start_round()  (new random map type)
                                               --Menu-->        Game.go_to_menu()
 ```
@@ -162,6 +163,22 @@ Round (scenes/round/round.tscn)               builds the map, decides the result
 - **Bullets are monitorable Area2Ds.** In Godot 4.7 an `Area2D` with `monitorable = false` does
   not notice tile walls (`TileMapLayer` bodies), so bullets keep the default `monitorable = true`.
   `tests/test_walls.gd` fires both kinds of bullet at a real tile wall.
+- **ASCII art screens are real text.** `AsciiArt` (`scripts/ui/ascii_art.gd`) draws a picture
+  made of characters, one per square cell, with `draw_char()`: the menu TV (read from the 89x68
+  grid in `art/game/menu_tv.txt`) or a panel it generates (the pause menu). Because every cell is
+  drawn on its own, the boot-up and the shimmer can change single characters. The look (phosphor
+  colours, the font, glowing boxes and buttons) is in `PhosphorStyle`
+  (`scripts/ui/phosphor_style.gd`), sized in cells. The glow, scanlines, sweeping band and
+  flicker are one shader over the picture (`shaders/crt.gdshader`) that reads the screen
+  underneath it. Plain `.txt` files are not exported by default, so the export presets include
+  `art/game/*.txt`.
+- **Sharp text for ASCII screens.** The game renders at 640x360 and scales the pixels up, which
+  would turn 5 px characters to mush. So while an ASCII screen is open the window uses the
+  `canvas_items` content scale mode (text drawn at the real resolution) and goes back to
+  `viewport` when it closes: the TV menus do it while they exist, the pause menu while paused.
+- **The TV menus share one base.** `TvMenu` (`scripts/ui/tv_menu.gd`) sizes the TV to fill the
+  screen, lays the CRT shader over it, places the menu's screen area in TV cells and fades the UI
+  in after the boot-up. `PasswordScreen` and the main menu extend it and only add their own UI.
 - **Smooth motion.** Physics runs 60 times a second; `physics/common/physics_interpolation`
   draws everything in between, so motion is smooth on 120 Hz screens too. Teleports (the spawn,
   the boss's Fade) call `reset_physics_interpolation()` so they jump instead of sliding. Enemies

@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.7.0 — 2026-10-23
+
+### Added
+- A new password menu: an ASCII art television in green phosphor with a soft glow, faint scanlines, a slow sweeping band and a rare flicker. It boots up row by row out of noise, and a few characters shimmer all the time.
+- Typing pops each digit into one of 4 code cells, with a blinking cursor and a burst of shimmer. Backspace erases; Enter or the TRY CODE button tries the code.
+- A wrong code turns the cells and the button red, shakes the button and makes the TV shimmer harder, then clears the cells. The right code shows "ACCESS GRANTED" and goes straight into a round.
+- The main menu is the same TV, with the title and PLAY and QUIT buttons; the chosen button lights up, and Up, Down and Enter work too.
+- The TV fills the screen.
+- The pause menu is an ASCII art panel in the same green phosphor (without the TV): it boots up and shimmers, with RESUME, RESTART ROUND and MENU; Up, Down and Enter choose, Esc resumes.
+
+### Changed
+- The right password now starts a round at once; the main menu is only reached from the Menu buttons.
+
 ## v0.6.0 — 2026-10-23
 
 ### Added
