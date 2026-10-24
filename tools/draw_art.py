@@ -52,6 +52,16 @@ PALETTE = {
     "r": (0xB6, 0x26, 0x49, 255),  # red stripes
     "e": (0x58, 0x5E, 0x72, 255),  # head
     "L": (0xFF, 0x58, 0x73, 255),  # light
+    # The smoke bomb (redrawn to match the station art: outline, 3 shades, a teal band).
+    "F": (0x58, 0x5E, 0x78, 255),  # body, light
+    "G": (0x3A, 0x3E, 0x58, 255),  # body
+    "H": (0x2A, 0x2C, 0x43, 255),  # body, dark
+    "J": (0x88, 0x90, 0xA6, 255),  # shine
+    "K": (0x74, 0xF2, 0xE0, 255),  # band, lit
+    "X": (0x27, 0xA3, 0xA3, 255),  # band
+    "f": (0x8A, 0x6A, 0x44, 255),  # fuse
+    "Y": (0xFF, 0xD1, 0x66, 255),  # spark
+    "Z": (0xFF, 0x9F, 0x43, 255),  # spark, orange
 }
 
 PLAYER_BULLET = [
@@ -274,6 +284,24 @@ PUDDLE_PINK = [
     "...iiiiiiiiiii....",
 ]
 
+# The smoke bomb, on the floor and (twice as big) in the HUD.
+SMOKE_BOMB = [
+    "........Y..",
+    ".......YWYZ",
+    "......ofY..",
+    ".....of....",
+    "...oeeeo...",
+    "..ooFFFoo..",
+    ".oFJFGGGHo.",
+    "oFJFGGGGGHo",
+    "oKKKKKKXXXo",
+    "oXXXXXXXXXo",
+    "oGGGGGGGHHo",
+    ".oGGGGGHHo.",
+    "..ooHHHoo..",
+    "....ooo....",
+]
+
 # A pylon with red stripes and a red light on top (a room object of the Boss Chamber).
 PYLON = [
     "................",
@@ -345,6 +373,7 @@ def main() -> None:
         "hand": HAND,
         "key_glint": KEY_GLINT,
         "ui_panel": UI_PANEL,
+        "smoke_bomb": SMOKE_BOMB,
     }
     for name, grid in sprites.items():
         draw(grid).save(GAME_DIR / f"{name}.png")

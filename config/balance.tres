@@ -2,11 +2,6 @@
 
 [ext_resource type="Script" uid="uid://cddrgcvig5e3q" path="res://config/balance_config.gd" id="1_balance"]
 [ext_resource type="Script" uid="uid://k6rp1tlqa4hm" path="res://config/gun_stats.gd" id="2_gun_stats"]
-[ext_resource type="Texture2D" uid="uid://vt7sud2dioom" path="res://art/game/gun_pop_pistol.png" id="3_pop_pistol"]
-[ext_resource type="Texture2D" uid="uid://dnkqfoothvvw2" path="res://art/game/gun_brass_revolver.png" id="4_brass_revolver"]
-[ext_resource type="Texture2D" uid="uid://b0dvh6ao6t5j0" path="res://art/game/gun_scattershot.png" id="5_scattershot"]
-[ext_resource type="Texture2D" uid="uid://dansg63d8tdik" path="res://art/game/gun_fuse_launcher.png" id="6_fuse_launcher"]
-[ext_resource type="Texture2D" uid="uid://e3f10fckuyju" path="res://art/game/gun_gold_detonator.png" id="7_gold_detonator"]
 [ext_resource type="Texture2D" uid="uid://ddoyqw3g8vfmn" path="res://art/game/bullet_player.png" id="8_bullet"]
 [ext_resource type="Texture2D" uid="uid://c1jh2u4k4r0bl" path="res://art/game/bullet_rocket.png" id="9_rocket"]
 [ext_resource type="Texture2D" uid="uid://cf363qbnt5rg3" path="res://art/game/bullet_gold.png" id="10_gold"]
@@ -42,7 +37,6 @@ wings = 2
 [sub_resource type="Resource" id="GunStats_brass_revolver"]
 script = ExtResource("2_gun_stats")
 id = &"brass_revolver"
-icon = ExtResource("4_brass_revolver")
 held_texture = ExtResource("12_held_brass_revolver")
 bullet_texture = ExtResource("8_bullet")
 grip = Vector2(2, 4)
@@ -87,7 +81,6 @@ wings = 1
 [sub_resource type="Resource" id="GunStats_fuse_launcher"]
 script = ExtResource("2_gun_stats")
 id = &"fuse_launcher"
-icon = ExtResource("6_fuse_launcher")
 held_texture = ExtResource("14_held_fuse_launcher")
 bullet_texture = ExtResource("9_rocket")
 grip = Vector2(3, 6)
@@ -110,7 +103,6 @@ chest_weight = 15.0
 [sub_resource type="Resource" id="GunStats_gold_detonator"]
 script = ExtResource("2_gun_stats")
 id = &"gold_detonator"
-icon = ExtResource("7_gold_detonator")
 held_texture = ExtResource("15_held_gold_detonator")
 bullet_texture = ExtResource("10_gold")
 grip = Vector2(9, 5)
@@ -133,7 +125,6 @@ chest_weight = 5.0
 [sub_resource type="Resource" id="GunStats_pop_pistol"]
 script = ExtResource("2_gun_stats")
 id = &"pop_pistol"
-icon = ExtResource("3_pop_pistol")
 held_texture = ExtResource("11_held_pop_pistol")
 bullet_texture = ExtResource("8_bullet")
 grip = Vector2(3, 4)
@@ -156,7 +147,6 @@ chest_weight = 0.0
 [sub_resource type="Resource" id="GunStats_scattershot"]
 script = ExtResource("2_gun_stats")
 id = &"scattershot"
-icon = ExtResource("5_scattershot")
 held_texture = ExtResource("13_held_scattershot")
 bullet_texture = ExtResource("8_bullet")
 grip = Vector2(6, 4)

@@ -5,10 +5,8 @@ extends Resource
 
 ## Short name used in the run log, for example "pop_pistol".
 @export var id: StringName
-## The big drawing: used in the HUD.
-@export var icon: Texture2D
-## The small drawing (the approved gun sprites, 12-21 px long) shown in the hero's hand and for
-## guns lying on the floor.
+## The gun's drawing (the approved gun sprites, 12-21 px long), shown in the hero's hand, for guns
+## lying on the floor, and twice as big in the HUD.
 @export var held_texture: Texture2D
 @export var bullet_texture: Texture2D
 ## Pixel in held_texture where the hand holds the gun. The gun rotates around this point.

@@ -18,10 +18,10 @@ any public release.
 
 ## Other art
 
-Guns and items (files 09–21) were drawn for the project mood board; they are now only the HUD's gun
-icons and the heart, ammo, smoke bomb and hourglass items. The guns in the hand, the chests and the
+Items (files 14–21) were drawn for the project mood board; they are now only the heart, ammo and
+hourglass items. The guns (in the hand, on the floor and in the HUD), the chests and the
 key are the owner's approved retexture sprites (`art/source/retexture/`), and so are the room tiles and
-objects (`art/source/retexture/38_room_parts/`). The rooms' floor details, the Boss Chamber's pylons, barrels, doors, the exit hatch, the key's glint,
+objects (`art/source/retexture/38_room_parts/`). The smoke bomb, the rooms' floor details, the Boss Chamber's pylons, barrels, doors, the exit hatch, the key's glint,
 bullets, shell casings, the muzzle flash, the hero's hand and UI frames are drawn in code in `tools/draw_art.py`.
 
 ## Font

@@ -24,7 +24,7 @@ radius = 95
 
 [sub_resource type="Resource" id="control"]
 script = ExtResource("3_room")
-ambient = Color(0.18, 0.169, 0.29, 1)
+ambient = Color(0.46, 0.43, 0.62, 1)
 wall_light = SubResource("control_wall_light")
 breathe = 0.0
 breathe_speed = 0.0
@@ -52,7 +52,7 @@ radius = 80
 
 [sub_resource type="Resource" id="server"]
 script = ExtResource("3_room")
-ambient = Color(0.122, 0.165, 0.267, 1)
+ambient = Color(0.38, 0.46, 0.62, 1)
 wall_light = SubResource("server_wall_light")
 breathe = 0.0
 breathe_speed = 0.0
@@ -80,7 +80,7 @@ radius = 35
 
 [sub_resource type="Resource" id="lab"]
 script = ExtResource("3_room")
-ambient = Color(0.133, 0.188, 0.227, 1)
+ambient = Color(0.4, 0.52, 0.56, 1)
 wall_light = SubResource("lab_wall_light")
 breathe = 0.0
 breathe_speed = 0.0
@@ -108,7 +108,7 @@ radius = 70
 
 [sub_resource type="Resource" id="storage"]
 script = ExtResource("3_room")
-ambient = Color(0.11, 0.098, 0.082, 1)
+ambient = Color(0.52, 0.46, 0.38, 1)
 wall_light = SubResource("storage_wall_light")
 breathe = 0.1
 breathe_speed = 0.7
@@ -164,7 +164,7 @@ radius = 50
 
 [sub_resource type="Resource" id="arena"]
 script = ExtResource("3_room")
-ambient = Color(0.137, 0.122, 0.2, 1)
+ambient = Color(0.44, 0.4, 0.56, 1)
 wall_light = SubResource("arena_wall_light")
 breathe = 0.0
 breathe_speed = 0.0
@@ -234,7 +234,7 @@ radius = 60
 
 [sub_resource type="Resource" id="boss"]
 script = ExtResource("3_room")
-ambient = Color(0.114, 0.094, 0.173, 1)
+ambient = Color(0.4, 0.34, 0.52, 1)
 wall_light = SubResource("boss_wall_light")
 breathe = 0.0
 breathe_speed = 0.0
