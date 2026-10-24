@@ -7,10 +7,14 @@ const IMPACT_SPARK := preload("res://scenes/fx/impact_spark.tscn")
 ## A blast starts this many pixels back along the bullet's path, so its centre is never
 ## inside the wall it hit (walls block blasts, and a centre inside one would be blocked oddly).
 const BLAST_PULLBACK := 6.0
+## Its picture has two frames; it shimmers between them this many times a second.
+const SHIMMER_FRAMES := 2
+const SHIMMER_RATE := 10.0
 
 var _stats: GunStats
 var _velocity := Vector2.ZERO
 var _spent := false
+var _time := 0.0
 
 @onready var _sprite: Sprite2D = $Sprite
 
@@ -23,12 +27,15 @@ func setup(direction: Vector2, gun: GunStats) -> void:
 
 func _ready() -> void:
 	_sprite.texture = _stats.bullet_texture
+	_sprite.hframes = SHIMMER_FRAMES
 	body_entered.connect(_on_body_hit)
 	area_entered.connect(func(hitbox: Area2D) -> void: _on_hit(hitbox.owner as Enemy))
 
 
 func _physics_process(delta: float) -> void:
 	position += _velocity * delta
+	_time += delta
+	_sprite.frame = int(_time * SHIMMER_RATE) % SHIMMER_FRAMES
 
 
 ## Walls and chests take no damage; a barrel is lit.

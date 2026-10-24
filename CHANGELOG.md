@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.14.1 — 2026-10-24
+
+### Changed
+- Every bullet is redrawn in the station style with a dark outline and a bright core, and shimmers while it flies: big red bullets for enemies and Root, small teal ones for Trojans and error windows, cream for the Pop Pistol, red rockets for the Fuse Launcher and gold for the Gold Detonator.
+
 ## v0.14.0 — 2026-10-24
 
 ### Changed

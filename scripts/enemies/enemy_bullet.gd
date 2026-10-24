@@ -4,8 +4,14 @@ class_name EnemyBullet
 extends Area2D
 
 const IMPACT_SPARK := preload("res://scenes/fx/impact_spark.tscn")
+## Its picture has two frames; it shimmers between them this many times a second.
+const SHIMMER_FRAMES := 2
+const SHIMMER_RATE := 10.0
 
 var _velocity := Vector2.ZERO
+var _time := 0.0
+
+@onready var _sprite: Sprite2D = $Sprite
 
 
 func setup(direction: Vector2, speed: float) -> void:
@@ -13,12 +19,15 @@ func setup(direction: Vector2, speed: float) -> void:
 
 
 func _ready() -> void:
+	_sprite.hframes = SHIMMER_FRAMES
 	body_entered.connect(_on_wall_hit)
 	area_entered.connect(_on_hurtbox_entered)
 
 
 func _physics_process(delta: float) -> void:
 	position += _velocity * delta
+	_time += delta
+	_sprite.frame = int(_time * SHIMMER_RATE) % SHIMMER_FRAMES
 
 
 ## Removes the bullet with a small spark (also used by the smoke bomb).
