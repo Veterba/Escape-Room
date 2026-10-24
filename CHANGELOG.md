@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.14.2 — 2026-10-24
+
+### Added
+- The Windows version can be downloaded from the GitHub Releases page: unzip and run `EscapeBoom.exe`, no install needed. GitHub builds it every time a new version is tagged.
+
 ## v0.14.1 — 2026-10-24
 
 ### Changed

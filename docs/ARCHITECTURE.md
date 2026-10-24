@@ -14,6 +14,7 @@ How Escape Boom is put together. Updated at the end of every part.
 | `scripts/` | The GDScript for those scenes, in the same groups. |
 | `shaders/` | The hit flash shader. |
 | `tests/` | The headless test runner and the tests. |
+| `.github/workflows/` | `windows-release.yml`: GitHub builds the Windows zip for every pushed version tag and puts it on the Releases page. |
 | `tools/` | Python art scripts, `export.sh`, which builds the Windows and macOS releases from `export_presets.cfg`, and `bot_check.gd`, which shows each map can be won in time (see the README). |
 
 ## Autoloads
