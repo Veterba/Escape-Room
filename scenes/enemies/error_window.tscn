@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/error_window.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/fx/juice.gd" id="2_juice"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+resource_local_to_scene = true
+size = Vector2(26, 18)
+
+[node name="ErrorWindow" type="CharacterBody2D" groups=["enemies"]]
+collision_layer = 0
+collision_mask = 0
+motion_mode = 1
+script = ExtResource("1_script")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 0
+monitoring = false
+
+[node name="Shape" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("RectangleShape2D_hitbox")
+
+[node name="Glow" type="PointLight2D" parent="."]
+
+[node name="Body" type="AnimatedSprite2D" parent="."]
+visible = false
+
+[node name="Juice" type="Node" parent="." node_paths=PackedStringArray("sprite")]
+script = ExtResource("2_juice")
+sprite = NodePath("../Body")
+
+[node name="Nav" type="NavigationAgent2D" parent="."]

@@ -6,9 +6,9 @@ class_name RoomStyles
 
 ## Fight, chest, start and exit rooms pick one of these at random.
 const ROOM_TYPES: Array[StringName] = [&"control", &"server", &"lab", &"storage"]
-## The tile source of each room type in scenes/maps/dungeon_tiles.tres (source 0 is the old look,
-## still used by the Boss Chamber).
-const TILE_SOURCES := {&"control": 1, &"server": 2, &"lab": 3, &"storage": 4, &"maze": 5, &"arena": 6}
+## The tile source of each room type in scenes/maps/dungeon_tiles.tres. The Boss Chamber is built
+## from the arena's tiles.
+const TILE_SOURCES := {&"control": 1, &"server": 2, &"lab": 3, &"storage": 4, &"maze": 5, &"arena": 6, &"boss": 6}
 
 ## Where the tiles are in each room type's atlas (see tools/import_art.py).
 const FLOOR_VARIANTS := 8
@@ -38,7 +38,7 @@ const PROPS := {
 	&"lamp": [1, 0.0], &"lockers": [1, 0.0], &"monitor": [4, 12.0], &"rack": [4, 4.0],
 	&"shelf": [1, 0.0], &"sign": [1, 0.0], &"strip_light": [1, 0.0], &"tank": [8, 6.0],
 	&"tankP": [8, 6.0], &"terminal": [2, 2.0], &"toolbox": [1, 0.0], &"tube": [1, 0.0],
-	&"tvpile": [4, 8.0], &"valves": [1, 0.0], &"vent": [1, 0.0],
+	&"tvpile": [4, 8.0], &"valves": [1, 0.0], &"vent": [1, 0.0], &"pylon": [1, 0.0],
 }
 ## Objects that glow, and which light of config/lighting.tres they carry.
 const GLOWING := {&"tank": &"tank", &"tankP": &"tank_pink", &"console": &"console", &"monitor": &"monitor", &"cryo": &"cryo"}
@@ -46,14 +46,15 @@ const GLOWING := {&"tank": &"tank", &"tankP": &"tank_pink", &"console": &"consol
 ## (as on the approved page).
 const ON_WALL_HEIGHT := {
 	&"lamp": 10, &"tube": 8, &"strip_light": 26, &"beacon": 10, &"fusebox": 12, &"vent": 16,
-	&"terminal": 10, &"sign": 12, &"valves": 2, &"cables": 8, &"extinguisher": 14,
+	&"terminal": 10, &"sign": 12, &"valves": 2, &"cables": 8, &"extinguisher": 14, &"monitor": 6,
 }
 ## Objects that stand against the north wall sink this many pixels into the floor in front of it.
 const WALL_STAND_SINK := 3
 
 ## What each room type puts where:
 ## - wall_light: the light on its north wall, one every LAMP_SPACING tiles
-## - broken_light: the object of its broken light (tinted with the light's colour)
+## - broken_light: the object of its broken lights (tinted with the light's colour), and how many
+## - wall_middle: an object hung in the middle of the north wall (or nothing)
 ## - along_wall: objects standing against the north wall
 ## - on_wall: small objects hung on the north wall
 ## - cover: what stands where the layout has a group of crates, by the group's size in tiles.
@@ -64,7 +65,7 @@ const WALL_STAND_SINK := 3
 ## - details: flat details lying on the floor
 const LOOKS := {
 	&"control": {
-		"wall_light": &"lamp", "broken_light": &"tube",
+		"wall_light": &"lamp", "broken_light": &"tube", "broken_lights": 1, "wall_middle": &"",
 		"along_wall": [&"console", &"rack", &"monitor", &"lockers", &"tank", &"terminal"],
 		"on_wall": [&"fusebox", &"vent", &"sign", &"cables"],
 		"cover": {
@@ -76,7 +77,7 @@ const LOOKS := {
 		"details": [&"oil", &"debris", &"debris", &"cable", &"floor_strip", &"papers"],
 	},
 	&"server": {
-		"wall_light": &"strip_light", "broken_light": &"strip_light",
+		"wall_light": &"strip_light", "broken_light": &"strip_light", "broken_lights": 1, "wall_middle": &"",
 		"along_wall": [&"rack", &"rack", &"rack", &"monitor", &"cooler"],
 		"on_wall": [&"fusebox", &"cables", &"vent"],
 		"cover": {
@@ -88,7 +89,7 @@ const LOOKS := {
 		"details": [&"cable", &"cable", &"floor_strip", &"debris", &"oil"],
 	},
 	&"lab": {
-		"wall_light": &"lamp", "broken_light": &"tube",
+		"wall_light": &"lamp", "broken_light": &"tube", "broken_lights": 1, "wall_middle": &"",
 		"along_wall": [&"tank", &"tank", &"tankP", &"console", &"generator", &"cooler"],
 		"on_wall": [&"valves", &"extinguisher", &"terminal", &"vent"],
 		"cover": {
@@ -100,7 +101,7 @@ const LOOKS := {
 		"details": [&"puddle_green", &"puddle_green", &"puddle_pink", &"debris", &"oil"],
 	},
 	&"storage": {
-		"wall_light": &"lamp", "broken_light": &"tube",
+		"wall_light": &"lamp", "broken_light": &"tube", "broken_lights": 1, "wall_middle": &"",
 		"along_wall": [&"shelf", &"shelf", &"lockers", &"crate"],
 		"on_wall": [&"sign", &"extinguisher", &"vent", &"fusebox"],
 		"cover": {
@@ -112,7 +113,7 @@ const LOOKS := {
 		"details": [&"oil", &"debris", &"debris", &"papers"],
 	},
 	&"maze": {
-		"wall_light": &"beacon", "broken_light": &"",
+		"wall_light": &"beacon", "broken_light": &"", "broken_lights": 0, "wall_middle": &"",
 		"along_wall": [],
 		"on_wall": [&"vent", &"cables"],
 		"cover": {},
@@ -120,7 +121,7 @@ const LOOKS := {
 		"details": [&"debris", &"oil", &"debris"],
 	},
 	&"arena": {
-		"wall_light": &"lamp", "broken_light": &"",
+		"wall_light": &"lamp", "broken_light": &"", "broken_lights": 0, "wall_middle": &"beacon",
 		"along_wall": [&"crateM", &"crate", &"tvpile"],
 		"on_wall": [&"sign", &"vent", &"sign"],
 		"cover": {
@@ -132,6 +133,14 @@ const LOOKS := {
 		"small": [&"crate", &"crateM"],
 		"details": [&"floor_strip", &"debris", &"oil"],
 	},
+	&"boss": {
+		"wall_light": &"lamp", "broken_light": &"tube", "broken_lights": 2, "wall_middle": &"monitor",
+		"along_wall": [],
+		"on_wall": [&"vent", &"sign"],
+		"cover": {},
+		"small": [&"crate"],
+		"details": [&"floor_strip", &"debris", &"oil"],
+	},
 }
 ## One wall light every this many tiles of north wall.
 const LAMP_SPACING := 10
@@ -139,6 +148,14 @@ const LAMP_SPACING := 10
 ## object hung on it (otherwise it stays bare).
 const ALONG_WALL_CHANCE := 0.45
 const ON_WALL_CHANCE := 0.25
+## The Boss Chamber: a ring of hazard stripes around its middle (its radius in tiles, how thick,
+## and how much it is squashed from top to bottom), a grate in the middle, and a pylon one tile
+## in from each corner.
+const BOSS_RING_RADIUS := 4.2
+const BOSS_RING_WIDTH := 0.6
+const BOSS_RING_SQUASH := 1.3
+const BOSS_GRATE_RADIUS := 1.3
+const BOSS_PYLON_INSET := 2
 ## Floor details: one for every this many floor tiles, and grates.
 const TILES_PER_DETAIL := 24
 const TILES_PER_GRATE := 70

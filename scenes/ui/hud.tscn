@@ -124,7 +124,7 @@ mouse_filter = 2
 layout_mode = 0
 offset_top = -18.0
 offset_right = 300.0
-text = "Ammo Wraith"
+text = "Root"
 horizontal_alignment = 1
 
 [node name="Back" type="ColorRect" parent="Root/BossBar"]

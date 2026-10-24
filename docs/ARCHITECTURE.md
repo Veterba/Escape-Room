@@ -139,14 +139,24 @@ Round (scenes/round/round.tscn)               builds the map, decides the result
   node per room.
 - **Rooms.** A `Room` knows its rectangle and its doors (`Door` tiles on its wall). A room with
   `enemies_on_enter` (fight rooms, with harder mixes deeper in from `floor_fights`, and the boss
-  room, with the Ammo Wraith) closes its doors when the player is two tiles past the doorway and
+  room, with Root) closes its doors when the player is two tiles past the doorway and
   spawns them as its own children, so "cleared" just means it has no enemy children left. Then
   it opens its doors and the doors in `opens_on_clear`: for the boss room, the exit room's, which
   start shut. The arena room starts its `ArenaWaves` instead.
-- **The Ammo Wraith** (`scripts/enemies/ammo_wraith.gd`) picks its phase from its share of hit
-  points (`phase_for()`). Phase 3 runs every attack clock 1.3 times faster rather than changing
-  each interval. Belt Lash queues its bullets with a delay each, so one sweep is spread over
-  time. Its health goes to the HUD through `Events.boss_health_changed`.
+- **Root** (`scripts/enemies/root.gd`) is one `Enemy` node that draws itself from its parts in
+  `_draw()`: the main window with the eye (drawn in code, so the pupil can follow the player and
+  the eye can blink and shut), five error windows, the cursor crown and hands. It keeps where
+  each window is now and pulls it towards its place with its own delay every frame, so the
+  cloak trails. `RootWindow` (`scripts/enemies/root_window.gd`) draws one window at any stage of
+  opening or closing. Root is a small state machine (`State`: idle, Belt Lash, Bullet Rain, roar,
+  split, teleport out, gone, teleport in, dying); its hitbox is switched off in every state where
+  it cannot be hit, so bullets pass through. It picks its phase from its share of hit points
+  (`phase_for()`); phase 3 runs its clocks 1.3 times faster. At the split it adds five
+  `ErrorWindow` enemies (`scripts/enemies/error_window.gd`) to its room, each with its own hit
+  points and state machine; destroyed, one stays in its room as "away" and comes back after
+  `error_window_return_time`. Its health goes to the HUD through `Events.boss_health_changed`;
+  when it has finished dying it drops the code (the key) and frees itself, which clears the
+  room.
 - **The floor map** (`scripts/ui/floor_map.gd`) draws the rooms straight from `DungeonFloor.rooms`:
   rooms walked into are filled, rooms joined to them are outlined.
 - **The maze generator.** `MazeGenerator` (`scripts/maps/maze_generator.gd`) carves a grid of

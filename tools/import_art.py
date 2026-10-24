@@ -16,7 +16,6 @@ UPSCALE_FACTOR = 16
 # Characters cut from a screenshot (non-integer scale): shrink to a target height in pixels.
 # Source file prefix -> (output name, target height).
 CHARACTERS = {
-    "02": ("boss_ammo_wraith", 64),
     "03": ("enemy_grunt_kin", 22),
     "05": ("enemy_fuse_kin", 22),
 }
@@ -95,6 +94,18 @@ MENU_TV_SOURCE = "retexture/15_menu_tv_ascii.txt"
 MENU_TV_OUTPUT = "menu_tv.txt"
 MENU_TV_SIZE = (89, 68)
 
+# Root, the boss (retexture spec, "Approved boss: Root"): its windows, the cursor, and red-titled
+# copies of the windows for phase 3. The eye is drawn by the game, so the main window's eye is
+# cleared.
+ROOT_PARTS_DIR = "retexture/44_boss_root"
+ROOT_DIR = "root"
+ROOT_WINDOWS = 5
+ROOT_EYE_AREA = (2, 5, 35, 27)  # left, top, right, bottom (exclusive), inside the main window
+ROOT_WINDOW_BACK = "#0d1822"
+# Title bar colours (and their lighter top row) -> the red of phase 3.
+ROOT_TITLE_ROWS = range(1, 4)
+ROOT_TITLES = {"#b62649": "#ff5873", "#c4516d": "#ff798f", "#27a3a3": "#ff5873", "#52b5b5": "#ff798f"}
+
 # Rooms (retexture spec, "Rooms"): every room type gets one tile atlas of 16 px cells.
 # Room type -> (floor style, wall style) of the parts in 38_room_parts.
 ROOM_PARTS_DIR = "retexture/38_room_parts"
@@ -119,8 +130,8 @@ WALL_TOP_PLAIN, WALL_TOP_S, WALL_TOP_E, WALL_TOP_W = 0, 2, 3, 4
 WALL_PIPE = [(0, "#5a6080"), (1, "#3a3e55"), (2, "#3a3e55"), (3, "#202235")]
 WALL_PIPE_TOP = 4
 NO_PIPE = ["maze"]
-# The tile set that both floors and the Labyrinth use: the old tiles (source 0, kept for the Boss
-# Chamber) and one atlas source per room type, in the order of ROOM_STYLES (sources 1-6).
+# The tile set that both floors and the Labyrinth use: one atlas source per room type, in the order
+# of ROOM_STYLES (sources 1-6).
 TILESET = ROOT / "scenes" / "maps" / "dungeon_tiles.tres"
 TILESET_UID = "uid://ckqprfhxgw3bx"
 # Walls are drawn in y order by the top edge of their cell, and block movement on their cell only
@@ -128,7 +139,6 @@ TILESET_UID = "uid://ckqprfhxgw3bx"
 WALL_SORT = -8
 TALL_ORIGIN = 16
 SQUARE = "PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)"
-OLD_TILES = [(0, False), (1, False), (2, True), (3, True), (4, False), (5, True)]
 # Room objects copied as they are: horizontal strips of equal frames (the frame counts are in
 # scripts/floor/room_styles.gd).
 ROOM_PROPS = [
@@ -340,15 +350,11 @@ def _tile(lines: list, x: int, y: int, solid: bool, tall: bool = False) -> None:
 def write_tileset() -> None:
     styles = list(ROOM_STYLES)
     out = [f'[gd_resource type="TileSet" format=3 uid="{TILESET_UID}"]', ""]
-    out.append('[ext_resource type="Texture2D" path="res://art/game/tiles.png" id="0_tiles"]')
     for i, room in enumerate(styles, 1):
         out.append(f'[ext_resource type="Texture2D" path="res://art/game/{ROOMS_DIR}/tiles_{room}.png" id="{i}_tiles"]')
     out.append("")
-    out += ['[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0"]', 'texture = ExtResource("0_tiles")']
-    for x, solid in OLD_TILES:
-        _tile(out, x, 0, solid)
     for i, room in enumerate(styles, 1):
-        out += ["", f'[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_{i}"]', f'texture = ExtResource("{i}_tiles")']
+        out += [f'[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_{i}"]', f'texture = ExtResource("{i}_tiles")']
         for x in range(11):
             _tile(out, x, 0, x == 10)
             _tile(out, x, 1, True)
@@ -356,11 +362,44 @@ def write_tileset() -> None:
             _tile(out, x, 2, True)
         for x in range(8):
             _tile(out, x, 3, True, tall=True)
-    out += ["", "[resource]", "physics_layer_0/collision_layer = 1", "physics_layer_0/collision_mask = 0"]
-    for i in range(len(styles) + 1):
+        out.append("")
+    out += ["[resource]", "physics_layer_0/collision_layer = 1", "physics_layer_0/collision_mask = 0"]
+    for i in range(1, len(styles) + 1):
         out.append(f'sources/{i} = SubResource("TileSetAtlasSource_{i}")')
     TILESET.write_text("\n".join(out) + "\n")
-    print(f"{TILESET.name}  {len(styles) + 1} tile sources")
+    print(f"{TILESET.name}  {len(styles)} tile sources")
+
+
+def _root_part(name: str) -> Image.Image:
+    return Image.open(SOURCE_DIR / ROOT_PARTS_DIR / f"{name}.png").convert("RGBA")
+
+
+def _red_title(image: Image.Image) -> Image.Image:
+    red = image.copy()
+    swaps = {_hex(old): _hex(new) for old, new in ROOT_TITLES.items()}
+    for y in ROOT_TITLE_ROWS:
+        for x in range(red.width):
+            red.putpixel((x, y), swaps.get(red.getpixel((x, y)), red.getpixel((x, y))))
+    return red
+
+
+def convert_root() -> None:
+    out_dir = GAME_DIR / ROOT_DIR
+    out_dir.mkdir(exist_ok=True)
+    main = _root_part("main_window_eye").crop((0, 0, 38, 30))
+    left, top, right, bottom = ROOT_EYE_AREA
+    for y in range(top, bottom):
+        for x in range(left, right):
+            main.putpixel((x, y), _hex(ROOT_WINDOW_BACK))
+    main.save(out_dir / "main.png")
+    _red_title(main).save(out_dir / "main_red.png")
+    for i in range(1, ROOT_WINDOWS + 1):
+        window = _root_part(f"window_{i}")
+        window.save(out_dir / f"window_{i}.png")
+        _red_title(window).save(out_dir / f"window_{i}_red.png")
+        _root_part(f"window_{i}_phase3").save(out_dir / f"window_{i}_static.png")
+    _root_part("cursor").save(out_dir / "cursor.png")
+    print(f"{ROOT_DIR}/  the main window, {ROOT_WINDOWS} error windows and the cursor")
 
 
 def convert_menu_tv() -> None:
@@ -397,6 +436,7 @@ def main() -> None:
     convert_chests()
     convert_rooms()
     write_tileset()
+    convert_root()
 
 
 if __name__ == "__main__":
