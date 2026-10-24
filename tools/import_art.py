@@ -95,6 +95,49 @@ MENU_TV_SOURCE = "retexture/15_menu_tv_ascii.txt"
 MENU_TV_OUTPUT = "menu_tv.txt"
 MENU_TV_SIZE = (89, 68)
 
+# Rooms (retexture spec, "Rooms"): every room type gets one tile atlas of 16 px cells.
+# Room type -> (floor style, wall style) of the parts in 38_room_parts.
+ROOM_PARTS_DIR = "retexture/38_room_parts"
+ROOMS_DIR = "rooms"
+ROOM_STYLES = {
+    "control": ("plate", "violet"), "server": ("server", "blue"), "lab": ("lab", "lab"),
+    "storage": ("storage", "rust"), "maze": ("dark", "dark"), "arena": ("arena", "arena"),
+}
+# The atlas, 11 cells wide:
+#   row 0: the 8 floor variants, the grate, the hazard stripes, an empty cell (an invisible
+#          blocker under room objects)
+#   row 1: the 11 wall tops: plain, then a light edge on n, s, e, w, ns, ew, nw, ne, sw, se
+#   row 2: the 2 short wall faces (inner walls and pillars)
+#   rows 3-5: the 6 north wall faces with a wall top above (16x48 each), then the top corners
+#          of the room: a plain top over two tops with an edge towards the wall face (east,
+#          then west)
+ROOM_ATLAS_CELLS = (11, 6)
+TILE = 16
+WALL_TOP_PLAIN, WALL_TOP_S, WALL_TOP_E, WALL_TOP_W = 0, 2, 3, 4
+# The pipe along the north wall (as on the approved page; the maze has none): its rows, from
+# 4 px below the top of the wall face.
+WALL_PIPE = [(0, "#5a6080"), (1, "#3a3e55"), (2, "#3a3e55"), (3, "#202235")]
+WALL_PIPE_TOP = 4
+NO_PIPE = ["maze"]
+# The tile set that both floors and the Labyrinth use: the old tiles (source 0, kept for the Boss
+# Chamber) and one atlas source per room type, in the order of ROOM_STYLES (sources 1-6).
+TILESET = ROOT / "scenes" / "maps" / "dungeon_tiles.tres"
+TILESET_UID = "uid://ckqprfhxgw3bx"
+# Walls are drawn in y order by the top edge of their cell, and block movement on their cell only
+# (a tall north wall face reaches up over the dark above the room).
+WALL_SORT = -8
+TALL_ORIGIN = 16
+SQUARE = "PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)"
+OLD_TILES = [(0, False), (1, False), (2, True), (3, True), (4, False), (5, True)]
+# Room objects copied as they are: horizontal strips of equal frames (the frame counts are in
+# scripts/floor/room_styles.gd).
+ROOM_PROPS = [
+    "arm", "barrel", "beacon", "bin", "box", "cables", "chair", "console", "cooler", "crate",
+    "crateM", "cryo", "desk", "extinguisher", "fusebox", "generator", "island", "lamp", "lockers",
+    "monitor", "rack", "shelf", "sign", "strip_light", "tank", "tankP", "terminal", "toolbox",
+    "tube", "tvpile", "valves", "vent",
+]
+
 # Files 22-25 are map layout references and the palette: they are never used in game.
 
 
@@ -243,6 +286,83 @@ def convert_chests() -> None:
     print(f"{CHEST_OUTPUT_DIR}/  {len(CHESTS)} chest pictures and strips")
 
 
+def _part(name: str) -> Image.Image:
+    return Image.open(SOURCE_DIR / ROOM_PARTS_DIR / f"{name}.png").convert("RGBA")
+
+
+def _cell(strip: Image.Image, i: int, height: int = TILE) -> Image.Image:
+    return strip.crop((i * TILE, 0, (i + 1) * TILE, height))
+
+
+def convert_rooms() -> None:
+    out_dir = GAME_DIR / ROOMS_DIR
+    (out_dir / "props").mkdir(parents=True, exist_ok=True)
+    for room, (floor, wall) in ROOM_STYLES.items():
+        atlas = Image.new("RGBA", (ROOM_ATLAS_CELLS[0] * TILE, ROOM_ATLAS_CELLS[1] * TILE))
+        floors = _part(f"floor_{floor}")
+        for i in range(8):
+            atlas.paste(_cell(floors, i), (i * TILE, 0))
+        atlas.paste(_part("floor_grate"), (8 * TILE, 0))
+        atlas.paste(_part("floor_hazard"), (9 * TILE, 0))
+        tops = _part(f"wall_top_{wall}")
+        atlas.paste(tops, (0, TILE))
+        atlas.paste(_part(f"wall_short_{wall}"), (0, 2 * TILE))
+        faces = _part(f"wall_{wall}")
+        for i in range(6):
+            face = _cell(faces, i, 2 * TILE)
+            if room not in NO_PIPE:
+                for dy, color in WALL_PIPE:
+                    for x in range(TILE):
+                        face.putpixel((x, WALL_PIPE_TOP + dy), _hex(color))
+            atlas.paste(_cell(tops, WALL_TOP_S), (i * TILE, 3 * TILE))
+            atlas.paste(face, (i * TILE, 4 * TILE))
+        for i, edge in [(6, WALL_TOP_E), (7, WALL_TOP_W)]:
+            atlas.paste(_cell(tops, WALL_TOP_PLAIN), (i * TILE, 3 * TILE))
+            atlas.paste(_cell(tops, edge), (i * TILE, 4 * TILE))
+            atlas.paste(_cell(tops, edge), (i * TILE, 5 * TILE))
+        atlas.save(out_dir / f"tiles_{room}.png")
+    for name in ROOM_PROPS:
+        _part(name).save(out_dir / "props" / f"{name}.png")
+    print(f"{ROOMS_DIR}/  {len(ROOM_STYLES)} tile atlases, {len(ROOM_PROPS)} objects")
+
+
+def _tile(lines: list, x: int, y: int, solid: bool, tall: bool = False) -> None:
+    if tall:
+        lines.append(f"{x}:{y}/size_in_atlas = Vector2i(1, 3)")
+    lines.append(f"{x}:{y}/0 = 0")
+    if tall:
+        lines.append(f"{x}:{y}/0/texture_origin = Vector2i(0, {TALL_ORIGIN})")
+    if solid:
+        lines.append(f"{x}:{y}/0/y_sort_origin = {WALL_SORT}")
+        lines.append(f"{x}:{y}/0/physics_layer_0/polygon_0/points = {SQUARE}")
+
+
+def write_tileset() -> None:
+    styles = list(ROOM_STYLES)
+    out = [f'[gd_resource type="TileSet" format=3 uid="{TILESET_UID}"]', ""]
+    out.append('[ext_resource type="Texture2D" path="res://art/game/tiles.png" id="0_tiles"]')
+    for i, room in enumerate(styles, 1):
+        out.append(f'[ext_resource type="Texture2D" path="res://art/game/{ROOMS_DIR}/tiles_{room}.png" id="{i}_tiles"]')
+    out.append("")
+    out += ['[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0"]', 'texture = ExtResource("0_tiles")']
+    for x, solid in OLD_TILES:
+        _tile(out, x, 0, solid)
+    for i, room in enumerate(styles, 1):
+        out += ["", f'[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_{i}"]', f'texture = ExtResource("{i}_tiles")']
+        for x in range(11):
+            _tile(out, x, 0, x == 10)
+            _tile(out, x, 1, True)
+        for x in range(2):
+            _tile(out, x, 2, True)
+        for x in range(8):
+            _tile(out, x, 3, True, tall=True)
+    out += ["", "[resource]", "physics_layer_0/collision_layer = 1", "physics_layer_0/collision_mask = 0"]
+    for i in range(len(styles) + 1):
+        out.append(f'sources/{i} = SubResource("TileSetAtlasSource_{i}")')
+    TILESET.write_text("\n".join(out) + "\n")
+    print(f"{TILESET.name}  {len(styles) + 1} tile sources")
+
+
 def convert_menu_tv() -> None:
     width, height = MENU_TV_SIZE
     rows = (SOURCE_DIR / MENU_TV_SOURCE).read_text().split("\n")
@@ -275,6 +395,8 @@ def main() -> None:
     print(f"held_*.png  {len(HELD_GUNS)} guns")
     Image.open(SOURCE_DIR / KEY_SOURCE).convert("RGBA").save(GAME_DIR / KEY_OUTPUT)
     convert_chests()
+    convert_rooms()
+    write_tileset()
 
 
 if __name__ == "__main__":

@@ -19,7 +19,10 @@ navigation_polygon = SubResource("NavigationPolygon_floor")
 [node name="Floor" type="TileMapLayer" parent="Navigation"]
 z_index = -10
 tile_set = ExtResource("2_tiles")
+rendering_quadrant_size = 8
 
 [node name="Walls" type="TileMapLayer" parent="Navigation"]
 y_sort_enabled = true
 tile_set = ExtResource("2_tiles")
+
+[node name="Tint" type="CanvasModulate" parent="."]

@@ -16,6 +16,9 @@ const BOSS_RING_WIDTH := 2.0
 const BOSS_RING_COLOR := Color("#E0403A")
 
 var kind: FloorGenerator.Kind
+## How the room looks (a room type of RoomStyles); empty for the Boss Chamber, which keeps its
+## old look.
+var room_type: StringName
 ## Rooms between this one and the start.
 var depth := 0
 ## Where the room is, in tiles, walls included.

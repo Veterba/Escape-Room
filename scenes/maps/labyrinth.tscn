@@ -24,6 +24,7 @@ fill_to = Vector2(1, 0.5)
 y_sort_enabled = true
 script = ExtResource("1_script")
 map_id = &"maze"
+room_type = &"maze"
 
 [node name="Navigation" type="NavigationRegion2D" parent="."]
 y_sort_enabled = true
@@ -32,13 +33,13 @@ navigation_polygon = SubResource("NavigationPolygon_floor")
 [node name="Floor" type="TileMapLayer" parent="Navigation"]
 z_index = -10
 tile_set = ExtResource("2_tiles")
+rendering_quadrant_size = 8
 
 [node name="Walls" type="TileMapLayer" parent="Navigation"]
 y_sort_enabled = true
 tile_set = ExtResource("2_tiles")
 
 [node name="Darkness" type="CanvasModulate" parent="."]
-color = Color(0.03, 0.02, 0.05, 1)
 
 [node name="Vision" type="PointLight2D" parent="."]
 texture = SubResource("GradientTexture2D_vision")

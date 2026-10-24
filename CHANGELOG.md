@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.11.0 — 2026-10-24
+
+### Changed
+- Fight, chest, start and exit rooms are now one of four station rooms, picked at random: a Control room, a Server hall, a Lab or a Storage room, each with its own floor, walls and objects. Corridors look like the room they lead from.
+- The Labyrinth is a dark maze room and the Enemy Arena a hall with pillars and hazard stripes around the code chest. The Boss Chamber keeps its old look.
+- North walls are tall wall faces with lamps, screens, vents and signs; other walls show their tops; inner walls and pillars have a short face.
+- Crates are now room objects of the same size (server racks, tanks, desks, shelves, crate stacks). They still block movement and bullets exactly as before.
+- Every room has a dark tint and coloured lights: warm lamps, glowing tanks and consoles, cold strip lights, and a broken light that slowly drifts between two colours and dims softly. The tint fades when you walk into another room.
+- The Enemy Arena has a red alarm light slowly sweeping the hall; the Labyrinth has a few red emergency lights on its inner walls and keeps its darkness around you.
+- Floors have random tile variants, grates, oil stains, debris, papers, cables and glowing puddles, and hazard stripes in front of doors.
+- Bullets stay bright in dark rooms.
+
 ## v0.10.0 — 2026-10-23
 
 ### Changed

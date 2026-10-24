@@ -18,7 +18,8 @@ any public release.
 
 Guns and items (files 09–21) were drawn for the project mood board; they are now only the HUD's gun
 icons and the heart, ammo, smoke bomb and hourglass items. The guns in the hand, the chests and the
-key are the owner's approved retexture sprites (`art/source/retexture/`). Tiles, crates, barrels, doors, the exit hatch, the key's glint,
+key are the owner's approved retexture sprites (`art/source/retexture/`), and so are the room tiles and
+objects (`art/source/retexture/38_room_parts/`). The old tiles (Boss Chamber), the rooms' floor details, barrels, doors, the exit hatch, the key's glint,
 bullets, shell casings, the muzzle flash, the hero's hand and UI frames are drawn in code in `tools/draw_art.py`.
 
 ## Font
