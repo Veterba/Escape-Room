@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.13.0** (the bot check, final README).
+Current version: **0.14.0** (Static and Countdown, ASCII end screen).
 
 ## Requirements
 
@@ -142,7 +142,7 @@ godot --headless --path . --fixed-fps 60 -s tools/bot_check.gd
 - The boss is a real fight: a scripted player in a boss round shoots Root with the Brass
   Revolver (half the shots hit, and only while Root can be hit), then walks over the code.
 
-Results (v0.13.0; 110 px/s walking, Pop Pistol 1.33 and Brass Revolver 2.05 damage per second):
+Results (v0.14.0; 110 px/s walking, Pop Pistol 1.33 and Brass Revolver 2.05 damage per second):
 
 | Map | What was measured | Time | Limit |
 |---|---|---|---|
@@ -151,11 +151,11 @@ Results (v0.13.0; 110 px/s walking, Pop Pistol 1.33 and Brass Revolver 2.05 dama
 | Labyrinth | shortest walk to the code | 1:01–1:29 | 5:00 timer (+0:30 hourglass) |
 | Labyrinth | walking every corridor of the maze (the worst case for a lost player) | 4:03 | 5:00 timer |
 | Boss Chamber | floor to the boss room (same rules as the arena floor) | 0:57 median, 1:17 worst | no timer |
-| Boss Chamber | the fight with Root, 4 scripted fights | 2:41–3:06 | target 3–4 min |
+| Boss Chamber | the fight with Root (220 hit points), 4 scripted fights | 2:09–2:48 | target 3–4 min |
 
-Every map can be won inside its limit with room to spare, so no numbers were changed. A new
-player hits less than half their shots and has to dodge, which is why the Root fight sits at the
-low end of its 3–4 minute target.
+Every map can be won inside its limit with room to spare. Root's hit points were lowered from the
+spec's 250 to 220 after playtesting showed the fight was too hard: a new player hits far less than
+half their shots and has to dodge, so the real fight is longer than the bot's.
 
 ## Project layout
 

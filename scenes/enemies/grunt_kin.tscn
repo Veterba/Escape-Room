@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/enemies/grunt_kin.gd" id="1_script"]
 [ext_resource type="SpriteFrames" path="res://scenes/enemies/grunt_kin_frames.tres" id="2_frames"]
 [ext_resource type="Shader" path="res://shaders/hit_flash.gdshader" id="3_flash"]
 [ext_resource type="Script" path="res://scripts/fx/juice.gd" id="4_juice"]
+[ext_resource type="Texture2D" path="res://art/game/hand_violet.png" id="5_hand"]
+[ext_resource type="Texture2D" path="res://art/game/muzzle_flash_small.png" id="6_flash"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_flash"]
 resource_local_to_scene = true
@@ -21,6 +23,8 @@ collision_layer = 4
 collision_mask = 133
 motion_mode = 1
 script = ExtResource("1_script")
+procedural_walk = false
+fades_on_death = true
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 position = Vector2(0, -4)
@@ -37,9 +41,21 @@ shape = SubResource("CircleShape2D_hitbox")
 
 [node name="Body" type="AnimatedSprite2D" parent="."]
 material = SubResource("ShaderMaterial_flash")
-position = Vector2(0, -11)
+position = Vector2(0, -12)
 sprite_frames = ExtResource("2_frames")
 animation = &"idle"
+
+[node name="GunPivot" type="Node2D" parent="."]
+
+[node name="Gun" type="Sprite2D" parent="GunPivot"]
+centered = false
+
+[node name="Hand" type="Sprite2D" parent="GunPivot"]
+position = Vector2(1, 0)
+texture = ExtResource("5_hand")
+
+[node name="Flash" type="Sprite2D" parent="GunPivot"]
+texture = ExtResource("6_flash")
 
 [node name="Juice" type="Node" parent="." node_paths=PackedStringArray("sprite")]
 script = ExtResource("4_juice")

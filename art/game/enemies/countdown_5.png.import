@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://fcps4h8m7jwr"
-path="res://.godot/imported/enemy_grunt_kin.png-89f426f2b0aab83d7fed817a62f3df7e.ctex"
+uid="uid://cx5li848ij6qs"
+path="res://.godot/imported/countdown_5.png-1e15eeba9d3edd97ab20e694f7bcd68e.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/game/enemy_grunt_kin.png"
-dest_files=["res://.godot/imported/enemy_grunt_kin.png-89f426f2b0aab83d7fed817a62f3df7e.ctex"]
+source_file="res://art/game/enemies/countdown_5.png"
+dest_files=["res://.godot/imported/countdown_5.png-1e15eeba9d3edd97ab20e694f7bcd68e.ctex"]
 
 [params]
 

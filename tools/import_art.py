@@ -13,13 +13,6 @@ GAME_DIR = ROOT / "art" / "game"
 # Pixel art that was scaled up exactly 16x: shrink by 16 to get the true pixels.
 UPSCALE_FACTOR = 16
 
-# Characters cut from a screenshot (non-integer scale): shrink to a target height in pixels.
-# Source file prefix -> (output name, target height).
-CHARACTERS = {
-    "03": ("enemy_grunt_kin", 22),
-    "05": ("enemy_fuse_kin", 22),
-}
-
 # Guns and items: source file prefix -> output name.
 NATIVE_ART = {
     "14": "item_rusty_knife",
@@ -80,6 +73,10 @@ ENEMY_SHEET = "retexture/37_enemies_sheet.png"
 ENEMY_DIR = "enemies"
 ENEMY_CELL = 32
 ENEMY_ROWS = [("watcher", 8), ("ram", 8), ("glitch", 11), ("trojan", 8)]
+# Static (Grunt Kin) and Countdown (Fuse Kin): 24 x 24 cells, move 1-4, warning 1-4, hit, dying.
+SMALL_ENEMY_SHEET = "retexture/45_static_countdown.png"
+SMALL_ENEMY_CELL = 24
+SMALL_ENEMY_ROWS = [("static", 10), ("countdown", 10)]
 
 # Art from the retexture references lives in art/source/retexture/, under its own numbers.
 # The password menu's TV as a character grid (columns x rows). The source file has the trailing
@@ -159,12 +156,6 @@ def harden_alpha(image: Image.Image) -> Image.Image:
     return image
 
 
-def convert_character(source: Path, target_height: int) -> Image.Image:
-    image = Image.open(source).convert("RGBA")
-    width = round(image.width * target_height / image.height)
-    return harden_alpha(image.resize((width, target_height), Image.NEAREST))
-
-
 def convert_native(source: Path) -> Image.Image:
     image = Image.open(source).convert("RGBA")
     if image.width % UPSCALE_FACTOR or image.height % UPSCALE_FACTOR:
@@ -175,14 +166,17 @@ def convert_native(source: Path) -> Image.Image:
 
 
 def convert_enemies() -> None:
-    sheet = Image.open(SOURCE_DIR / ENEMY_SHEET).convert("RGBA")
     out_dir = GAME_DIR / ENEMY_DIR
     out_dir.mkdir(exist_ok=True)
-    for row, (name, count) in enumerate(ENEMY_ROWS):
-        for i in range(count):
-            box = (i * ENEMY_CELL, row * ENEMY_CELL, (i + 1) * ENEMY_CELL, (row + 1) * ENEMY_CELL)
-            sheet.crop(box).save(out_dir / f"{name}_{i}.png")
-    print(f"{ENEMY_DIR}/  {sum(count for _, count in ENEMY_ROWS)} frames")
+    frames = 0
+    for source, cell, rows in [(ENEMY_SHEET, ENEMY_CELL, ENEMY_ROWS), (SMALL_ENEMY_SHEET, SMALL_ENEMY_CELL, SMALL_ENEMY_ROWS)]:
+        sheet = Image.open(SOURCE_DIR / source).convert("RGBA")
+        for row, (name, count) in enumerate(rows):
+            for i in range(count):
+                box = (i * cell, row * cell, (i + 1) * cell, (row + 1) * cell)
+                sheet.crop(box).save(out_dir / f"{name}_{i}.png")
+                frames += 1
+    print(f"{ENEMY_DIR}/  {frames} frames")
 
 
 def convert_hero() -> None:
@@ -408,10 +402,6 @@ def convert_menu_tv() -> None:
 
 def main() -> None:
     GAME_DIR.mkdir(parents=True, exist_ok=True)
-    for prefix, (name, height) in CHARACTERS.items():
-        out = convert_character(find_source(prefix), height)
-        out.save(GAME_DIR / f"{name}.png")
-        print(f"{name}.png  {out.width}x{out.height}")
     for prefix, name in NATIVE_ART.items():
         out = convert_native(find_source(prefix))
         out.save(GAME_DIR / f"{name}.png")

@@ -187,13 +187,16 @@ Round (scenes/round/round.tscn)               builds the map, decides the result
   a blast lights it; after a short fuse it explodes through the shared `Explosion`, which lights
   every barrel it reaches, so rows of barrels go off one by one. Enemies path around barrels; once
   one is gone they still walk around the empty spot (the navigation is not rebaked).
-- **Enemy looks.** The Officer, Rocket, Shade and Wing Kin wear the approved retexture looks
-  (Watcher, Ram, Glitch, Trojan), cut by `import_art.py` from `37_enemies_sheet.png` into
+- **Enemy looks.** Every enemy wears its approved retexture look: the Officer, Rocket, Shade and
+  Wing Kin (Watcher, Ram, Glitch, Trojan) are cut by `import_art.py` from `37_enemies_sheet.png`,
+  the Grunt and Fuse Kin (Static, Countdown) from `45_static_countdown.png`, into
   `art/game/enemies/`. Their scripts and names stay the same; each `SpriteFrames` has `idle`,
   `walk`, `tell` (the warning before an attack), `hit` and `die`. Three switches on `Enemy` serve
   these frames: `procedural_walk` off (the frames already move), `hover` for flyers (they bob over
-  a `GroundShadow`), and `fades_on_death` (the dying frame stays and fades). The Grunt and Fuse
-  Kin keep their old look until their new one is chosen.
+  a `GroundShadow`), and `fades_on_death` (the dying frame stays and fades). Static holds the
+  Brass Revolver's sprite in a floating hand (`GunPivot`, turned to the player and flipped when
+  aiming left) and shoots from its muzzle; Countdown picks its 3-2-1 frame from how much of its
+  fuse has burnt and draws the spark at its fuse tip in `_draw()`.
 - **Shade Kin teleports.** `ShadeKin` floats in `FLOAT`; every 3-6 s it `TWITCH`es (looks only) or
   teleports through `TEAR`, `GONE` and `UNFOLD`. While teleporting its hitbox is off, contact
   damage is skipped and `take_damage()` does nothing, so it can neither hurt nor be hit.
