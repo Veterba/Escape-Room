@@ -64,39 +64,42 @@ PALETTE = {
     "Z": (0xFF, 0x9F, 0x43, 255),  # spark, orange
     # Static's floating hand (approved station page: violet metal).
     "j": (0x46, 0x4C, 0x84, 255),  # violet
+    # Bullets (approved station page): pale cores for the red and teal ones, and brass.
+    "a": (0xFF, 0xD3, 0xDA, 255),  # pale pink
+    "m": (0xE8, 0xFF, 0xFB, 255),  # pale teal
+    "s": (0xCD, 0x7E, 0x1F, 255),  # brass, dark
 }
 
+# Bullets: two frames side by side, which they shimmer between while they fly.
 PLAYER_BULLET = [
-    ".AAAA.",
-    "ABBBBA",
-    "ABOBBA",
-    "ABBBBA",
-    "ABBBBA",
-    ".AAAA.",
+    ".oooo..oooo.",
+    "oyllyoollllo",
+    "olWWloolWllo",
+    "olWWloollWlo",
+    "oyllyoollllo",
+    ".oooo..oooo.",
 ]
 
 # Gungeon-style enemy bullet: big, round, bright outline so it reads on the dark floor.
 ENEMY_BULLET = [
-    "..OOOO..",
-    ".ORRRRO.",
-    "ORROORRO",
-    "ORROORRO",
-    "ORRRRRRO",
-    "ORRRRRRO",
-    ".ORRRRO.",
-    "..OOOO..",
+    "..oooo....oooo..",
+    ".orrrro..orLLro.",
+    "orLLLLrooLLLLLLo",
+    "orLaaLrooLLaWLLo",
+    "orLaaLrooLLWaLLo",
+    "orLLLLrooLLLLLLo",
+    ".orrrro..orLLro.",
+    "..oooo....oooo..",
 ]
 
 # Wing Kin bullet: the same shape in teal.
 WING_BULLET = [
-    "..OOOO..",
-    ".OTTTTO.",
-    "OTTOOTTO",
-    "OTTOOTTO",
-    "OTTTTTTO",
-    "OTTTTTTO",
-    ".OTTTTO.",
-    "..OOOO..",
+    ".oooo..oooo.",
+    "oXKKXooKKKKo",
+    "oKmmKooKWmKo",
+    "oKmmKooKmWKo",
+    "oXKKXooKKKKo",
+    ".oooo..oooo.",
 ]
 
 # Red barrel: explodes when shot.
@@ -160,21 +163,21 @@ EXIT_HATCH = [
 
 # Fuse Launcher rocket, pointing right.
 ROCKET = [
-    ".AAAAA..",
-    "AMRRRRA.",
-    "ABRRRROA",
-    "AMRRRRA.",
-    ".AAAAA..",
+    ".ooooo...ooooo..",
+    "oeLLLro.oeLLLLo.",
+    "oQLLLLaooQLaLLLo",
+    "oeLLLro.oeLLLLo.",
+    ".ooooo...ooooo..",
 ]
 
 # Gold Detonator bullet: brass with a teal core.
 GOLD_BULLET = [
-    ".AAAA.",
-    "ABBBBA",
-    "ABTTBA",
-    "ABTTBA",
-    "ABBBBA",
-    ".AAAA.",
+    ".oooo..oooo.",
+    "osggsooggggo",
+    "ogllgooglggo",
+    "ogllgoogglgo",
+    "osggsooggggo",
+    ".oooo..oooo.",
 ]
 
 SHELL_CASING = [
