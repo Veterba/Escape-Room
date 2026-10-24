@@ -1,0 +1,55 @@
+# Builds the Windows version on GitHub and puts it on the repository's Releases page.
+# It runs when a version tag (for example v0.14.2) is pushed, or by hand from the Actions tab
+# (then the zip is kept as a download of that run instead).
+name: Windows release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  GODOT_VERSION: "4.7.2"
+
+jobs:
+  windows:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Godot and its export templates
+        run: |
+          base="https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-stable"
+          cd "$RUNNER_TEMP"
+          curl -fsSL -o godot.zip "$base/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip"
+          curl -fsSL -o templates.tpz "$base/Godot_v${GODOT_VERSION}-stable_export_templates.tpz"
+          unzip -q godot.zip
+          mv "Godot_v${GODOT_VERSION}-stable_linux.x86_64" godot
+          templates="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$templates"
+          unzip -q templates.tpz
+          mv templates/* "$templates/"
+
+      - name: Export the Windows build
+        run: |
+          mkdir -p builds/windows
+          "$RUNNER_TEMP/godot" --headless --path . --import
+          "$RUNNER_TEMP/godot" --headless --path . --export-release "Windows Desktop" builds/windows/EscapeBoom.exe
+          test -s builds/windows/EscapeBoom.exe
+          cd builds/windows && zip -q ../EscapeBoom-windows.zip EscapeBoom.exe
+
+      - name: Put it on the Releases page
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: builds/EscapeBoom-windows.zip
+
+      - name: Keep it as a download of this run
+        if: ${{ !startsWith(github.ref, 'refs/tags/') }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: EscapeBoom-windows
+          path: builds/EscapeBoom-windows.zip

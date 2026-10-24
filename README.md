@@ -3,7 +3,31 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.14.1** (retextured bullets).
+Current version: **0.14.2** (Windows downloads from GitHub).
+
+## Install on Windows (no Godot needed)
+
+1. Open the repository on GitHub and go to **Releases** (right-hand side of the main page).
+2. Under the newest version, download `EscapeBoom-windows.zip`.
+3. Right-click the zip, choose **Extract All**, and open the extracted folder.
+4. Double-click `EscapeBoom.exe`. The game is not signed, so Windows SmartScreen warns the first
+   time: click **More info**, then **Run anyway**.
+
+Nothing is installed: the `.exe` holds the whole game. To remove it, delete the folder. Saved run
+logs live in `%APPDATA%\Godot\app_userdata\Escape Boom\`.
+
+### Making a new Windows release
+
+GitHub builds the Windows version by itself (`.github/workflows/windows-release.yml`): push a
+version tag and, a few minutes later, the zip appears on the Releases page.
+
+```sh
+git tag v0.14.2
+git push origin v0.14.2
+```
+
+The build can also be started by hand: **Actions** → **Windows release** → **Run workflow**; the
+zip is then a download at the bottom of that run's page.
 
 ## Requirements
 
