@@ -19,6 +19,8 @@ class RoomPlan:
 	var depth := 0
 	var parent: RoomPlan
 	var layout: PackedStringArray
+	## The corridor to the parent room, in tiles, walls included.
+	var corridor := Rect2i()
 
 
 const VOID := " "
@@ -53,7 +55,7 @@ func _init(rng: RandomNumberGenerator, objective_size: Vector2i, with_exit := fa
 			stamp_room(room, room.layout)
 	for room in rooms:
 		if room.parent:
-			_dig_corridor(room.parent, room)
+			room.corridor = _dig_corridor(room.parent, room)
 
 
 ## Copies `room_layout` into the floor at the room's place, keeping the door tiles already dug.
@@ -181,7 +183,8 @@ func _centers(sizes: Dictionary, gap: int) -> Array[int]:
 
 ## A straight corridor, CORRIDOR_WIDTH tiles wide with a wall on each side, from the middle of
 ## one room's side to the facing room. The two room-wall tiles it passes through become doors.
-func _dig_corridor(a: RoomPlan, b: RoomPlan) -> void:
+## Returns the corridor's area, walls included.
+func _dig_corridor(a: RoomPlan, b: RoomPlan) -> Rect2i:
 	# Always dig to the right or downwards, from `first` to `second`.
 	var first := a
 	var second := b
@@ -204,6 +207,8 @@ func _dig_corridor(a: RoomPlan, b: RoomPlan) -> void:
 			else:
 				_grid[tile.y][tile.x] = GameMap.FLOOR
 	_write_layout()
+	var side := across * (CORRIDOR_WIDTH / 2 + 1)
+	return Rect2i(start - side, Vector2i.ONE).merge(Rect2i(end + side, Vector2i.ONE))
 
 
 ## The tile in the middle of `room`'s side that faces `direction`.

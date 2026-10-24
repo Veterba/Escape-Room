@@ -9,7 +9,7 @@ How Escape Boom is put together. Updated at the end of every part.
 | `art/source/` | Original art copied from the vault. Never used directly (a `.gdignore` hides it from Godot). The retexture references are in `art/source/retexture/` under their own numbers. |
 | `art/game/` | Game-ready PNGs made by the two scripts in `tools/`, and `menu_tv.txt`, the menu TV's character grid. |
 | `art/fonts/` | JetBrains Mono ExtraBold for the password menu, with its licence (OFL). |
-| `config/` | `balance.tres` (every tunable number) and the scripts that define its fields. |
+| `config/` | `balance.tres` (every tunable number), `lighting.tres` (every room light) and the scripts that define their fields. |
 | `scenes/` | Godot scenes (`.tscn`) and resources (`.tres`), grouped by feature. |
 | `scripts/` | The GDScript for those scenes, in the same groups. |
 | `shaders/` | The hit flash shader. |
@@ -21,8 +21,9 @@ How Escape Boom is put together. Updated at the end of every part.
 Autoloads are scripts Godot creates once at startup and keeps for the whole game; any script can
 use them by name.
 
-- `Config` (`scripts/autoload/config.gd`) loads `config/balance.tres` once. Scripts read numbers as
-  `Config.balance.player_move_speed`. No gameplay numbers are written into scripts.
+- `Config` (`scripts/autoload/config.gd`) loads `config/balance.tres` and `config/lighting.tres`
+  once. Scripts read numbers as `Config.balance.player_move_speed` and lights as
+  `Config.lighting.for_room(&"lab").ambient`. No gameplay numbers are written into scripts.
 - `Audio` (`scripts/autoload/audio.gd`) has an empty `play_sfx()`. The calls mark where sounds
   will go; sound is out of scope for now.
 - `Events` (`scripts/autoload/events.gd`) holds game-wide signals: `code_collected`, `hourglass_collected`,
@@ -54,7 +55,8 @@ Round (scenes/round/round.tscn)               builds the map, decides the result
 │   ├── Navigation (NavigationRegion2D)       walkable area, baked at runtime around the walls
 │   │   ├── Floor (TileMapLayer)              floor tiles, always underneath (z_index -10)
 │   │   └── Walls (TileMapLayer)              wall tiles with collision, y-sorted
-│   ├── Darkness, Vision                      Labyrinth only: CanvasModulate and PointLight2D
+│   ├── Tint (DungeonFloor) / Darkness, Vision (Labyrinth)   CanvasModulate tint, the player's light
+│   ├── RoomProp, RoomLight                   room objects, floor details and coloured lights (RoomDecor)
 │   ├── chests, barrels, doors, enemies, code placed from the text layout
 │   └── Room (DungeonFloor only, one per room) locks fight and boss rooms; their enemies live here
 │       └── ArenaWaves (arena room only)      sends the waves; EnemySpawn effects become enemies
@@ -76,6 +78,23 @@ Round (scenes/round/round.tscn)               builds the map, decides the result
 ```
 
 ## Key decisions
+
+- **Room types.** `RoomStyles` (`scripts/floor/room_styles.gd`) lists, per room type (control,
+  server, lab, storage, maze, arena), its tiles and which objects go along its north wall, on it,
+  where crates are and on the floor. `GameMap` asks `_room_type_at(cell)` for every cell
+  (`DungeonFloor` answers per room and corridor, the `Labyrinth` is all maze, empty means the old
+  tiles) and picks the wall tile from the neighbours: a tall face under the dark, a short face on
+  inner walls, otherwise a top with light edges towards the floor. Blocks of crates become room
+  objects on invisible blocking tiles (or pillars in the arena), so collision and navigation are
+  the same as before. `RoomDecor` (`scripts/floor/room_decor.gd`) adds everything that does not
+  block: wall objects, lights, details, grates and hazard stripes. `tools/import_art.py` builds
+  one tile atlas per room type and writes `scenes/maps/dungeon_tiles.tres` from them.
+- **Lighting.** Godot's own 2D lighting: a `CanvasModulate` darkens everything on the map, and
+  `PointLight2D` nodes (`RoomLight`, `scripts/floor/room_light.gd`) add their colour on top. Every
+  colour, strength and radius is in `config/lighting.tres`, so it can be tuned without code.
+  Bullets use an unshaded material, so the tint never hides them. Up to 16 lights may touch one
+  piece of floor (`rendering/limits/opengl/max_lights_per_object`), and the floor layer is drawn
+  in 8x8-tile pieces, so lamps are not dropped where many lights meet.
 
 - **One balance resource.** `BalanceConfig` is a `Resource` with typed `@export` fields; the values
   are in `config/balance.tres`, and only there: the fields have no defaults in the script. (The

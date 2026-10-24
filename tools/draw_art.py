@@ -28,6 +28,22 @@ PALETTE = {
     # The key's glint (approved retexture page).
     "g": (0xFF, 0xD1, 0x66, 255),  # gold
     "W": (0xFF, 0xFF, 0xFF, 255),  # white
+    # Floor details of the rooms (colours from the approved station page).
+    "n": (0x12, 0x12, 0x20, 255),  # oil
+    "N": (0x2A, 0x2A, 0x44, 255),  # oil sheen
+    "d": (0x4A, 0x4F, 0x6B, 255),  # debris, light
+    "D": (0x2C, 0x2F, 0x45, 255),  # debris, dark
+    "z": (0x10, 0x11, 0x19, 255),  # debris shadow
+    "p": (0xD8, 0xD2, 0xC0, 255),  # paper
+    "P": (0x8A, 0x84, 0x78, 255),  # paper lines
+    "c": (0x0B, 0x0B, 0x12, 255),  # cable
+    "C": (0x33, 0x36, 0x4F, 255),  # cable shine
+    "u": (0x14, 0x20, 0x2A, 255),  # floor light strip
+    "U": (0x2A, 0xA6, 0xA6, 255),  # floor light strip, lit
+    "v": (0x2A, 0x6A, 0x48, 255),  # green puddle
+    "V": (0x3F, 0x9A, 0x62, 255),  # green puddle, middle
+    "i": (0x6A, 0x2A, 0x52, 255),  # pink puddle
+    "I": (0x9A, 0x3A, 0x72, 255),  # pink puddle, middle
 }
 
 # 16x16 tiles. The tile set atlas is these tiles side by side, in the order of TILES below.
@@ -314,6 +330,70 @@ UI_PANEL = [
 ]
 
 
+# Flat details lying on the rooms' floors (art/game/rooms/details/).
+OIL = [
+    "...nnnnnnnn...",
+    ".nnNnnnNnnnNn.",
+    "nnnnnnnnnnnnnn",
+    ".nnnnnnnnnnnn.",
+    "...nnnnnnnn...",
+]
+
+DEBRIS = [
+    "dd.......DDD....",
+    "zz..d.....zzz.d.",
+    "....z.DD......z.",
+    ".DDD..zz...dd...",
+    ".zzz.......zz...",
+]
+
+PAPERS = [
+    "pppppp.......",
+    "pPPPPp..ppppp",
+    "pppppp..pPPPp",
+    "pPPPpp..ppppp",
+    "pppppp..pPPpp",
+    "........ppppp",
+]
+
+CABLE = [
+    "CC........................CCC...",
+    "ccCC....................CCccc...",
+    "..ccCCC...........CCCCCcc...CC..",
+    ".....ccCCCCCCCCCCCccccc.....ccCC",
+    "..........ccccccccc...........cc",
+]
+
+FLOOR_STRIP = [
+    "UUUuuuUUUuuuUUUuuuUUUuuuUUUuuuUU",
+    "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu",
+]
+
+PUDDLE_GREEN = [
+    ".....vvvvvvvvvv.....",
+    "..vvvvvvVVVVvvvvvv..",
+    ".vvvvVVVVVVVVVVvvvv.",
+    "vvvvVVVVVVVVVVVVvvvv",
+    ".vvvvVVVVVVVVVVvvvv.",
+    "..vvvvvvVVVVvvvvvv..",
+    ".....vvvvvvvvvv.....",
+]
+
+PUDDLE_PINK = [
+    "....iiiiiiiiii....",
+    "..iiiiiIIIIiiiiii.",
+    ".iiiIIIIIIIIIIiiii",
+    "iiiiIIIIIIIIIIIii.",
+    ".iiiiiiIIIIiiiii..",
+    "...iiiiiiiiiii....",
+]
+
+DETAILS = {
+    "oil": OIL, "debris": DEBRIS, "papers": PAPERS, "cable": CABLE, "floor_strip": FLOOR_STRIP,
+    "puddle_green": PUDDLE_GREEN, "puddle_pink": PUDDLE_PINK,
+}
+
+
 def draw(grid: list[str]) -> Image.Image:
     width = len(grid[0])
     assert all(len(row) == width for row in grid), "every row of a sprite must have the same length"
@@ -352,7 +432,11 @@ def main() -> None:
     }
     for name, grid in sprites.items():
         draw(grid).save(GAME_DIR / f"{name}.png")
-    print(f"tiles.png and {len(sprites)} sprites written to {GAME_DIR}")
+    details_dir = GAME_DIR / "rooms" / "details"
+    details_dir.mkdir(parents=True, exist_ok=True)
+    for name, grid in DETAILS.items():
+        draw(grid).save(details_dir / f"{name}.png")
+    print(f"tiles.png, {len(sprites)} sprites and {len(DETAILS)} floor details written to {GAME_DIR}")
 
 
 if __name__ == "__main__":

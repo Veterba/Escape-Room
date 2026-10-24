@@ -2,6 +2,7 @@
 ## other map. The gun chest and the hourglass go in dead ends, enemies far from the start, and
 ## officers get patrol routes along corridors. Everything outside a circle around the player is
 ## dark: a CanvasModulate darkens the map and a PointLight2D that follows the player lights it.
+## It is built with the maze room type's tiles, with red emergency lights on a few inner walls.
 class_name Labyrinth
 extends GameMap
 
@@ -14,6 +15,7 @@ const WING := "w"
 var maze: MazeGenerator
 
 @onready var _vision: PointLight2D = $Vision
+@onready var _darkness: CanvasModulate = $Darkness
 
 
 func _ready() -> void:
@@ -46,6 +48,8 @@ func _ready() -> void:
 
 	# The light texture's radius is half its width at scale 1.
 	_vision.texture_scale = cfg.maze_vision_radius / (_vision.texture.get_width() / 2.0)
+	_darkness.color = Config.lighting.maze.ambient
+	RoomDecor.dress(self, Rect2i(Vector2i.ZERO, Vector2i(layout[0].length(), layout.size())), room_type, rng)
 
 
 func _process(_delta: float) -> void:

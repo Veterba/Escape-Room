@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.10.0** (retexture: the enemies).
+Current version: **0.11.0** (retexture: rooms and lighting).
 
 ## Requirements
 

@@ -1,0 +1,240 @@
+[gd_resource type="Resource" script_class="LightingConfig" format=3]
+
+[ext_resource type="Script" path="res://config/lighting_config.gd" id="1_lighting"]
+[ext_resource type="Script" path="res://config/light_spec.gd" id="2_spec"]
+[ext_resource type="Script" path="res://config/room_lighting.gd" id="3_room"]
+
+[sub_resource type="Resource" id="control_wall_light"]
+script = ExtResource("2_spec")
+color = Color(1, 0.745, 0.431, 1)
+energy = 0.95
+radius = 125
+
+[sub_resource type="Resource" id="control_broken"]
+script = ExtResource("2_spec")
+color = Color(0.455, 0.949, 0.878, 1)
+energy = 0.85
+radius = 130
+
+[sub_resource type="Resource" id="control_fill"]
+script = ExtResource("2_spec")
+color = Color(0.706, 0.353, 1, 1)
+energy = 0.6
+radius = 95
+
+[sub_resource type="Resource" id="control"]
+script = ExtResource("3_room")
+ambient = Color(0.18, 0.169, 0.29, 1)
+wall_light = SubResource("control_wall_light")
+breathe = 0.0
+breathe_speed = 0.0
+broken = SubResource("control_broken")
+broken_to = Color(1, 0.353, 0.451, 1)
+fill = SubResource("control_fill")
+
+[sub_resource type="Resource" id="server_wall_light"]
+script = ExtResource("2_spec")
+color = Color(0.51, 0.706, 1, 1)
+energy = 0.75
+radius = 90
+
+[sub_resource type="Resource" id="server_broken"]
+script = ExtResource("2_spec")
+color = Color(0.51, 0.706, 1, 1)
+energy = 0.7
+radius = 95
+
+[sub_resource type="Resource" id="server_fill"]
+script = ExtResource("2_spec")
+color = Color(0.235, 0.353, 0.667, 1)
+energy = 0.5
+radius = 80
+
+[sub_resource type="Resource" id="server"]
+script = ExtResource("3_room")
+ambient = Color(0.122, 0.165, 0.267, 1)
+wall_light = SubResource("server_wall_light")
+breathe = 0.0
+breathe_speed = 0.0
+broken = SubResource("server_broken")
+broken_to = Color(1, 0.353, 0.667, 1)
+fill = SubResource("server_fill")
+
+[sub_resource type="Resource" id="lab_wall_light"]
+script = ExtResource("2_spec")
+color = Color(1, 0.745, 0.431, 1)
+energy = 0.75
+radius = 100
+
+[sub_resource type="Resource" id="lab_broken"]
+script = ExtResource("2_spec")
+color = Color(0.431, 0.902, 0.549, 1)
+energy = 0.85
+radius = 130
+
+[sub_resource type="Resource" id="lab_fill"]
+script = ExtResource("2_spec")
+color = Color(0.431, 0.902, 0.549, 1)
+energy = 0.0
+radius = 35
+
+[sub_resource type="Resource" id="lab"]
+script = ExtResource("3_room")
+ambient = Color(0.133, 0.188, 0.227, 1)
+wall_light = SubResource("lab_wall_light")
+breathe = 0.0
+breathe_speed = 0.0
+broken = SubResource("lab_broken")
+broken_to = Color(0.706, 0.353, 1, 1)
+fill = SubResource("lab_fill")
+
+[sub_resource type="Resource" id="storage_wall_light"]
+script = ExtResource("2_spec")
+color = Color(1, 0.745, 0.431, 1)
+energy = 0.75
+radius = 140
+
+[sub_resource type="Resource" id="storage_broken"]
+script = ExtResource("2_spec")
+color = Color(1, 0.784, 0.471, 1)
+energy = 0.85
+radius = 130
+
+[sub_resource type="Resource" id="storage_fill"]
+script = ExtResource("2_spec")
+color = Color(0.471, 0.431, 0.353, 1)
+energy = 0.4
+radius = 70
+
+[sub_resource type="Resource" id="storage"]
+script = ExtResource("3_room")
+ambient = Color(0.11, 0.098, 0.082, 1)
+wall_light = SubResource("storage_wall_light")
+breathe = 0.1
+breathe_speed = 0.7
+broken = SubResource("storage_broken")
+broken_to = Color(1, 0.471, 0.235, 1)
+fill = SubResource("storage_fill")
+
+[sub_resource type="Resource" id="maze_wall_light"]
+script = ExtResource("2_spec")
+color = Color(1, 0.275, 0.353, 1)
+energy = 0.45
+radius = 50
+
+[sub_resource type="Resource" id="maze_broken"]
+script = ExtResource("2_spec")
+color = Color(1, 0.275, 0.353, 1)
+energy = 0.0
+radius = 50
+
+[sub_resource type="Resource" id="maze_fill"]
+script = ExtResource("2_spec")
+color = Color(1, 0.275, 0.353, 1)
+energy = 0.0
+radius = 50
+
+[sub_resource type="Resource" id="maze"]
+script = ExtResource("3_room")
+ambient = Color(0.03, 0.02, 0.05, 1)
+wall_light = SubResource("maze_wall_light")
+breathe = 0.33
+breathe_speed = 1.5
+broken = SubResource("maze_broken")
+broken_to = Color(1, 0.275, 0.353, 1)
+fill = SubResource("maze_fill")
+
+[sub_resource type="Resource" id="arena_wall_light"]
+script = ExtResource("2_spec")
+color = Color(1, 0.745, 0.431, 1)
+energy = 0.7
+radius = 110
+
+[sub_resource type="Resource" id="arena_broken"]
+script = ExtResource("2_spec")
+color = Color(1, 0.745, 0.431, 1)
+energy = 0.0
+radius = 130
+
+[sub_resource type="Resource" id="arena_fill"]
+script = ExtResource("2_spec")
+color = Color(1, 0.745, 0.431, 1)
+energy = 0.0
+radius = 50
+
+[sub_resource type="Resource" id="arena"]
+script = ExtResource("3_room")
+ambient = Color(0.137, 0.122, 0.2, 1)
+wall_light = SubResource("arena_wall_light")
+breathe = 0.0
+breathe_speed = 0.0
+broken = SubResource("arena_broken")
+broken_to = Color(1, 0.745, 0.431, 1)
+fill = SubResource("arena_fill")
+
+[sub_resource type="Resource" id="tank"]
+script = ExtResource("2_spec")
+color = Color(0.431, 0.902, 0.549, 1)
+energy = 0.65
+radius = 40
+
+[sub_resource type="Resource" id="tank_pink"]
+script = ExtResource("2_spec")
+color = Color(1, 0.373, 0.604, 1)
+energy = 0.65
+radius = 40
+
+[sub_resource type="Resource" id="console"]
+script = ExtResource("2_spec")
+color = Color(0.431, 0.902, 0.549, 1)
+energy = 0.6
+radius = 40
+
+[sub_resource type="Resource" id="monitor"]
+script = ExtResource("2_spec")
+color = Color(0.471, 0.549, 1, 1)
+energy = 0.5
+radius = 44
+
+[sub_resource type="Resource" id="cryo"]
+script = ExtResource("2_spec")
+color = Color(0.373, 0.69, 1, 1)
+energy = 0.55
+radius = 60
+
+[sub_resource type="Resource" id="code_chest"]
+script = ExtResource("2_spec")
+color = Color(1, 0.82, 0.4, 1)
+energy = 0.45
+radius = 50
+
+[sub_resource type="Resource" id="alarm"]
+script = ExtResource("2_spec")
+color = Color(1, 0.275, 0.353, 1)
+energy = 0.5
+radius = 110
+
+[resource]
+script = ExtResource("1_lighting")
+control = SubResource("control")
+server = SubResource("server")
+lab = SubResource("lab")
+storage = SubResource("storage")
+maze = SubResource("maze")
+arena = SubResource("arena")
+boss_ambient = Color(1, 1, 1, 1)
+tint_fade_time = 0.6
+tank = SubResource("tank")
+tank_pink = SubResource("tank_pink")
+console = SubResource("console")
+monitor = SubResource("monitor")
+cryo = SubResource("cryo")
+code_chest = SubResource("code_chest")
+drift_speed = 0.35
+dim_speed = 0.9
+dim_depth = 0.6
+dim_sharpness = 8.0
+alarm = SubResource("alarm")
+alarm_sweep = Vector2(0.3, 0.25)
+alarm_speed = 0.8
+maze_emergency_lights = 8
