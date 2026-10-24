@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.13.0 — 2026-10-24
+
+### Added
+- A bot check (`tools/bot_check.gd`) that shows every map can be won in time with the Pop Pistol and the Brass Revolver at half the shots hitting: the Enemy Arena in 2:59 at worst, the Labyrinth's shortest walk in 1:01–1:29 (4:03 to walk every corridor), and Root beaten in 2:41–3:06 over 4 scripted fights.
+
+### Changed
+- The README is complete: how to play each map, tune it, build it and check it.
+
 ## v0.12.1 — 2026-10-24
 
 ### Changed

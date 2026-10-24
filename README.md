@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.12.1** (brighter rooms, new HUD gun and smoke bomb).
+Current version: **0.13.0** (the bot check, final README).
 
 ## Requirements
 
@@ -50,8 +50,7 @@ Every round picks one of three map types at random, and builds it fresh:
   windows, has three phases (glides and Belt Lash; plus Bullet Rain and teleports; then it splits
   into its main window and five error windows that fight on their own). Beat it and it drops the
   code (walk over it to win); the door to the exit room opens too. No timer: you only lose by
-  dying. A scripted fight (a C-rank gun, half the shots hitting, no dodging needed) beat Root in
-  2.6–3.1 minutes over 4 runs.
+  dying.
 
 Press Tab for a map of the rooms you have seen (arena and boss floors).
 
@@ -93,8 +92,8 @@ The runner prints one line per test and exits with code 1 if any test fails.
 ## Regenerate the art
 
 ```sh
-python3 tools/import_art.py   # art/source/ -> art/game/ (characters, guns, items)
-python3 tools/draw_art.py     # our own pixel art: tiles, bullet, casing, flash, hand, UI frame
+python3 tools/import_art.py   # art/source/ -> art/game/ (hero, enemies, Root, guns, chests, rooms, tile set)
+python3 tools/draw_art.py     # our own pixel art: bullets, casing, flash, hand, UI frame, smoke bomb, floor details
 ```
 
 Both scripts are safe to run again at any time. Replace a file in `art/source/` with the same
@@ -123,7 +122,40 @@ The builds are not signed with a developer certificate, so both systems warn the
 ## Tuning
 
 Every gameplay number lives in `config/balance.tres` (its fields are documented in
-`config/balance_config.gd`). Change a value there and restart the game.
+`config/balance_config.gd`). Every room light (tint, colours, strengths, radii, how broken lights
+drift) lives in `config/lighting.tres` (documented in `config/lighting_config.gd` and
+`config/room_lighting.gd`). Change a value there and restart the game.
+
+## Bot check: can every map be won in time?
+
+`tools/bot_check.gd` measures every map type with the Pop Pistol plus one C-rank gun (the Brass
+Revolver), assuming half the shots hit:
+
+```sh
+godot --headless --path . --fixed-fps 60 -s tools/bot_check.gd
+```
+
+- Floors are generated 50 times; it walks the shortest path to the objective room and through
+  every chest room and back, and counts the fight rooms' hit points at the pistol's damage.
+- The Enemy Arena's code chest unlocks when wave 4 starts, and a wave starts at least every 30 s.
+- The Labyrinth's walk times come from the generated mazes (50 seeds).
+- The boss is a real fight: a scripted player in a boss round shoots Root with the Brass
+  Revolver (half the shots hit, and only while Root can be hit), then walks over the code.
+
+Results (v0.13.0; 110 px/s walking, Pop Pistol 1.33 and Brass Revolver 2.05 damage per second):
+
+| Map | What was measured | Time | Limit |
+|---|---|---|---|
+| Enemy Arena | floor to the arena: walking, chest rooms, fight rooms (pistol) | 1:02 median, 1:27 worst | |
+| Enemy Arena | plus the waves until the code chest unlocks (90 s at most) and opening it (2 s) | 2:59 worst | 5:00 timer |
+| Labyrinth | shortest walk to the code | 1:01–1:29 | 5:00 timer (+0:30 hourglass) |
+| Labyrinth | walking every corridor of the maze (the worst case for a lost player) | 4:03 | 5:00 timer |
+| Boss Chamber | floor to the boss room (same rules as the arena floor) | 0:57 median, 1:17 worst | no timer |
+| Boss Chamber | the fight with Root, 4 scripted fights | 2:41–3:06 | target 3–4 min |
+
+Every map can be won inside its limit with room to spare, so no numbers were changed. A new
+player hits less than half their shots and has to dodge, which is why the Root fight sits at the
+low end of its 3–4 minute target.
 
 ## Project layout
 
