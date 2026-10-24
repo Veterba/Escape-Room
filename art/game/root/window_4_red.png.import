@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cp0426wxkdthb"
-path="res://.godot/imported/boss_ammo_wraith.png-396abdaea4c4acfaba1ce6b10aa58eb0.ctex"
+uid="uid://belx53h0rntvq"
+path="res://.godot/imported/window_4_red.png-dce714a6b588955848f9fd12519f8509.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/game/boss_ammo_wraith.png"
-dest_files=["res://.godot/imported/boss_ammo_wraith.png-396abdaea4c4acfaba1ce6b10aa58eb0.ctex"]
+source_file="res://art/game/root/window_4_red.png"
+dest_files=["res://.godot/imported/window_4_red.png-dce714a6b588955848f9fd12519f8509.ctex"]
 
 [params]
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.12.0 — 2026-10-24
+
+### Added
+- Root, the new boss: a virus made of windows, with one huge eye that follows you and blinks, a crown of cursors and two cursor hands. Its error windows trail behind it like a cloak when it glides.
+- Phase 1: Root glides to new spots in the upper half of the room and fires Belt Lash, two arcs of bullets that sweep across each other.
+- Phase 2: it also fires Bullet Rain (a ring of 16 after a loading spinner) and teleports every 6 s: its windows close one by one, the eye shuts, the main window closes, and it opens again somewhere else, the eye opening last. It fires Bullet Rain right after.
+- Phase 3: the five error windows fly off and fight on their own. Each keeps its distance, flashes its title bar before an aimed teal shot, teleports by itself, bursts into pixels when destroyed and comes back 6 s later. Only the main window hurts Root now; it teleports every 3.5 s, fires a ring after each teleport and an aimed burst in between.
+- Root roars for 1.5 s between phases, and can't be hit while it roars, splits or teleports: bullets pass through.
+- When Root dies its windows close one by one, the error windows vanish and it drops the code.
+- The Boss Chamber is a dark station hall with a hazard ring on the floor, two broken lights, a wall screen and four red-lit pylons in its corners.
+
+### Removed
+- The Ammo Wraith.
+
 ## v0.11.0 — 2026-10-24
 
 ### Changed

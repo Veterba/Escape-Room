@@ -2,29 +2,20 @@
 ## After building, it bakes the navigation mesh that enemies use to walk around walls.
 ## Walls, characters and chests are y-sorted: whatever stands lower on screen is drawn in front.
 ##
-## Layout legend: '#' wall, 'x' crate (a wall that looks like a crate), '.' floor,
+## Layout legend: '#' wall, 'x' crate (a room object that blocks like a wall), '.' floor,
 ## 'P' player start, 'C' secret code, 'K' a spot for the code chest (one of them is picked at
 ## random), 'G' gun chest, 'H' hourglass, 'b' red barrel, 'g' Grunt Kin, 'f' Fuse Kin,
 ## 's' Shade Kin, 'w' Wing Kin, 'D' door, 'E' the exit, ' ' nothing at all (the dark outside
 ## the rooms).
 ## Every letter but '#', 'x' and ' ' stands on floor.
 ##
-## Rooms of a room type (RoomStyles) get that type's tiles: random floor variants, a tall wall face
+## Every cell gets the tiles of its room type (RoomStyles): random floor variants, a tall wall face
 ## on the north wall, wall tops elsewhere and short faces on inner walls. Crates become room
-## objects of matching size standing on invisible blocking tiles, or pillars. Without a room type
-## a cell keeps the old tiles (the Boss Chamber).
+## objects of matching size standing on invisible blocking tiles, or pillars.
 class_name GameMap
 extends Node2D
 
 const TILE_SIZE := 16
-const SOURCE_ID := 0
-## Atlas coordinates of the tiles in art/game/tiles.png.
-const FLOOR_TILES: Array[Vector2i] = [Vector2i(0, 0), Vector2i(1, 0), Vector2i(4, 0)]
-## How often each floor tile is picked: mostly plain, some cracked, some chipped.
-const FLOOR_WEIGHTS: Array[float] = [8.0, 1.0, 1.0]
-const WALL_TOP := Vector2i(2, 0)
-const WALL_FACE := Vector2i(3, 0)
-const CRATE_TILE := Vector2i(5, 0)
 ## The sides of a cell, in the order wall tops name their edges.
 const SIDES := {"n": Vector2i.UP, "s": Vector2i.DOWN, "e": Vector2i.RIGHT, "w": Vector2i.LEFT}
 const WALL := "#"
@@ -49,8 +40,8 @@ const ENTITIES := {
 }
 
 @export var map_id: StringName
-## The room type whose tiles and objects the whole map uses (see RoomStyles), or empty for the
-## old tiles. DungeonFloor picks one per room instead.
+## The room type whose tiles and objects the whole map uses (see RoomStyles). DungeonFloor picks
+## one per room instead.
 @export var room_type: StringName
 ## One string per row of tiles, using the legend above.
 @export var layout: PackedStringArray
@@ -81,26 +72,16 @@ func _build() -> void:
 		for x in layout[y].length():
 			var cell := Vector2i(x, y)
 			var symbol := layout[y][x]
-			var type := _room_type_at(cell)
 			if symbol == VOID:
 				continue
-			if type.is_empty():
-				if symbol == WALL:
-					_walls.set_cell(cell, SOURCE_ID, _wall_tile_at(x, y))
-					continue
-				if symbol == CRATE:
-					_walls.set_cell(cell, SOURCE_ID, CRATE_TILE)
-					continue
-				_floor.set_cell(cell, SOURCE_ID, FLOOR_TILES[rng.rand_weighted(FLOOR_WEIGHTS)])
-			else:
-				var source: int = RoomStyles.TILE_SOURCES[type]
-				if symbol == WALL:
-					_walls.set_cell(cell, source, _room_wall_tile(cell))
-					continue
-				_floor.set_cell(cell, source, Vector2i(rng.randi_range(0, RoomStyles.FLOOR_VARIANTS - 1), 0))
-				if symbol == CRATE:
-					_walls.set_cell(cell, source, RoomStyles.BLOCKER)
-					continue
+			var source: int = RoomStyles.TILE_SOURCES[_room_type_at(cell)]
+			if symbol == WALL:
+				_walls.set_cell(cell, source, _room_wall_tile(cell))
+				continue
+			_floor.set_cell(cell, source, Vector2i(rng.randi_range(0, RoomStyles.FLOOR_VARIANTS - 1), 0))
+			if symbol == CRATE:
+				_walls.set_cell(cell, source, RoomStyles.BLOCKER)
+				continue
 			var center := _floor.map_to_local(cell)
 			if symbol == FLOOR:
 				free_floor_cells.append(cell)
@@ -138,6 +119,11 @@ func set_floor_tile(cell: Vector2i, atlas_coords: Vector2i) -> void:
 	_floor.set_cell(cell, RoomStyles.TILE_SOURCES[_room_type_at(cell)], atlas_coords)
 
 
+## Makes `cell` block movement (an invisible tile), for a room object standing on it.
+func block_cell(cell: Vector2i) -> void:
+	_walls.set_cell(cell, RoomStyles.TILE_SOURCES[_room_type_at(cell)], RoomStyles.BLOCKER)
+
+
 ## Adds a room object standing at `base` (pixels), with its light if it glows.
 func add_prop(prop: StringName, base: Vector2) -> RoomProp:
 	var sprite := RoomProp.make(prop, base)
@@ -148,7 +134,7 @@ func add_prop(prop: StringName, base: Vector2) -> RoomProp:
 	return sprite
 
 
-## The room type of the room `cell` belongs to (empty for the old tiles).
+## The room type of the room `cell` belongs to.
 func _room_type_at(_cell: Vector2i) -> StringName:
 	return room_type
 
@@ -163,7 +149,7 @@ func _crate_covers(rng: RandomNumberGenerator) -> Dictionary:
 		for x in layout[y].length():
 			var start := Vector2i(x, y)
 			var type := _room_type_at(start)
-			if layout[y][x] != CRATE or seen.has(start) or type.is_empty():
+			if layout[y][x] != CRATE or seen.has(start):
 				continue
 			var group := Rect2i(start, Vector2i.ONE)
 			var todo: Array[Vector2i] = [start]
@@ -207,15 +193,7 @@ func _cover(group: Rect2i, props: Array, rng: RandomNumberGenerator) -> void:
 		add_prop(props[i], Vector2(roundf(x), group.end.y * TILE_SIZE))
 
 
-## A wall with floor right below it shows its front face; any other wall shows its top.
-func _wall_tile_at(x: int, y: int) -> Vector2i:
-	var is_last_row := y + 1 >= layout.size()
-	if not is_last_row and not layout[y + 1][x] in [WALL, VOID, CRATE]:
-		return WALL_FACE
-	return WALL_TOP
-
-
-## Which wall tile a wall of a room type shows (retexture spec, "Rooms"):
+## Which wall tile a wall shows (retexture spec, "Rooms"):
 ## - the north wall (floor below it, the dark above) shows its tall face under a wall top, and
 ##   the top corners next to it reach up with it;
 ## - an inner wall (nothing dark around it: the Labyrinth's inner walls, pillars) with floor

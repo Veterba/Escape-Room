@@ -1,9 +1,11 @@
 ## Dresses a room of a room type (retexture spec, "Rooms" and "Lighting"): wall lights, objects
 ## standing against the north wall and hung on it, the broken light, a soft light in the middle,
 ## details and grates on the floor, and hazard stripes in front of the doors. The Enemy Arena
-## also gets its sweeping alarm light and stripes around the code chest; the Labyrinth gets red
-## emergency lights on its inner walls instead of anything on its north wall.
-## None of it blocks movement: room objects that do are placed by GameMap where crates were.
+## also gets its sweeping alarm light and stripes around the code chest; the Boss Chamber a
+## hazard ring and red-lit pylons in its corners; the Labyrinth gets red emergency lights on its
+## inner walls instead of anything on its north wall.
+## Only the pylons block movement: other room objects that do are placed by GameMap where crates
+## were.
 class_name RoomDecor
 
 ## Floor details lie above the floor and below everything else.
@@ -13,6 +15,8 @@ const DETAIL_JITTER := 4
 ## Tiles of hazard stripes inward from a door, and around the code chest (width, height).
 const DOOR_HAZARD_DEPTH := 3
 const CODE_CHEST_HAZARD := Vector2i(5, 3)
+## Pixels from the top of a pylon's picture down to its light.
+const PYLON_LIGHT_FROM_TOP := 4
 ## Pixels from the top of a short inner wall face down to an emergency light.
 const EMERGENCY_LIGHT_HEIGHT := 2
 
@@ -28,6 +32,8 @@ static func dress(map: GameMap, rect: Rect2i, room_type: StringName, rng: Random
 		map.add_child(RoomLight.make(lighting.fill, map.cell_center(rect.get_center())))
 	if room_type == &"arena":
 		_dress_arena(map, rect)
+	elif room_type == &"boss":
+		_dress_boss(map, rect)
 	_dress_floor(map, rect.grow(-1), room_type, rng)
 
 
@@ -43,7 +49,7 @@ static func _dress_north_wall(map: GameMap, rect: Rect2i, room_type: StringName,
 			free.append(x)
 	if free.is_empty():
 		return
-	var lamps := maxi(1, roundi(float(rect.size.x) / RoomStyles.LAMP_SPACING))
+	var lamps := maxi(1, roundi(float(rect.size.x) / RoomStyles.LAMP_SPACING)) if lighting.wall_light.energy > 0.0 else 0
 	for i in lamps:
 		if free.is_empty():
 			return
@@ -55,15 +61,17 @@ static func _dress_north_wall(map: GameMap, rect: Rect2i, room_type: StringName,
 			light.tinted = lamp
 		_breathe(light, lighting)
 		map.add_child(light)
-	if lighting.broken.energy > 0.0 and not free.is_empty():
+	if look["wall_middle"] != &"" and not free.is_empty():
+		_hang(map, look["wall_middle"], _nearest(free, rect.get_center().x), y, free)
+	for i in look["broken_lights"]:
+		if lighting.broken.energy <= 0.0 or free.is_empty():
+			break
 		var tube := _hang(map, look["broken_light"], free[rng.randi_range(0, free.size() - 1)], y, free)
 		var light := _light_on(tube, lighting.broken)
 		light.kind = RoomLight.Kind.BROKEN
 		light.broken_to = lighting.broken_to
 		light.tinted = tube
 		map.add_child(light)
-	if room_type == &"arena" and not free.is_empty():
-		_hang(map, &"beacon", _nearest(free, rect.get_center().x), y, free)
 	var along: Array = look["along_wall"]
 	var on_wall: Array = look["on_wall"]
 	for x in free.duplicate():
@@ -146,6 +154,31 @@ static func _dress_arena(map: GameMap, rect: Rect2i) -> void:
 					var cell := middle - CODE_CHEST_HAZARD / 2 + Vector2i(dx, dy)
 					if map.is_open(cell):
 						map.set_floor_tile(cell, RoomStyles.HAZARD)
+
+
+## A ring of hazard stripes around the middle with a grate inside, and a red-lit pylon standing
+## one tile in from each corner (blocking its tile).
+static func _dress_boss(map: GameMap, rect: Rect2i) -> void:
+	var inside := rect.grow(-1)
+	var middle := Vector2(rect.get_center()) - Vector2(0.5, 0.5)
+	for y in range(inside.position.y, inside.end.y):
+		for x in range(inside.position.x, inside.end.x):
+			var cell := Vector2i(x, y)
+			var offset := Vector2(cell) - middle
+			var distance := Vector2(offset.x, offset.y * RoomStyles.BOSS_RING_SQUASH).length()
+			if map.symbol_at(cell) != GameMap.FLOOR:
+				continue
+			if absf(distance - RoomStyles.BOSS_RING_RADIUS) < RoomStyles.BOSS_RING_WIDTH:
+				map.set_floor_tile(cell, RoomStyles.HAZARD)
+			elif distance < RoomStyles.BOSS_GRATE_RADIUS:
+				map.set_floor_tile(cell, RoomStyles.GRATE)
+	var near := RoomStyles.BOSS_PYLON_INSET
+	for corner in [rect.position + Vector2i(near, near), Vector2i(rect.end.x - 1 - near, rect.position.y + near),
+			Vector2i(rect.position.x + near, rect.end.y - 1 - near), rect.end - Vector2i.ONE * (near + 1)]:
+		map.block_cell(corner)
+		var pylon := map.add_prop(&"pylon", Vector2(map.cell_center(corner).x, (corner.y + 1) * GameMap.TILE_SIZE))
+		var light := RoomLight.make(Config.lighting.pylon, pylon.position + Vector2(0, -pylon.texture.get_height() + PYLON_LIGHT_FROM_TOP))
+		map.add_child(light)
 
 
 ## Hazard stripes on each door and the tiles just inside it.

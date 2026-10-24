@@ -205,31 +205,81 @@ extends Resource
 @export var shade_appear_min: float
 @export var shade_appear_max: float
 
-@export_group("Ammo Wraith")
-@export var boss_hp: int
-## Pixels per second it drifts towards the player.
-@export var boss_speed: float
+@export_group("Root (the boss)")
+@export var root_hp: int
 ## Share of hit points where phase 2 and phase 3 start (0.66 = 66 %).
-@export var boss_phase2_at: float
-@export var boss_phase3_at: float
-## Seconds it stops and roars between phases, and how hard the screen shakes then.
-@export var boss_phase_pause: float
-@export var boss_roar_shake: float
-## In phase 3 everything happens this many times faster.
-@export var boss_phase3_speedup: float
-@export var boss_bullet_speed: float
-## Belt Lash: seconds between lashes; each lash is two sweeps the other way round.
-@export var boss_lash_interval: float
-@export var boss_lash_bullets: int
-## Degrees one sweep covers, and the seconds it takes.
-@export var boss_lash_arc: float
-@export var boss_lash_sweep_time: float
-## Bullet Rain (from phase 2): seconds between rings, and bullets in a ring.
-@export var boss_rain_interval: float
-@export var boss_rain_bullets: int
-## Fade (phase 3): seconds between teleports, and how far from the player it lands at least.
-@export var boss_fade_interval: float
-@export var boss_fade_min_distance: float
+@export var root_phase2_at: float
+@export var root_phase3_at: float
+## Seconds it roars between phases (it cannot be hit then), and how hard the screen shakes.
+@export var root_phase_pause: float
+@export var root_roar_shake: float
+## In phase 3 its clocks and bullets run this many times faster.
+@export var root_phase3_speedup: float
+## Phases 1-2: seconds between glides to a new point in the upper half of the room (random
+## between the two), and how quickly it closes in on that point (share of the way per second).
+@export var root_glide_min: float
+@export var root_glide_max: float
+@export var root_glide_follow: float
+## Belt Lash: seconds between lashes, how long one lasts, seconds between the pairs of bullets
+## it fires, the degrees each of its two arms sweeps (they cross), and the bullets' speed.
+@export var root_lash_interval: float
+@export var root_lash_time: float
+@export var root_lash_fire_interval: float
+@export var root_lash_arc: float
+@export var root_lash_bullet_speed: float
+## Bullet Rain (from phase 2): seconds between rings, bullets in a ring, seconds it winds up
+## (the loading spinner) before firing, and the bullets' speed.
+@export var root_rain_interval: float
+@export var root_rain_bullets: int
+@export var root_rain_windup: float
+@export var root_rain_bullet_speed: float
+## Teleport (from phase 2): seconds between teleports, how far from the player it lands at
+## least, and the seconds it takes to close, stay gone and open again.
+@export var root_teleport_interval: float
+@export var root_teleport_min_distance: float
+@export var root_teleport_out_time: float
+@export var root_teleport_gone_time: float
+@export var root_teleport_in_time: float
+## Phase 3: seconds the error windows take to fly off, then the main window alone: seconds
+## between teleports and the least distance from the player, the ring after each teleport
+## (bullets, speed), the aimed burst between teleports (seconds between, bullets, degrees
+## between bullets, speed), and its glides (seconds between, follow, least distance from the
+## player).
+@export var root_split_time: float
+@export var root_phase3_teleport_interval: float
+@export var root_phase3_teleport_min_distance: float
+@export var root_phase3_ring_bullets: int
+@export var root_phase3_ring_speed: float
+@export var root_burst_interval: float
+@export var root_burst_bullets: int
+@export var root_burst_spread: float
+@export var root_burst_speed: float
+@export var root_phase3_glide_interval: float
+@export var root_phase3_glide_follow: float
+@export var root_phase3_glide_min_distance: float
+
+@export_group("Error windows (Root, phase 3)")
+@export var error_window_hp: int
+## They keep between these distances from the player (pixels), moving this fast.
+@export var error_window_min_distance: float
+@export var error_window_max_distance: float
+@export var error_window_speed: float
+## Seconds between aimed shots (random between the two), the title bar's warning before each,
+## and the bullet's speed.
+@export var error_window_fire_min: float
+@export var error_window_fire_max: float
+@export var error_window_warning_time: float
+@export var error_window_bullet_speed: float
+## Their own teleports: seconds between (random between the two), seconds to close, gone and
+## open, and the least distance from the player where they land.
+@export var error_window_teleport_min: float
+@export var error_window_teleport_max: float
+@export var error_window_teleport_out_time: float
+@export var error_window_teleport_gone_time: float
+@export var error_window_teleport_in_time: float
+@export var error_window_teleport_min_distance: float
+## Seconds a destroyed error window stays gone before it comes back.
+@export var error_window_return_time: float
 
 @export_group("Floor")
 ## How many rooms a floor has, the start and the objective room included.

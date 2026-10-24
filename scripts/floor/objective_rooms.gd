@@ -36,7 +36,7 @@ static func arena(rng: RandomNumberGenerator) -> PackedStringArray:
 	return _to_layout(grid)
 
 
-## Four mirrored pillars; the Ammo Wraith appears in the middle when the player walks in.
+## Four mirrored pillars; Root appears in the middle when the player walks in.
 static func boss(rng: RandomNumberGenerator) -> PackedStringArray:
 	var grid := _empty_room(BOSS_SIZE)
 	var center := BOSS_SIZE / 2

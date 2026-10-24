@@ -1,4 +1,4 @@
-"""Draws the art we make ourselves (tiles, bullets, casings, flashes, hands, UI frames) into art/game/.
+"""Draws the art we make ourselves (bullets, casings, flashes, hands, UI frames, room details) into art/game/.
 
 Every sprite is a grid of characters, one per pixel, using the palette from file 25 (the hero's
 hand and muzzle flash use the approved hero palette from the retexture spec).
@@ -44,129 +44,15 @@ PALETTE = {
     "V": (0x3F, 0x9A, 0x62, 255),  # green puddle, middle
     "i": (0x6A, 0x2A, 0x52, 255),  # pink puddle
     "I": (0x9A, 0x3A, 0x72, 255),  # pink puddle, middle
+    # The red-lit pylons in the corners of the Boss Chamber (approved boss page).
+    "o": (0x07, 0x06, 0x0D, 255),  # outline
+    "q": (0x2B, 0x2E, 0x45, 255),  # body
+    "Q": (0x55, 0x5C, 0x80, 255),  # body, top edge
+    "x": (0x19, 0x1A, 0x26, 255),  # foot
+    "r": (0xB6, 0x26, 0x49, 255),  # red stripes
+    "e": (0x58, 0x5E, 0x72, 255),  # head
+    "L": (0xFF, 0x58, 0x73, 255),  # light
 }
-
-# 16x16 tiles. The tile set atlas is these tiles side by side, in the order of TILES below.
-# New tiles go at the end, so the atlas coordinates of the old ones never change.
-FLOOR_PLAIN = [
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSMSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSMSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "AAAAAAAAAAAAAAAA",
-]
-
-FLOOR_CRACKED = [
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSASSSA",
-    "SSSSSSSSSSASSSSA",
-    "SSSSSSSSSASSSSSA",
-    "SSSSSSSSAASSSSSA",
-    "SSSSSSSASSSSSSSA",
-    "SSSSSSASSSSSSSSA",
-    "SSSSSSASSSSSSSSA",
-    "SSSSSASSSSSSSSSA",
-    "SSSAASSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSMSSA",
-    "SSSSSSSSSSSSSSSA",
-    "AAAAAAAAAAAAAAAA",
-]
-
-# A floor tile with its top-left corner chipped off.
-FLOOR_CHIPPED = [
-    "AAAMSSSSSSSSSSSA",
-    "AAMSSSSSSSSSSSSA",
-    "AMSSSSSSSSSSSSSA",
-    "MSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSMSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSMSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "SSSSSSSSSSSSSSSA",
-    "AAAAAAAAAAAAAAAA",
-]
-
-# A crate in the arena: cover that never breaks. Top face, then the front with a diagonal brace.
-CRATE = [
-    "AAAAAAAAAAAAAAAA",
-    "AOOOOOOOOOOOOOOA",
-    "AOBBBBBBBBBBBBBA",
-    "AOBBBBBBBBBBBBBA",
-    "ABBBBBBBBBBBBBBA",
-    "AAAAAAAAAAAAAAAA",
-    "ABBBBBBBBBBBBBBA",
-    "ABMMMMMMMMMMBBBA",
-    "ABMMMMMMMMBBMMBA",
-    "ABMMMMMMBBMMMMBA",
-    "ABMMMMBBMMMMMMBA",
-    "ABMMBBMMMMMMMMBA",
-    "ABBBMMMMMMMMMMBA",
-    "ABBBBBBBBBBBBBBA",
-    "AAAAAAAAAAAAAAAA",
-    "AAAAAAAAAAAAAAAA",
-]
-
-# Seen from above: the top of a wall, dark bricks.
-WALL_TOP = [
-    "SSSSSSSASSSSSSSA",
-    "SSSSSSSASSSSSSSA",
-    "SSSSSSSASSSSSSSA",
-    "AAAAAAAAAAAAAAAA",
-    "SSSASSSSSSSASSSS",
-    "SSSASSSSSSSASSSS",
-    "SSSASSSSSSSASSSS",
-    "AAAAAAAAAAAAAAAA",
-    "SSSSSSSASSSSSSSA",
-    "SSSSSSSASSSSSSSA",
-    "SSSSSSSASSSSSSSA",
-    "AAAAAAAAAAAAAAAA",
-    "SSSASSSSSSSASSSS",
-    "SSSASSSSSSSASSSS",
-    "SSSASSSSSSSASSSS",
-    "AAAAAAAAAAAAAAAA",
-]
-
-# The front of a wall that faces the player: a light cap, lighter bricks, a shadow at the foot.
-WALL_FACE = [
-    "MMMMMMMMMMMMMMMM",
-    "AAAAAAAAAAAAAAAA",
-    "MMMMMMMSMMMMMMMS",
-    "MMMMMMMSMMMMMMMS",
-    "MMMMMMMSMMMMMMMS",
-    "SSSSSSSSSSSSSSSS",
-    "MMMSMMMMMMMSMMMM",
-    "MMMSMMMMMMMSMMMM",
-    "MMMSMMMMMMMSMMMM",
-    "SSSSSSSSSSSSSSSS",
-    "MMMMMMMSMMMMMMMS",
-    "MMMMMMMSMMMMMMMS",
-    "MMMMMMMSMMMMMMMS",
-    "SSSSSSSSSSSSSSSS",
-    "AAAAAAAAAAAAAAAA",
-    "AAAAAAAAAAAAAAAA",
-]
-
-TILES = [FLOOR_PLAIN, FLOOR_CRACKED, WALL_TOP, WALL_FACE, FLOOR_CHIPPED, CRATE]
 
 PLAYER_BULLET = [
     ".AAAA.",
@@ -388,6 +274,44 @@ PUDDLE_PINK = [
     "...iiiiiiiiiii....",
 ]
 
+# A pylon with red stripes and a red light on top (a room object of the Boss Chamber).
+PYLON = [
+    "................",
+    ".......oo.......",
+    "......oLLo......",
+    "......oLLo......",
+    ".....oeeeeo.....",
+    ".....oeeeeo.....",
+    ".....oeeeeo.....",
+    ".....oeeeeo.....",
+    ".....oeeeeo.....",
+    "...oooeeeeooo...",
+    "..oQQQQQQQQQQo..",
+    "..oqqqqqqqqqqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqrrrrrrrrqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqrrrrrrrrqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqrrrrrrrrqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqqqqqqqqqqo..",
+    "..oqrrrrrrrrqo..",
+    "..oqqqqqqqqqqo..",
+    ".oxxxxxxxxxxxxo.",
+    ".oxxxxxxxxxxxxo.",
+    ".oxxxxxxxxxxxxo.",
+    ".oxxxxxxxxxxxxo.",
+    "..oooooooooooo..",
+    "................",
+]
+
 DETAILS = {
     "oil": OIL, "debris": DEBRIS, "papers": PAPERS, "cable": CABLE, "floor_strip": FLOOR_STRIP,
     "puddle_green": PUDDLE_GREEN, "puddle_pink": PUDDLE_PINK,
@@ -404,16 +328,8 @@ def draw(grid: list[str]) -> Image.Image:
     return image
 
 
-def draw_atlas(tiles: list[list[str]]) -> Image.Image:
-    atlas = Image.new("RGBA", (16 * len(tiles), 16))
-    for index, tile in enumerate(tiles):
-        atlas.paste(draw(tile), (16 * index, 0))
-    return atlas
-
-
 def main() -> None:
     GAME_DIR.mkdir(parents=True, exist_ok=True)
-    draw_atlas(TILES).save(GAME_DIR / "tiles.png")
     sprites = {
         "bullet_player": PLAYER_BULLET,
         "bullet_enemy": ENEMY_BULLET,
@@ -436,7 +352,10 @@ def main() -> None:
     details_dir.mkdir(parents=True, exist_ok=True)
     for name, grid in DETAILS.items():
         draw(grid).save(details_dir / f"{name}.png")
-    print(f"tiles.png, {len(sprites)} sprites and {len(DETAILS)} floor details written to {GAME_DIR}")
+    props_dir = GAME_DIR / "rooms" / "props"
+    props_dir.mkdir(parents=True, exist_ok=True)
+    draw(PYLON).save(props_dir / "pylon.png")
+    print(f"{len(sprites)} sprites, {len(DETAILS)} floor details and the pylon written to {GAME_DIR}")
 
 
 if __name__ == "__main__":

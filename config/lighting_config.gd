@@ -11,8 +11,7 @@ extends Resource
 @export var storage: RoomLighting
 @export var maze: RoomLighting
 @export var arena: RoomLighting
-## The Boss Chamber keeps its old look: no tint.
-@export var boss_ambient: Color
+@export var boss: RoomLighting
 ## Seconds the tint takes to change when the player walks into another room.
 @export var tint_fade_time: float
 
@@ -24,6 +23,16 @@ extends Resource
 @export var cryo: LightSpec
 ## The glow over the code chest in the Enemy Arena.
 @export var code_chest: LightSpec
+## The red light on top of each pylon in the Boss Chamber.
+@export var pylon: LightSpec
+
+@export_group("Root")
+## The red glow around Root (it fades while Root teleports), and around the main window alone in
+## phase 3.
+@export var root_glow: LightSpec
+@export var root_glow_alone: LightSpec
+## The faint teal glow of each error window in phase 3.
+@export var error_window_glow: LightSpec
 
 @export_group("Broken lights")
 ## How fast a broken light drifts between its two colours (radians per second; a full swing
@@ -48,6 +57,7 @@ extends Resource
 @export var maze_emergency_lights: int
 
 
-## The lighting of a room type (&"control", &"server", &"lab", &"storage", &"maze", &"arena").
+## The lighting of a room type (&"control", &"server", &"lab", &"storage", &"maze", &"arena",
+## &"boss").
 func for_room(room_type: StringName) -> RoomLighting:
 	return get(room_type)

@@ -13,7 +13,7 @@ func test_bullets_stop_at_tile_walls() -> void:
 	var walls := TileMapLayer.new()
 	walls.tile_set = TILES
 	for y in range(-3, 4):
-		walls.set_cell(Vector2i(WALL_COLUMN, y), GameMap.SOURCE_ID, GameMap.WALL_TOP)
+		walls.set_cell(Vector2i(WALL_COLUMN, y), RoomStyles.TILE_SOURCES[&"arena"], RoomStyles.wall_top(""))
 	world.add_child(walls)
 	var player_bullet: PlayerBullet = PLAYER_BULLET.instantiate()
 	player_bullet.setup(Vector2.RIGHT, Config.balance.pop_pistol)

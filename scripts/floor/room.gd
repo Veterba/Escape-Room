@@ -10,14 +10,9 @@ const GRUNT := preload("res://scenes/enemies/grunt_kin.tscn")
 const FUSE := preload("res://scenes/enemies/fuse_kin.tscn")
 const ROCKET := preload("res://scenes/enemies/rocket_kin.tscn")
 const WING := preload("res://scenes/enemies/wing_kin.tscn")
-## The red ring on the boss room's floor: radius and width in pixels.
-const BOSS_RING_RADIUS := 40.0
-const BOSS_RING_WIDTH := 2.0
-const BOSS_RING_COLOR := Color("#E0403A")
 
 var kind: FloorGenerator.Kind
-## How the room looks (a room type of RoomStyles); empty for the Boss Chamber, which keeps its
-## old look.
+## How the room looks (a room type of RoomStyles).
 var room_type: StringName
 ## Rooms between this one and the start.
 var depth := 0
@@ -31,7 +26,7 @@ var doors: Array[Door] = []
 var enemies_on_enter: Array[PackedScene] = []
 ## Doors elsewhere that open when this room is cleared.
 var opens_on_clear: Array[Door] = []
-## The boss room: the boss appears in the middle and a red ring marks the floor.
+## The boss room: the boss appears in the middle.
 var boss_room := false
 ## The arena's waves, if this is the arena room.
 var waves: ArenaWaves
@@ -102,11 +97,6 @@ static func enemies_for(mix: ArenaWave) -> Array[PackedScene]:
 		for i in entry[1]:
 			enemies.append(entry[0])
 	return enemies
-
-
-func _draw() -> void:
-	if boss_room:
-		draw_arc(map.cell_center(rect.get_center()), BOSS_RING_RADIUS, 0.0, TAU, 32, BOSS_RING_COLOR, BOSS_RING_WIDTH)
 
 
 func _on_entered(player: Node2D) -> void:

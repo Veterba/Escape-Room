@@ -2,13 +2,13 @@
 ## objective room, the Enemy Arena or the Boss Chamber. A boss floor also has an exit room behind
 ## the boss: its door opens when the boss is dead, and stepping on the exit wins. The whole floor
 ## is built as one GameMap, then every room gets a Room node that runs it.
-## Every room but the Boss Chamber gets a room type (the Enemy Arena its own, the others a random
+## Every room gets a room type (the Enemy Arena and the Boss Chamber their own, the others a random
 ## one of four): its tiles, objects and lights. Corridors look like the room they lead from. The
 ## dark tint of the room the player is in fades in over the whole floor.
 class_name DungeonFloor
 extends GameMap
 
-const AMMO_WRAITH := preload("res://scenes/enemies/ammo_wraith.tscn")
+const ROOT := preload("res://scenes/enemies/root.tscn")
 
 ## Which objective room ends the floor: &"arena" or &"boss". Set before adding the floor.
 var objective: StringName
@@ -31,7 +31,7 @@ func _ready() -> void:
 	plan.stamp_room(plan.objective, ObjectiveRooms.boss(rng) if is_boss else ObjectiveRooms.arena(rng))
 	for room_plan in plan.rooms:
 		if room_plan == plan.objective:
-			_room_types[room_plan] = &"" if is_boss else &"arena"
+			_room_types[room_plan] = &"boss" if is_boss else &"arena"
 		else:
 			_room_types[room_plan] = RoomStyles.ROOM_TYPES[rng.randi_range(0, RoomStyles.ROOM_TYPES.size() - 1)]
 	layout = plan.layout
@@ -55,8 +55,7 @@ func _ready() -> void:
 				door.close()
 			objective_room.opens_on_clear = room.doors
 	for room in rooms:
-		if not room.room_type.is_empty():
-			RoomDecor.dress(self, room.rect, room.room_type, rng)
+		RoomDecor.dress(self, room.rect, room.room_type, rng)
 	_lit_room = rooms[0]
 	_tint.color = _ambient(_lit_room)
 
@@ -72,12 +71,11 @@ func _process(_delta: float) -> void:
 
 
 func _ambient(room: Room) -> Color:
-	if room.room_type.is_empty():
-		return Config.lighting.boss_ambient
 	return Config.lighting.for_room(room.room_type).ambient
 
 
-## Rooms take their room type; corridors the type of the room they lead from.
+## Rooms take their room type; corridors the type of the room they lead from. Outside both
+## there is nothing to build (the dark).
 func _room_type_at(cell: Vector2i) -> StringName:
 	for room_plan: FloorGenerator.RoomPlan in _room_types:
 		if room_plan.rect.has_point(cell):
@@ -110,7 +108,7 @@ func _add_room(room_plan: FloorGenerator.RoomPlan) -> Room:
 	elif room.kind == FloorGenerator.Kind.OBJECTIVE:
 		objective_room = room
 		if objective == &"boss":
-			room.enemies_on_enter = [AMMO_WRAITH]
+			room.enemies_on_enter = [ROOT]
 			room.boss_room = true
 	add_child(room)
 	rooms.append(room)

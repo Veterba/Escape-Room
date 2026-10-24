@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.11.0** (retexture: rooms and lighting).
+Current version: **0.12.0** (the boss, Root).
 
 ## Requirements
 
@@ -46,9 +46,12 @@ Every round picks one of three map types at random, and builds it fresh:
   Kin (Watcher cameras) handcuff you (mash E to break free), Shade Kin (Glitch ghosts) drift
   through walls and teleport now and then, and an hourglass in a
   dead end adds 30 s. 5:00 timer, and no map.
-- **Boss Chamber:** a floor like the arena's, ending in the boss room. The Ammo Wraith has three
-  phases (Belt Lash; plus Bullet Rain; then faster, with Fade). Beat it and the door to the exit
-  room opens: step on the exit to win. No timer: you only lose by dying.
+- **Boss Chamber:** a floor like the arena's, ending in the boss room. Root, a virus made of
+  windows, has three phases (glides and Belt Lash; plus Bullet Rain and teleports; then it splits
+  into its main window and five error windows that fight on their own). Beat it and it drops the
+  code (walk over it to win); the door to the exit room opens too. No timer: you only lose by
+  dying. A scripted fight (a C-rank gun, half the shots hitting, no dodging needed) beat Root in
+  2.6–3.1 minutes over 4 runs.
 
 Press Tab for a map of the rooms you have seen (arena and boss floors).
 
