@@ -1,59 +1,81 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/end_screen.gd" id="1_script"]
+[ext_resource type="Script" path="res://scripts/ui/ascii_art.gd" id="2_art"]
+[ext_resource type="Shader" path="res://shaders/crt.gdshader" id="3_crt"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_crt"]
+shader = ExtResource("3_crt")
 
 [node name="EndScreen" type="CanvasLayer"]
 process_mode = 3
 layer = 10
 script = ExtResource("1_script")
 
-[node name="Center" type="CenterContainer" parent="."]
+[node name="View" type="Control" parent="."]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Panel" type="PanelContainer" parent="Center"]
-layout_mode = 2
+[node name="Dim" type="ColorRect" parent="View"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.6)
 
-[node name="Items" type="VBoxContainer" parent="Center/Panel"]
-layout_mode = 2
-theme_override_constants/separation = 4
+[node name="Back" type="ColorRect" parent="View"]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
 
-[node name="Title" type="Label" parent="Center/Panel/Items"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.941, 0.706, 0.235, 1)
-theme_override_font_sizes/font_size = 48
-text = "ESCAPED!"
-horizontal_alignment = 1
+[node name="Art" type="Control" parent="View"]
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2
+script = ExtResource("2_art")
 
-[node name="Subtitle" type="Label" parent="Center/Panel/Items"]
-layout_mode = 2
-text = "Secret code"
-horizontal_alignment = 1
-
-[node name="Code" type="Label" parent="Center/Panel/Items"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.247, 0.757, 0.69, 1)
-theme_override_font_sizes/font_size = 48
-text = "0000"
-horizontal_alignment = 1
-
-[node name="Time" type="Label" parent="Center/Panel/Items"]
-layout_mode = 2
-text = "Time 0:00"
-horizontal_alignment = 1
-
-[node name="Buttons" type="HBoxContainer" parent="Center/Panel/Items"]
-layout_mode = 2
-theme_override_constants/separation = 8
+[node name="Items" type="VBoxContainer" parent="View/Art"]
+layout_mode = 0
 alignment = 1
 
-[node name="PlayAgain" type="Button" parent="Center/Panel/Items/Buttons"]
+[node name="Title" type="Label" parent="View/Art/Items"]
 layout_mode = 2
-text = "Play again"
+size_flags_horizontal = 4
+horizontal_alignment = 1
 
-[node name="Menu" type="Button" parent="Center/Panel/Items/Buttons"]
+[node name="Subtitle" type="Label" parent="View/Art/Items"]
 layout_mode = 2
-text = "Menu"
+size_flags_horizontal = 4
+horizontal_alignment = 1
+
+[node name="Code" type="Label" parent="View/Art/Items"]
+layout_mode = 2
+size_flags_horizontal = 4
+horizontal_alignment = 1
+
+[node name="Time" type="Label" parent="View/Art/Items"]
+layout_mode = 2
+size_flags_horizontal = 4
+horizontal_alignment = 1
+
+[node name="Buttons" type="HBoxContainer" parent="View/Art/Items"]
+layout_mode = 2
+alignment = 1
+
+[node name="PlayAgain" type="Button" parent="View/Art/Items/Buttons"]
+layout_mode = 2
+
+[node name="Menu" type="Button" parent="View/Art/Items/Buttons"]
+layout_mode = 2
+
+[node name="Crt" type="ColorRect" parent="View"]
+material = SubResource("ShaderMaterial_crt")
+layout_mode = 3
+anchors_preset = 0
+mouse_filter = 2

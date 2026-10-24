@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dyhk5b7j38xau"
-path="res://.godot/imported/enemy_fuse_kin.png-0416186f261cc991b7036966855479eb.ctex"
+uid="uid://duxlo5f070v28"
+path="res://.godot/imported/static_3.png-1aa76814704af2e89dc574f6797f96e1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://art/game/enemy_fuse_kin.png"
-dest_files=["res://.godot/imported/enemy_fuse_kin.png-0416186f261cc991b7036966855479eb.ctex"]
+source_file="res://art/game/enemies/static_3.png"
+dest_files=["res://.godot/imported/static_3.png-1aa76814704af2e89dc574f6797f96e1.ctex"]
 
 [params]
 

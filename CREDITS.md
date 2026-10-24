@@ -2,8 +2,8 @@
 
 ## Character sprites
 
-The character sprites of the Grunt Kin and the Fuse Kin (files 03 and 05 in `art/source/`) are **placeholders** taken from a community Enter the Gungeon sprite sheet. They are **not for
-public release** and will be replaced with our own art.
+Static and Countdown, the Grunt Kin and Fuse Kin (`art/source/retexture/45_static_countdown.png`),
+are the owner's approved retexture enemies.
 
 Root, the boss (`art/source/retexture/44_boss_root/`), is the owner's approved boss design; its
 eye, glow and effects are drawn in code from the approved page.

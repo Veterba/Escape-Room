@@ -62,6 +62,8 @@ PALETTE = {
     "f": (0x8A, 0x6A, 0x44, 255),  # fuse
     "Y": (0xFF, 0xD1, 0x66, 255),  # spark
     "Z": (0xFF, 0x9F, 0x43, 255),  # spark, orange
+    # Static's floating hand (approved station page: violet metal).
+    "j": (0x46, 0x4C, 0x84, 255),  # violet
 }
 
 PLAYER_BULLET = [
@@ -211,6 +213,14 @@ HAND = [
     "khtk",
     "kttk",
     "kkkk",
+]
+
+# The floating violet hand that holds Static's gun.
+HAND_VIOLET = [
+    "oooo",
+    "oWjo",
+    "ojjo",
+    "oooo",
 ]
 
 # A 9-slice frame for HUD panels: 3 px margins on every side.
@@ -371,6 +381,7 @@ def main() -> None:
         "muzzle_flash_big": MUZZLE_FLASH_BIG,
         "muzzle_flash_small": MUZZLE_FLASH_SMALL,
         "hand": HAND,
+        "hand_violet": HAND_VIOLET,
         "key_glint": KEY_GLINT,
         "ui_panel": UI_PANEL,
         "smoke_bomb": SMOKE_BOMB,

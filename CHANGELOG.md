@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.14.0 — 2026-10-24
+
+### Changed
+- Grunt Kin are now Statics: infected .exe files on stubby legs, holding a Brass Revolver in a floating violet hand that turns towards you. Their bullets leave from the gun's muzzle, and their eyes flare and red spots break out just before each shot.
+- Fuse Kin are now Countdowns: round bombs with a blue crash screen and a spark flickering on the fuse. Once lit, the screen turns red and counts 3-2-1, the 1 blinking faster until it explodes.
+- The win and lose screens are ASCII panels in green phosphor like the pause panel; BOOM is written in red.
+- Root has 220 hit points instead of 250, so the fight is a little shorter.
+
+### Removed
+- The old Grunt Kin and Fuse Kin placeholder sprites.
+
 ## v0.13.0 — 2026-10-24
 
 ### Added

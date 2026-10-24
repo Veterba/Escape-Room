@@ -76,6 +76,8 @@ extends Resource
 ## Seconds between shots.
 @export var grunt_fire_interval: float
 @export var grunt_bullet_speed: float
+## Seconds before a shot in which its eyes flare and red spots break out, as a warning.
+@export var grunt_tell_time: float
 
 @export_group("Fuse Kin")
 @export var fuse_hp: int
