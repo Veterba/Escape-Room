@@ -100,8 +100,8 @@ Round (scenes/round/round.tscn)               builds the map, decides the result
   are in `config/balance.tres`, and only there: the fields have no defaults in the script. (The
   Godot editor drops every value that equals a script default when it saves a `.tres`, which
   emptied most of the file twice.) Each gun is a `GunStats` sub-resource inside it, so a gun's numbers
-  and its art sit together: `icon` (the big drawing, for the HUD), `held_texture` (the small
-  drawing in the hand and on the floor) and the grip, muzzle and ejection pixels of the held drawing.
+  and its art sit together: `held_texture` (the
+  drawing in the hand, on the floor and, twice as big, in the HUD) and the grip, muzzle and ejection pixels of the held drawing.
 - **Y-sorting.** `Round`, the map, the navigation region and the `Walls` layer all have
   `y_sort_enabled`, so their children are drawn in order of their y position, as if they were one
   list: a character lower on screen is drawn in front. Wall tiles sort by the top of the tile

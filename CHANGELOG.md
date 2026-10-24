@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.12.1 — 2026-10-24
+
+### Changed
+- Rooms are much brighter: every room's dark tint is lighter, so the floor, objects and enemies are easy to see. The Labyrinth stays dark around you.
+- The HUD shows your gun with its new sprite.
+- The smoke bomb is redrawn in the same pixel style as the rest of the game, on the floor and in the HUD.
+
 ## v0.12.0 — 2026-10-24
 
 ### Added

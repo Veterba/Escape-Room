@@ -22,23 +22,17 @@ CHARACTERS = {
 
 # Guns and items: source file prefix -> output name.
 NATIVE_ART = {
-    "09": "gun_pop_pistol",
-    "10": "gun_brass_revolver",
-    "11": "gun_scattershot",
-    "12": "gun_fuse_launcher",
-    "13": "gun_gold_detonator",
     "14": "item_rusty_knife",
     "15": "item_secret_code",
     "16": "item_heart",
     "17": "item_ammo_box",
-    "18": "item_smoke_bomb",
     "20": "item_hourglass",
     "21": "item_exit_key",
 }
 
 # Items lying on the floor use a half-size copy, so they stay small next to the 24 px hero.
 # The full-size drawings are still used in the HUD.
-FLOOR_ITEMS = ["item_heart", "item_ammo_box", "item_smoke_bomb", "item_hourglass"]
+FLOOR_ITEMS = ["item_heart", "item_ammo_box", "item_hourglass"]
 FLOOR_ITEM_SHRINK = 2
 
 # The hero, Telly: every approved frame in one sheet, 1 px = 1 game pixel, in 24x24 cells.

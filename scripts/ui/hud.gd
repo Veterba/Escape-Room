@@ -21,6 +21,9 @@ var _player: Player
 var _timer: RoundTimer
 var _pulse_time := 0.0
 
+## The gun and smoke bomb drawings are shown this many times their size.
+const ICON_SCALE := 2
+
 @onready var _hearts: HBoxContainer = $Root/Hearts
 @onready var _timer_label: Label = $Root/TimerLabel
 @onready var _map_name: Label = $Root/MapName
@@ -30,6 +33,7 @@ var _pulse_time := 0.0
 @onready var _boss_fill: ColorRect = $Root/BossBar/Fill
 @onready var _gun_icon: TextureRect = $Root/Loadout/Row/GunIcon
 @onready var _ammo_label: Label = $Root/Loadout/Row/AmmoLabel
+@onready var _smoke_icon: TextureRect = $Root/Loadout/Row/SmokeIcon
 @onready var _smoke_label: Label = $Root/Loadout/Row/SmokeLabel
 
 
@@ -50,6 +54,7 @@ func bind(player: Player, timer: RoundTimer, map_id: StringName) -> void:
 	_refresh_gun()
 	_show_hearts(player.hearts)
 	_show_smoke_bombs(player.smoke_bombs)
+	_smoke_icon.custom_minimum_size = _smoke_icon.texture.get_size() * ICON_SCALE
 	_show_map_name(Strings.MAP_NAMES[map_id])
 
 
@@ -108,7 +113,8 @@ func _show_map_name(map_name: String) -> void:
 
 func _refresh_gun() -> void:
 	var gun := _player.gun
-	_gun_icon.texture = gun.stats.icon
+	_gun_icon.texture = gun.stats.held_texture
+	_gun_icon.custom_minimum_size = gun.stats.held_texture.get_size() * ICON_SCALE
 	if gun.is_reloading:
 		_ammo_label.text = Strings.RELOADING
 		return
