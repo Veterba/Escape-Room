@@ -1,4 +1,4 @@
-## A picture made of text characters, drawn one character per square cell: the menu TV (read from
+## A picture made of text characters, drawn one character per cell: the menu TV (read from
 ## art/game/menu_tv.txt) or a generated panel (the pause menu). Because every cell is drawn on its
 ## own, the picture can boot up row by row out of noise and shimmer: a few characters at a time
 ## step one level lighter or denser on the ramp and settle back.
@@ -46,8 +46,10 @@ const PANEL_FIELD_NOISE := 0.12
 const PANEL_CORNER := 2
 
 var mood := Mood.IDLE
-## Pixels per cell (cells are square).
+## Pixels per cell: its height (the characters are this big), and its width, which can be wider
+## to spread the picture across a wide screen (the characters keep their shape).
 var cell := 1.0
+var cell_width := 1.0
 var columns := 0
 var rows := 0
 
@@ -113,10 +115,12 @@ func boot() -> void:
 	mood = Mood.IDLE
 
 
-## Size the picture to `pixels` per character.
-func set_cell_size(pixels: float) -> void:
+## Size the picture to `pixels` per character, and `width` pixels per column (square cells if
+## left out).
+func set_cell_size(pixels: float, width := 0.0) -> void:
 	cell = pixels
-	size = Vector2(columns, rows) * cell
+	cell_width = width if width > 0.0 else pixels
+	size = Vector2(columns * cell_width, rows * cell)
 	queue_redraw()
 
 
@@ -149,7 +153,7 @@ func _draw() -> void:
 			if character == " ":
 				continue
 			var width := FONT.get_char_size(character.unicode_at(0), font_size).x
-			draw_char(FONT, Vector2(x * cell + (cell - width) / 2.0, y * cell + baseline), character, font_size, PHOSPHOR)
+			draw_char(FONT, Vector2(x * cell_width + (cell_width - width) / 2.0, y * cell + baseline), character, font_size, PHOSPHOR)
 
 
 ## Rows above the boot line are the real picture, the next few are noise, the rest still empty.

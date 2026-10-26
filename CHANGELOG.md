@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.14.7 — 2026-10-26
+
+### Changed
+- The menu TV fills the whole screen on any monitor, with no black bars or cut-off edges around it.
+- The bright band that kept sweeping down the TV is gone.
+
 ## v0.14.6 — 2026-10-26
 
 ### Changed

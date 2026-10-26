@@ -1,6 +1,5 @@
 // The CRT look over the password menu's TV: a soft phosphor glow (a small blur of what is
-// underneath, added back on top), faint scanlines in real screen pixels, a slow bright band
-// sweeping down, and a rare short flicker.
+// underneath, added back on top), faint scanlines in real screen pixels, and a rare short flicker.
 shader_type canvas_item;
 
 uniform sampler2D screen_texture : hint_screen_texture, filter_linear;
@@ -14,10 +13,6 @@ uniform float glow_floor = 0.12;
 // Scanlines: one darker line every this many screen pixels.
 uniform float scanline_period = 3.0;
 uniform float scanline_darkness = 0.28;
-// The band: seconds for one sweep, its height as a share of the TV, and how bright it is.
-uniform float band_time = 5.5;
-uniform float band_height = 0.18;
-uniform float band_strength = 0.09;
 // Flicker: one cycle in seconds; the picture dims briefly twice in each cycle.
 uniform float flicker_time = 6.0;
 
@@ -33,10 +28,6 @@ void fragment() {
 		glow += 0.5 * max(texture(screen_texture, SCREEN_UV + direction * glow_far).rgb - glow_floor, 0.0);
 	}
 	vec3 color = base + glow / (1.5 * float(GLOW_SAMPLES)) * glow_strength;
-
-	float band_at = fract(TIME / band_time) * (1.0 + 2.0 * band_height) - band_height;
-	float band = max(0.0, 1.0 - abs(UV.y - band_at) / (0.5 * band_height));
-	color += phosphor.rgb * band_strength * band;
 
 	if (mod(FRAGCOORD.y, scanline_period) < 1.0) {
 		color *= 1.0 - scanline_darkness;
