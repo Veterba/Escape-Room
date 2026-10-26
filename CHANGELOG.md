@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.14.4 — 2026-10-26
+
+### Changed
+- The win screen shows only ESCAPED! and the word for the next task (BYE for now); the random code and the time are gone from it.
+
 ## v0.14.3 — 2026-10-26
 
 ### Changed
