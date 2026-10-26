@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.14.8 — 2026-10-26
+
+### Changed
+- The word for the next task on the win screen is now REBOOT.
+
 ## v0.14.7 — 2026-10-26
 
 ### Changed
