@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.14.6** (the game is called ROOM and opens fullscreen).
+Current version: **0.14.7** (ROOM, fullscreen, the menu TV fills the screen).
 
 ## Install on Windows (no Godot needed)
 
@@ -22,8 +22,8 @@ GitHub builds the Windows version by itself (`.github/workflows/windows-release.
 version tag and, a few minutes later, the zip appears on the Releases page.
 
 ```sh
-git tag v0.14.6
-git push origin v0.14.6
+git tag v0.14.7
+git push origin v0.14.7
 ```
 
 The build can also be started by hand: **Actions** → **Windows release** → **Run workflow**; the
