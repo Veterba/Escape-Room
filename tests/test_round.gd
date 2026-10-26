@@ -48,7 +48,6 @@ func test_picking_up_the_code_wins() -> void:
 	var round_node := _make_round()
 	Events.code_collected.emit()
 	assert_eq(round_node.result, Round.Result.WIN, "result")
-	assert_eq(round_node.secret_code.length(), 4, "the code has 4 digits")
 	Events.code_collected.emit()
 	assert_eq(_log_lines().size(), 2, "a second pickup does not end the round again")
 

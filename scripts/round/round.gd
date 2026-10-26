@@ -12,8 +12,6 @@ const RESULT_NAMES := {Result.WIN: "win", Result.DEATH: "death", Result.TIMEOUT:
 const NO_GUN := "none"
 
 var map: GameMap
-## A random 4-digit code, new every round.
-var secret_code := ""
 var result := Result.NONE
 var hearts_lost := 0
 ## How often an Officer Kin handcuffed the player.
@@ -40,7 +38,6 @@ func _ready() -> void:
 	player.global_position = map.spawn_position
 	player.reset_physics_interpolation()
 	player.camera.set_bounds(map.bounds)
-	secret_code = "%04d" % randi_range(0, 9999)
 
 	player.hurt.connect(func() -> void: hearts_lost += 1)
 	player.died.connect(end_round.bind(Result.DEATH))
@@ -86,7 +83,7 @@ func _add_hourglass_time() -> void:
 
 func _show_end_screen() -> void:
 	get_tree().paused = true
-	_end_screen.show_result(result, secret_code, timer.elapsed)
+	_end_screen.show_result(result)
 
 
 func _count_shot(stats: GunStats) -> void:

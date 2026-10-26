@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.14.3** (password 6342, the word for the next task).
+Current version: **0.14.4** (password 6342, the win screen shows the word for the next task).
 
 ## Install on Windows (no Godot needed)
 
@@ -22,8 +22,8 @@ GitHub builds the Windows version by itself (`.github/workflows/windows-release.
 version tag and, a few minutes later, the zip appears on the Releases page.
 
 ```sh
-git tag v0.14.3
-git push origin v0.14.3
+git tag v0.14.4
+git push origin v0.14.4
 ```
 
 The build can also be started by hand: **Actions** → **Windows release** → **Run workflow**; the
@@ -53,7 +53,7 @@ godot --path . --map=arena
 
 The game opens on the password menu: an ASCII television in green phosphor. Type the 4-digit
 access code (Backspace erases) and press Enter or click TRY CODE; the right code goes straight
-into a round. The code is in `config/balance.tres` (`password`, now `6342`). Winning shows the word for the next escape room task (`next_task_word` there, `bye` for now). The main menu (from the
+into a round. The code is in `config/balance.tres` (`password`, now `6342`). Winning shows ESCAPED! and the word for the next escape room task (`next_task_word` there, `bye` for now). The main menu (from the
 Menu buttons in the pause and end screens) is the same TV with PLAY and QUIT.
 `--map=` skips it.
 
