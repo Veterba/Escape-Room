@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.14.5 — 2026-10-26
+
+### Changed
+- The win screen shows only the word for the next task, without ESCAPED!.
+- Losing shows no words at all, only Play again and Menu.
+
 ## v0.14.4 — 2026-10-26
 
 ### Changed

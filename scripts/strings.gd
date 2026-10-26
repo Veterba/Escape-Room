@@ -10,12 +10,6 @@ const RESTART_ROUND := "Restart round"
 const MENU := "Menu"
 const PLAY_AGAIN := "Play again"
 
-const WIN_TITLE := "ESCAPED!"
-## Time used, for example "Time 5:42".
-const LOSE_TITLE := "BOOM"
-const REASON_TIMEOUT := "Out of time"
-const REASON_DEATH := "You died"
-
 const MAP_NAMES := {
 	&"boss": "Boss Chamber",
 	&"maze": "Labyrinth",

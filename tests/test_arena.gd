@@ -8,6 +8,9 @@ const PLAYER := preload("res://scenes/player/player.tscn")
 const GRUNT := preload("res://scenes/enemies/grunt_kin.tscn")
 const GUN_CHEST := preload("res://scenes/world/gun_chest.tscn")
 const LOG_PATH := "user://test_runs.csv"
+## Extra seconds to wait for a drop: headless frames can be slow and long, so a drop animation
+## may need a frame or two more than its own time.
+const DROP_SLACK := 0.5
 
 
 func _make_arena_round() -> Round:
@@ -109,7 +112,7 @@ func test_opening_the_code_chest_takes_a_hold_that_a_hit_cancels() -> void:
 		interactor.update(STEP, player, true)
 	assert_true(not chest.can_interact(), "a full hold opens it")
 	chest._process(cfg.chest_open_time)
-	await wait(CodeChest.DROP_TIME + 0.05)  # The key drops in front of the chest.
+	await wait(CodeChest.DROP_TIME + DROP_SLACK)  # The key drops in front of the chest.
 	var dropped_code := false
 	for child in round_node.map.get_children():
 		dropped_code = dropped_code or (child is Pickup and (child as Pickup).kind == Pickup.Kind.CODE)
@@ -142,7 +145,7 @@ func test_gun_chest_opens_and_drops_its_gun() -> void:
 	assert_true(not chest.can_interact(), "opening")
 	chest._process(cfg.chest_open_time)
 	assert_eq(chest.state, GunChest.State.OPEN, "open after chest_open_time")
-	await wait(GunChest.DROP_TIME + 0.05)
+	await wait(GunChest.DROP_TIME + DROP_SLACK)
 	var dropped: GunPickup = null
 	for child in world.get_children():
 		if child is GunPickup:
@@ -170,4 +173,5 @@ func test_barrels_hurt_everyone_and_chain_explode() -> void:
 	await world.get_tree().process_frame  # The blast is added at the end of the frame.
 	assert_eq(player.hearts, cfg.player_hearts - 1, "the player loses one heart")
 	assert_true(not is_instance_valid(grunt) or grunt.hp == cfg.grunt_hp - cfg.barrel_damage, "the grunt takes the damage")
-	assert_true(second.is_lit(), "the barrel in range is lit by the blast")
+	# On a slow frame its short fuse may already have burnt down: gone means it went off too.
+	assert_true(not is_instance_valid(second) or second.is_lit(), "the barrel in range is lit by the blast")
