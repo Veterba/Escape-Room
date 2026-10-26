@@ -64,6 +64,16 @@ layout_mode = 2
 size_flags_horizontal = 4
 horizontal_alignment = 1
 
+[node name="NextLabel" type="Label" parent="View/Art/Items"]
+layout_mode = 2
+size_flags_horizontal = 4
+horizontal_alignment = 1
+
+[node name="NextWord" type="Label" parent="View/Art/Items"]
+layout_mode = 2
+size_flags_horizontal = 4
+horizontal_alignment = 1
+
 [node name="Buttons" type="HBoxContainer" parent="View/Art/Items"]
 layout_mode = 2
 alignment = 1

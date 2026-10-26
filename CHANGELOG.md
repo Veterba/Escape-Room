@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.14.3 — 2026-10-26
+
+### Changed
+- The password to start the game is now 6342.
+
+### Added
+- Winning shows the word for the next escape room task under the time (for now: BYE).
+
 ## v0.14.2 — 2026-10-24
 
 ### Added

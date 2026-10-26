@@ -300,6 +300,8 @@ extends Resource
 @export_group("Password screen")
 ## The password from the previous escape room task.
 @export var password: String
+## The word for the next escape room task, shown on the win screen.
+@export var next_task_word: String
 
 @export_group("Camera")
 ## How fast the camera catches up with the player. Higher is snappier.
