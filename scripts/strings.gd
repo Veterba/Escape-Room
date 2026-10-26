@@ -12,6 +12,7 @@ const PLAY_AGAIN := "Play again"
 
 const WIN_TITLE := "ESCAPED!"
 const SECRET_CODE := "Secret code"
+const NEXT_TASK_WORD := "Word for the next task"
 ## Time used, for example "Time 5:42".
 const TIME_USED_FORMAT := "Time %s"
 const LOSE_TITLE := "BOOM"
