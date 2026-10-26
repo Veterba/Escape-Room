@@ -10,8 +10,8 @@ config_version=5
 
 [application]
 
-config/name="Escape Boom"
-config/version="0.14.5"
+config/name="Room"
+config/version="0.14.6"
 run/main_scene="res://scenes/ui/password_screen.tscn"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 
@@ -26,6 +26,7 @@ Game="*res://scripts/autoload/game.gd"
 
 window/size/viewport_width=640
 window/size/viewport_height=360
+window/size/mode=3
 window/size/window_width_override=1280
 window/size/window_height_override=720
 window/stretch/mode="viewport"

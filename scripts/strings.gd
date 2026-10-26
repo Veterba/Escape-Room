@@ -1,7 +1,7 @@
 ## All text the player sees, kept in one place so it can be translated later.
 class_name Strings
 
-const GAME_TITLE := "ESCAPE BOOM"
+const GAME_TITLE := "ROOM"
 const PLAY := "Play"
 const QUIT := "Quit"
 const PAUSED := "Paused"

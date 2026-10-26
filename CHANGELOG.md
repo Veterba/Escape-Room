@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.14.6 — 2026-10-26
+
+### Changed
+- The game is called ROOM: on the menu TV, in the window title and as the app's name.
+- The game opens fullscreen, so the menu TV fills the height of the monitor and the rounds fill the whole screen (on a 2560 × 1440 monitor every game pixel is exactly 4 × 4).
+
 ## v0.14.5 — 2026-10-26
 
 ### Changed
