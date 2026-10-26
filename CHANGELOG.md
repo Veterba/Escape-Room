@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.14.9 — 2026-10-26
+
+### Changed
+- The word for the next task on the win screen is now RE.
+
 ## v0.14.8 — 2026-10-26
 
 ### Changed
