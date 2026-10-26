@@ -3,7 +3,7 @@
 A top-down roguelite shooter in the style of Enter the Gungeon, made as a school project.
 One random map type per round: get the secret code before the 5:00 timer runs out, or beat the boss.
 
-Current version: **0.14.5** (password 6342; the win screen shows only the word for the next task).
+Current version: **0.14.6** (the game is called ROOM and opens fullscreen).
 
 ## Install on Windows (no Godot needed)
 
@@ -14,7 +14,7 @@ Current version: **0.14.5** (password 6342; the win screen shows only the word f
    time: click **More info**, then **Run anyway**.
 
 Nothing is installed: the `.exe` holds the whole game. To remove it, delete the folder. Saved run
-logs live in `%APPDATA%\Godot\app_userdata\Escape Boom\`.
+logs live in `%APPDATA%\Godot\app_userdata\Room\`.
 
 ### Making a new Windows release
 
@@ -22,8 +22,8 @@ GitHub builds the Windows version by itself (`.github/workflows/windows-release.
 version tag and, a few minutes later, the zip appears on the Releases page.
 
 ```sh
-git tag v0.14.5
-git push origin v0.14.5
+git tag v0.14.6
+git push origin v0.14.6
 ```
 
 The build can also be started by hand: **Actions** → **Windows release** → **Run workflow**; the
@@ -97,8 +97,8 @@ Press Tab for a map of the rooms you have seen (arena and boss floors).
 ### Run log
 
 Every finished round adds a line to `runs.csv` in Godot's user folder
-(on macOS `~/Library/Application Support/Godot/app_userdata/Escape Boom/runs.csv`, on Windows
-`%APPDATA%\Godot\app_userdata\Escape Boom\runs.csv`). Columns: date, map, result
+(on macOS `~/Library/Application Support/Godot/app_userdata/Room/runs.csv`, on Windows
+`%APPDATA%\Godot\app_userdata\Room\runs.csv`). Columns: date, map, result
 (win/death/timeout), seconds used, hearts lost, times trapped, gun used most.
 
 ## Run the tests
@@ -139,7 +139,7 @@ the PATH, point the script at it: `GODOT=/path/to/godot tools/export.sh`.
 
 The builds are not signed with a developer certificate, so both systems warn the first time:
 
-- **macOS:** unzip, then right-click `Escape Boom.app`, choose Open, then Open again.
+- **macOS:** unzip, then right-click `Room.app`, choose Open, then Open again.
 - **Windows:** unzip, run `EscapeBoom.exe`; when SmartScreen appears, click More info, then
   Run anyway.
 
